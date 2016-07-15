@@ -55,7 +55,7 @@ go back more frequently.
     - Memory: 8GB
     - Graphics:
       - Intel Corporation Haswell-ULT Integrated Graphics Controller (rev 0b)
-      - NVIDIA Corporation GK208M [GeForce GT 740M] (rev a1)
+      - NVIDIA Corporation GK208M GeForce GT 740M (rev a1)
     - Storage: SSD 240GB
  
 - **Software:**
