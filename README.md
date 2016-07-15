@@ -10,6 +10,7 @@
 
 - Activities
 - Fragments
+- Intents
 - Settings
 - Splash Screen
 - Array Lists
@@ -27,7 +28,7 @@
 - Web View
 - Vibrator
 - GPS
-- Network
+- Network Location
 - Internet
 - Async Task
 - Json Write/Read
