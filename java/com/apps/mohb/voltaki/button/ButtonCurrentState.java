@@ -49,7 +49,7 @@ public class ButtonCurrentState {
     public static void setButtonProperties(Context context, int color, int textColor, int text, float textSize, boolean enabled) {
         if (button != null) {
             // check sdk version to apply correct methods
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 button.setBackgroundColor(context.getResources().getColor(color));
                 button.setTextColor(context.getResources().getColor(textColor));
             }
