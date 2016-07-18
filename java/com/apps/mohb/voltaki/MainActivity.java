@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/14/16 11:48 PM
+ *  Last modified : 7/17/16 11:15 PM
  *
  *  -----------------------------------------------------------
  */
@@ -22,9 +22,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,31 +34,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.apps.mohb.voltaki.messaging.Notification;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Locale;
 
-import com.apps.mohb.voltaki.button.ButtonEnums;
 import com.apps.mohb.voltaki.button.ButtonCurrentState;
+import com.apps.mohb.voltaki.button.ButtonEnums;
 import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
-import com.apps.mohb.voltaki.fragments.dialogs.LocServDisabledAlertFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.MapsNotInstalledAlertFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.ButtonTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.MainFragment;
 import com.apps.mohb.voltaki.fragments.NoMapsFragment;
 import com.apps.mohb.voltaki.fragments.NoPlayServicesFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ButtonTipAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.LocServDisabledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.MapsNotInstalledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.MapCurrentState;
+import com.apps.mohb.voltaki.messaging.Notification;
 import com.apps.mohb.voltaki.messaging.Toasts;
 
 
@@ -98,24 +95,14 @@ public class MainActivity extends AppCompatActivity implements
     private DialogFragment locServDisabledDialog;
     private DialogFragment gpsDisabledDialog;
 
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     protected GoogleApiAvailability googleApiAvailability;
     private int googlePlayServicesAvailability;
-    private GoogleApiClient googleApiClient;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         /// check if Google API is available
         checkGoogleAppsApiAvailability();
@@ -235,22 +222,6 @@ public class MainActivity extends AppCompatActivity implements
         else { // create map and button
             createMainFragment();
         }
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        googleApiClient.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.apps.mohb.voltaki/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(googleApiClient, viewAction);
 
     }
 
@@ -454,60 +425,6 @@ public class MainActivity extends AppCompatActivity implements
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.apps.mohb.voltaki/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(googleApiClient, viewAction);
-        googleApiClient.disconnect();
-
-        // if Google Play Services or Google Maps is not available stop execution
-        if ((!okPlayServices) || (!okMaps)) {
-            return;
-        }
-
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.apps.mohb.voltaki/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(googleApiClient, viewAction);
-        googleApiClient.disconnect();
-
-        // if Google Play Services or Google Maps is not available stop execution
-        if ((!okPlayServices) || (!okMaps)) {
-            return;
-        }
 
     }
 

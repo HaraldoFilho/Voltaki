@@ -5,14 +5,16 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonCurrentState.java
- *  Last modified : 7/11/16 8:41 PM
+ *  Last modified : 7/17/16 12:19 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.button;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.widget.Button;
 
 import com.apps.mohb.voltaki.Constants;
@@ -43,11 +45,19 @@ public class ButtonCurrentState {
         buttonStatus = status;
     }
 
+    @TargetApi(23)
     public static void setButtonProperties(Context context, int color, int textColor, int text, float textSize, boolean enabled) {
         if (button != null) {
-            button.setBackgroundColor(context.getResources().getColor(color));
+            // check sdk version to apply correct methods
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                button.setBackgroundColor(context.getResources().getColor(color));
+                button.setTextColor(context.getResources().getColor(textColor));
+            }
+            else {
+                button.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));
+                button.setTextColor(context.getResources().getColor(textColor, context.getTheme()));
+            }
             button.setTextSize(textSize);
-            button.setTextColor(context.getResources().getColor(textColor));
             button.setText(text);
             button.setEnabled(enabled);
         }
