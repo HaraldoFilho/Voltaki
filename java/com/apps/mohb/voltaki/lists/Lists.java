@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/19/16 1:04 AM
+ *  Last modified : 7/19/16 7:50 PM
  *
  *  -----------------------------------------------------------
  */
@@ -102,9 +102,17 @@ public class Lists {
         saveState();
     }
 
-    public void addItemToBookmarks(LocationItem item) {
+    public void addItemToBookmarks(Context context, LocationItem item) {
         bookmarks.add(Constants.LIST_HEAD, item);
         saveState();
+        // check if bookmarks auto back is enabled
+        if(sharedPref.getBoolean(Constants.AUTO_BACKUP, false)) {
+            try {
+                backupBookmarks(context, true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void updateLocationName(int position) {
@@ -170,56 +178,80 @@ public class Lists {
     }
 
 
-    public void backupBookmarks(Context context) throws IOException {
+    public void backupBookmarks(Context context, boolean auto) throws IOException {
+        // check if it is possible to write on external storage
         if (isExternalStorageWritable()) {
+            // if backup directory doesn't exist create it
             if (!getBackupDirectory(context).exists()) {
                 getBackupDirectory(context).mkdir();
             }
+            // full path backup file name
             File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+            // if file already exists delete it
             if (file.exists()) {
                 file.delete();
             }
+            // check if file is created successfully
             if (file.createNewFile()) {
+                // create a writer to file
                 FileWriter fileWriter = new FileWriter(file);
+                // get json string from memory
                 String jsonString = listsSavedState.getBookmarksJsonState();
+                // write json string to file
                 fileWriter.write(jsonString);
                 fileWriter.close();
-                Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + file.toString());
-                Toasts.showBackupBookmarks();
+                // if auto backup is not enabled show toast with confirmation and the backup file full path
+                if(!auto) {
+                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + file.toString());
+                    Toasts.showBackupBookmarks();
+                }
             }
 
         }
-        else {
-            Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
-            Toasts.showBackupBookmarks();
+        else { // if auto backup is not enabled show toast informing that external storage is unavailable
+            if(!auto) {
+                Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
+                Toasts.showBackupBookmarks();
+            }
         }
     }
 
     public void restoreBookmarks(Context context) throws IOException {
+        // check if it is possible to read from external storage
         if (isExternalStorageReadable()) {
+            // check if backup directory exists
             if ((getBackupDirectory(context).exists())) {
+                // full path backup file name
                 File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+                // check if backup file exists
                 if (file.exists()) {
+                    // create a reader from file
                     FileReader fileReader = new FileReader(file);
+                    // get file length in characters
                     int fileLength = (int) file.length();
+                    // create an array of characters with the length of file
                     char jsonCharArray[] = new char[fileLength];
+                    // read file and put data in the array of characters
                     fileReader.read(jsonCharArray, 0, fileLength);
+                    // convert the array of characters into a string
                     StringBuilder stringBuilder = new StringBuilder();
                     String jsonString = stringBuilder.append(jsonCharArray).toString();
+                    // save json bookmarks list in memory
                     listsSavedState.setBookmarksState(jsonString);
+                    // get bookmarks list from memory
                     bookmarks = listsSavedState.getBookmarksState();
                 }
-                else {
+                else { // show toast informing that backup file has not been found
                     Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
                     Toasts.showBackupBookmarks();
                 }
             }
-            else {
+            else { // show toast informing that backup file has not been found
                 Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
                 Toasts.showBackupBookmarks();
             }
         }
-        else {
+        else { // show toast informing that external storage is unavailable
             Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
             Toasts.showBackupBookmarks();
 
@@ -227,7 +259,9 @@ public class Lists {
     }
 
     private File getBackupDirectory(Context context) {
+        // get external storage root directory
         File dir = Environment.getExternalStorageDirectory();
+        // construct the backup directory with the application name
         return new File(dir.toString() + "/" + context.getString(R.string.info_app_name));
     }
 

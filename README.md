@@ -19,8 +19,6 @@
 - Notification
 - Button
 - Floating Button
-- Radio Buttons
-- Check Boxes
 - Text View
 - Image View
 - List View

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryActivity.java
- *  Last modified : 7/14/16 10:46 PM
+ *  Last modified : 7/14/16 11:48 PM
  *
  *  -----------------------------------------------------------
  */
@@ -241,7 +241,7 @@ public class HistoryActivity extends AppCompatActivity implements
                 locationBookmarkItem.setLocationName(historyList.getBookmarkEditText());
             }
             // add item to bookmarks
-            historyList.addItemToBookmarks(locationBookmarkItem);
+            historyList.addItemToBookmarks(getApplicationContext(), locationBookmarkItem);
             // show message that bookmark was added
             Toasts.showBookmarkAdded();
         } catch (Exception e) {

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/18/16 8:34 PM
+ *  Last modified : 7/19/16 7:48 PM
  *
  *  -----------------------------------------------------------
  */
@@ -229,7 +229,7 @@ public class MainFragment extends Fragment implements
 
                 // if vibrate feedback is enabled on settings, vibrate when button is clicked
                 if ((vibrator.hasVibrator()) && (sharedPref.getBoolean(Constants.BUTTON_VIBRATE, true))) {
-                    vibrator.vibrate(Constants.VIBRATE_SHORT_TIME);
+                    vibrator.vibrate(Constants.VIBRATE_LONG_TIME);
                 }
 
                 // create intent that will call Google Maps when GO BACK button is clicked
@@ -382,29 +382,29 @@ public class MainFragment extends Fragment implements
 
         // if default zoom level is high
         if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-            .matches(getString(R.string.set_def_zoom_high))) {
-                zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+                .matches(getString(R.string.set_def_zoom_high))) {
+            zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-            .matches(getString(R.string.set_def_zoom_mid))) {
+            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                    .matches(getString(R.string.set_def_zoom_mid))) {
                 zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-        } else // if default zoom level is low
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-            .matches(getString(R.string.set_def_zoom_low))) {
-                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-        }
-        else { // if default zoom level is auto
-            // set the map zoom level according to the default navigation mode
-            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-                zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-            } else
-            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
-                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-            }
-            else {
-                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-            }
-        }
+            } else // if default zoom level is low
+                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                        .matches(getString(R.string.set_def_zoom_low))) {
+                    zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+                }
+                else { // if default zoom level is auto
+                    // set the map zoom level according to the default navigation mode
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+                        zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+                    } else
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                        zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+                    }
+                    else {
+                        zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+                    }
+                }
 
 
 
@@ -417,25 +417,25 @@ public class MainFragment extends Fragment implements
             mListener.onUpdateMainMenuItemAddBookmarksState(false);
         }
         else // if button is YELLOW got to the current location, show floating button
-             // and enable "add to bookmarks" options menu item on main screen
-        if(ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)){
-            mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
-            mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
-            showFloatingButton();
-            mListener.onUpdateMainMenuItemAddBookmarksState(true);
-        }
-        else { // if button is GREEN got to the saved location, show floating button
-               // and enable "add to bookmarks" options menu item on main screen
-            mapCurrentState.gotoLocation(mapSavedState.getLatitude(), mapSavedState.getLongitude(), zoomLevel);
-            mapCurrentState.updateUI(mapSavedState.getLatitude(), mapSavedState.getLongitude());
-            if(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                    .matches(getString(R.string.set_status_bar_icon_disabled))) {
-                startGoBackNotification();
+            // and enable "add to bookmarks" options menu item on main screen
+            if(ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                    == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)){
+                mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
+                mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
+                showFloatingButton();
+                mListener.onUpdateMainMenuItemAddBookmarksState(true);
             }
-            showFloatingButton();
-            mListener.onUpdateMainMenuItemAddBookmarksState(true);
-        }
+            else { // if button is GREEN got to the saved location, show floating button
+                // and enable "add to bookmarks" options menu item on main screen
+                mapCurrentState.gotoLocation(mapSavedState.getLatitude(), mapSavedState.getLongitude(), zoomLevel);
+                mapCurrentState.updateUI(mapSavedState.getLatitude(), mapSavedState.getLongitude());
+                if(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
+                        .matches(getString(R.string.set_status_bar_icon_disabled))) {
+                    startGoBackNotification();
+                }
+                showFloatingButton();
+                mListener.onUpdateMainMenuItemAddBookmarksState(true);
+            }
 
         // if none location provider is available, set button to RED
         if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {

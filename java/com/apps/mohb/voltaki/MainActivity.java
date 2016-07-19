@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/17/16 11:15 PM
+ *  Last modified : 7/19/16 9:51 AM
  *
  *  -----------------------------------------------------------
  */
@@ -659,7 +659,7 @@ public class MainActivity extends AppCompatActivity implements
 
             // add item to bookmarks list and show toast
             if (locationItem != null) {
-                lists.addItemToBookmarks(locationItem);
+                lists.addItemToBookmarks(this, locationItem);
                 Toasts.showBookmarkAdded();
             }
 

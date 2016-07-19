@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/19/16 12:58 AM
+ *  Last modified : 7/19/16 7:50 PM
  *
  *  -----------------------------------------------------------
  */
@@ -29,10 +29,12 @@ import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
 import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
+import com.apps.mohb.voltaki.fragments.dialogs.BackupAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ItemDeleteAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ListsTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ReplaceLocationAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.RestoreAlertFragment;
 import com.apps.mohb.voltaki.lists.BookmarksListAdapter;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
@@ -45,6 +47,8 @@ import java.io.IOException;
 
 public class BookmarksActivity extends AppCompatActivity implements
         BookmarkEditDialogFragment.BookmarkEditDialogListener,
+        BackupAlertFragment.BackupDialogListener,
+        RestoreAlertFragment.RestoreDialogListener,
         ItemDeleteAlertFragment.ItemDeleteDialogListener,
         ListsTipAlertFragment.ListsTipDialogListener,
         ReplaceLocationAlertFragment.ReplaceLocationDialogListener {
@@ -134,23 +138,14 @@ public class BookmarksActivity extends AppCompatActivity implements
 
             // Backup
             case R.id.action_backup_bookmarks:
-                try {
-                    bookmarksList.backupBookmarks(getApplicationContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                DialogFragment backupAlert = new BackupAlertFragment();
+                backupAlert.show(getSupportFragmentManager(), "BackupAlertFragment");
                 break;
 
             // Restore
             case R.id.action_restore_bookmarks:
-                try {
-                    bookmarksList.restoreBookmarks(getApplicationContext());
-                    // Note: notifyDataSetChanged() doesn't work properly sometimes
-                    bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
-                    bookmarksListView.setAdapter(bookmarksAdapter);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                DialogFragment restoreAlert = new RestoreAlertFragment();
+                restoreAlert.show(getSupportFragmentManager(), "RestoreAlertFragment");
                 break;
 
             // Help
@@ -231,6 +226,44 @@ public class BookmarksActivity extends AppCompatActivity implements
         // close bookmarks screen
         finish();
 
+    }
+
+
+    // BOOKMARK BACKUP DIALOG
+
+    @Override // Yes
+    public void onBackupDialogPositiveClick(DialogFragment dialog) {
+        try {
+            bookmarksList.backupBookmarks(getApplicationContext(), false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override // No
+    public void onBackupDialogNegativeClick(DialogFragment dialog) {
+        dialog.getDialog().cancel();
+    }
+
+
+    // BOOKMARK RESTORE DIALOG
+
+    @Override // Yes
+    public void onRestoreDialogPositiveClick(DialogFragment dialog) {
+        try {
+            bookmarksList.restoreBookmarks(getApplicationContext());
+            // refresh list on screen
+            // Note: notifyDataSetChanged() doesn't work properly sometimes
+            bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
+            bookmarksListView.setAdapter(bookmarksAdapter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override // No
+    public void onRestoreDialogNegativeClick(DialogFragment dialog) {
+        dialog.getDialog().cancel();
     }
 
 

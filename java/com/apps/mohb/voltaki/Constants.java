@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 7/18/16 8:50 PM
+ *  Last modified : 7/19/16 8:06 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class Constants {
     public static final String BUTTON_CLICK_ACTIONS = "BUTTON_CLICK_ACTIONS";
     public static final String HISTORY_MAX_ITEMS = "HISTORY_MAX_ITEMS";
     public static final String STATUS_BAR_ICON = "STATUS_BAR_ICON";
+    public static final String AUTO_BACKUP = "AUTO_BACKUP";
     public static final String LOC_SERV_CHECK = "LOC_SERV_CHECK";
     public static final String GPS_CHECK = "GPS_CHECK";
 
@@ -87,8 +88,8 @@ public class Constants {
     public static final int    QUESTION_ARRAY_SIZE = 1;
 
     // Vibrator
-    public static final int    VIBRATE_SHORT_TIME = 70;
-    public static final int    VIBRATE_LONG_TIME = 80;
+    public static final int    VIBRATE_SHORT_TIME = 30;
+    public static final int    VIBRATE_LONG_TIME = 70;
 
     // Notification
     public static final int    NOTIFICATION_ID = 0;
