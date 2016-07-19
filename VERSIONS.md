@@ -1,3 +1,7 @@
+####**Beta 0.2.1**
+- Added automatic backup of bookmarks
+- Improvements on user interface
+
 ####**Beta 0.1.3**
 - Added vibrate feedback to floating button
 - Added zoom level configuration.
