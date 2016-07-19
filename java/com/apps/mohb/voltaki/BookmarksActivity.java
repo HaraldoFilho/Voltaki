@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/14/16 10:15 PM
+ *  Last modified : 7/19/16 12:58 AM
  *
  *  -----------------------------------------------------------
  */
@@ -38,6 +38,9 @@ import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.map.MapSavedState;
+import com.apps.mohb.voltaki.messaging.Toasts;
+
+import java.io.IOException;
 
 
 public class BookmarksActivity extends AppCompatActivity implements
@@ -96,6 +99,8 @@ public class BookmarksActivity extends AppCompatActivity implements
             }
         });
 
+        Toasts.createBackupBookmarks();
+
     }
 
     @Override
@@ -127,15 +132,35 @@ public class BookmarksActivity extends AppCompatActivity implements
 
         switch (id) {
 
+            // Backup
+            case R.id.action_backup_bookmarks:
+                try {
+                    bookmarksList.backupBookmarks(getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            // Restore
+            case R.id.action_restore_bookmarks:
+                try {
+                    bookmarksList.restoreBookmarks(getApplicationContext());
+                    // Note: notifyDataSetChanged() doesn't work properly sometimes
+                    bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
+                    bookmarksListView.setAdapter(bookmarksAdapter);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+
             // Help
-            case R.id.action_help_bookmarks: {
+            case R.id.action_help_bookmarks:
                 Intent intent = new Intent(this, HelpActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("url", getString(R.string.url_help_bookmarks));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
-            }
 
         }
 

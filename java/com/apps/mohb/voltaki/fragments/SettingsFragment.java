@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 7/15/16 7:16 AM
+ *  Last modified : 7/18/16 8:30 PM
  *
  *  -----------------------------------------------------------
  */
@@ -46,6 +46,7 @@ public class SettingsFragment extends PreferenceFragment {
         // guidelines.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_nav_option)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_nav_mode)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_zoom_level)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_status_bar_icon)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_max_history_items)));
     }

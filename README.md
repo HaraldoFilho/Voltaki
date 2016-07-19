@@ -32,6 +32,7 @@
 - Internet
 - Async Task
 - Json Write/Read
+- File Write/Read
 - Shared Preferences
 - Google Play Services API
 - Google Maps API

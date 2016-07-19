@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/14/16 11:48 PM
+ *  Last modified : 7/18/16 8:34 PM
  *
  *  -----------------------------------------------------------
  */
@@ -380,16 +380,33 @@ public class MainFragment extends Fragment implements
         // set that no location was get yet
         isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
 
-        // set the map zoom level according to the default navigation mode
-        if(defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-            zoomLevel = Constants.MAP_WALK_ZOOM_LEVEL;
-        } else
-        if(defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
-            zoomLevel = Constants.MAP_DRIVE_ZOOM_LEVEL;
+        // if default zoom level is high
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+            .matches(getString(R.string.set_def_zoom_high))) {
+                zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+        } else // if default zoom level is mid
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+            .matches(getString(R.string.set_def_zoom_mid))) {
+                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+        } else // if default zoom level is low
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+            .matches(getString(R.string.set_def_zoom_low))) {
+                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
         }
-        else {
-            zoomLevel = Constants.MAP_BICYCLE_ZOOM_LEVEL;
+        else { // if default zoom level is auto
+            // set the map zoom level according to the default navigation mode
+            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+                zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+            } else
+            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+            }
+            else {
+                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+            }
         }
+
+
 
         // if button is RED or ORANGE go to default location (0,0), hide floating button
         // and disable "add to bookmarks" options menu item on main screen
@@ -700,6 +717,10 @@ public class MainFragment extends Fragment implements
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // if vibrate feedback is enabled on settings, vibrate when button is clicked
+                if ((vibrator.hasVibrator()) && (sharedPref.getBoolean(Constants.BUTTON_VIBRATE, true))) {
+                    vibrator.vibrate(Constants.VIBRATE_SHORT_TIME);
+                }
                 // if button is YELLOW or GREEN, set red marker back to the center of the map on current location
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                         > ButtonEnums.convertEnumToInt(ButtonStatus.GETTING_LOCATION)) {
@@ -719,6 +740,10 @@ public class MainFragment extends Fragment implements
                     // if button is not GREEN reset the map
                     if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                             < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
+                        // if vibrate feedback is enabled on settings, vibrate when button is clicked
+                        if ((vibrator.hasVibrator()) && (sharedPref.getBoolean(Constants.BUTTON_VIBRATE, true))) {
+                            vibrator.vibrate(Constants.VIBRATE_SHORT_TIME);
+                        }
                         mListener.onReset();
                     }
                 }

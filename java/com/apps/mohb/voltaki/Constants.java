@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 7/12/16 9:02 PM
+ *  Last modified : 7/18/16 8:50 PM
  *
  *  -----------------------------------------------------------
  */
@@ -22,6 +22,7 @@ public class Constants {
     // Settings preferences
     public static final String NAVIGATION_OPTION = "NAVIGATION_OPTION";
     public static final String DEFAULT_NAV_MODE  = "DEFAULT_NAV_MODE";
+    public static final String DEFAULT_ZOOM_LEVEL  = "DEFAULT_ZOOM_LEVEL";
     public static final String BUTTON_VIBRATE = "BUTTON_VIBRATE";
     public static final String BUTTON_CLICK_ACTIONS = "BUTTON_CLICK_ACTIONS";
     public static final String HISTORY_MAX_ITEMS = "HISTORY_MAX_ITEMS";
@@ -53,11 +54,12 @@ public class Constants {
     public static final String JSON_ADDRESS = "address";
     public static final String JSON_LATITUDE = "latitude";
     public static final String JSON_LONGITUDE = "longitude";
+    public static final String BOOKMARKS_BACKUP_FILE = "bookmarks.json";
 
     // Location
-    public static final int    MAP_WALK_ZOOM_LEVEL    = 16;
-    public static final int    MAP_BICYCLE_ZOOM_LEVEL = 14;
-    public static final int    MAP_DRIVE_ZOOM_LEVEL   = 13;
+    public static final int    MAP_HIGH_ZOOM_LEVEL = 16;
+    public static final int    MAP_MID_ZOOM_LEVEL  = 14;
+    public static final int    MAP_LOW_ZOOM_LEVEL  = 13;
 
     public static final int    LAT_LNG_MAX_LENGTH = 15;
 

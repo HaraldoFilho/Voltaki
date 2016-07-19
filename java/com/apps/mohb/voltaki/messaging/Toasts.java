@@ -24,6 +24,7 @@ import com.apps.mohb.voltaki.R;
 
 public class Toasts {
 
+    private static Toast backupBookmarks;
     private static Toast bookmarkAdded;
     private static Toast legalNotices;
     private static Toast helpPage;
@@ -33,6 +34,28 @@ public class Toasts {
 
     public static void setContext(Context c) {
         context = c;
+    }
+
+
+    // Toast to notify that a bookmarks were backed up
+
+    public static void createBackupBookmarks() {
+        backupBookmarks = Toast.makeText((context), "", Toast.LENGTH_SHORT);
+        backupBookmarks.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
+    }
+
+    public static void setBackupBookmarksText(String text) {
+        backupBookmarks.setText(text);
+    }
+
+    public static void showBackupBookmarks() {
+        backupBookmarks.show();
+    }
+
+    public static void cancelBackupBookmarks() {
+        if (backupBookmarks != null) {
+            backupBookmarks.cancel();
+        }
     }
 
 
@@ -97,6 +120,7 @@ public class Toasts {
     // Cancel all toasts
 
     public static void cancelAllToasts() {
+        cancelBackupBookmarks();
         cancelBookmarkAdded();
         cancelLegalNotices();
         cancelHelpPage();

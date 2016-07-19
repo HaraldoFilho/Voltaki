@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/11/16 9:15 PM
+ *  Last modified : 7/19/16 1:04 AM
  *
  *  -----------------------------------------------------------
  */
@@ -14,13 +14,18 @@ package com.apps.mohb.voltaki.lists;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.R;
+import com.apps.mohb.voltaki.messaging.Toasts;
 
 
 // This class manages the Bookmarks and History lists
@@ -164,6 +169,68 @@ public class Lists {
         this.bookmarkEditText = bookmarkEditText;
     }
 
+
+    public void backupBookmarks(Context context) throws IOException {
+        if (isExternalStorageWritable()) {
+            if (!getBackupDirectory(context).exists()) {
+                getBackupDirectory(context).mkdir();
+            }
+            File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+            if (file.exists()) {
+                file.delete();
+            }
+            if (file.createNewFile()) {
+                FileWriter fileWriter = new FileWriter(file);
+                String jsonString = listsSavedState.getBookmarksJsonState();
+                fileWriter.write(jsonString);
+                fileWriter.close();
+                Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + file.toString());
+                Toasts.showBackupBookmarks();
+            }
+
+        }
+        else {
+            Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
+            Toasts.showBackupBookmarks();
+        }
+    }
+
+    public void restoreBookmarks(Context context) throws IOException {
+        if (isExternalStorageReadable()) {
+            if ((getBackupDirectory(context).exists())) {
+                File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+                if (file.exists()) {
+                    FileReader fileReader = new FileReader(file);
+                    int fileLength = (int) file.length();
+                    char jsonCharArray[] = new char[fileLength];
+                    fileReader.read(jsonCharArray, 0, fileLength);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String jsonString = stringBuilder.append(jsonCharArray).toString();
+                    listsSavedState.setBookmarksState(jsonString);
+                    bookmarks = listsSavedState.getBookmarksState();
+                }
+                else {
+                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
+                    Toasts.showBackupBookmarks();
+                }
+            }
+            else {
+                Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
+                Toasts.showBackupBookmarks();
+            }
+        }
+        else {
+            Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
+            Toasts.showBackupBookmarks();
+
+        }
+    }
+
+    private File getBackupDirectory(Context context) {
+        File dir = Environment.getExternalStorageDirectory();
+        return new File(dir.toString() + "/" + context.getString(R.string.info_app_name));
+    }
+
     public static boolean isFlagged() {
         return flag;
     }
@@ -172,4 +239,33 @@ public class Lists {
         Lists.flag = flag;
     }
 
+
+
+    // These two methods were extracted from:
+    // https://developer.android.com/guide/topics/data/data-storage.html#filesExternal
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
 }
+
+/*
+ * Portions of this page are reproduced from work created and shared by the Android Open Source Project
+ * and used according to terms described in the Creative Commons 2.5 Attribution License.
+ */

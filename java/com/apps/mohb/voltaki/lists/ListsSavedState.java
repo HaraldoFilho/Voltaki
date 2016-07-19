@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ListsSavedState.java
- *  Last modified : 7/11/16 9:15 PM
+ *  Last modified : 7/18/16 9:58 PM
  *
  *  -----------------------------------------------------------
  */
@@ -45,6 +45,11 @@ public class ListsSavedState {
         editor.commit();
     }
 
+    public void setBookmarksState(String jsonBookmarks) {
+        editor.putString(Constants.BOOKMARKS, jsonBookmarks);
+        editor.commit();
+    }
+
     // get bookmarks list from memory through a json string
     // if list was not saved yet creates a new array list
     public ArrayList<LocationItem> getBookmarksState() throws IOException {
@@ -54,6 +59,12 @@ public class ListsSavedState {
         } else {
             return readJsonString(jsonBookmarks);
         }
+    }
+
+    // get a json string of bookmarks list from memory
+    public String getBookmarksJsonState() {
+        String jsonBookmarks = preferences.getString(Constants.BOOKMARKS, "");
+        return jsonBookmarks;
     }
 
     // save history list on memory through a json string

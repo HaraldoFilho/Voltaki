@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonCurrentState.java
- *  Last modified : 7/17/16 12:19 PM
+ *  Last modified : 7/18/16 8:30 PM
  *
  *  -----------------------------------------------------------
  */
@@ -45,15 +45,15 @@ public class ButtonCurrentState {
         buttonStatus = status;
     }
 
-    @TargetApi(23)
+    @TargetApi(Build.VERSION_CODES.M)
     public static void setButtonProperties(Context context, int color, int textColor, int text, float textSize, boolean enabled) {
         if (button != null) {
             // check sdk version to apply correct methods
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // Lollipop or older
                 button.setBackgroundColor(context.getResources().getColor(color));
                 button.setTextColor(context.getResources().getColor(textColor));
             }
-            else {
+            else { // Marshmallow or newer
                 button.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));
                 button.setTextColor(context.getResources().getColor(textColor, context.getTheme()));
             }
