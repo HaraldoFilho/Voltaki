@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : GpsDisabledAlertFragment.java
- *  Last modified : 7/8/16 3:05 AM
+ *  Last modified : 7/19/16 10:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -15,6 +15,7 @@ package com.apps.mohb.voltaki.fragments.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
@@ -36,23 +37,29 @@ public class GpsDisabledAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_better_gps)
-                .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mListener.onAlertGpsDialogPositiveClick(GpsDisabledAlertFragment.this);
-                    }
-                })
-                .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mListener.onAlertGpsDialogNegativeClick(GpsDisabledAlertFragment.this);
-                    }
-                })
-                .setNeutralButton(R.string.alert_no_check, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mListener.onAlertGpsDialogNeutralClick(GpsDisabledAlertFragment.this);
-                    }
-                });
+        // check if android version is LOLLIPOP or lower
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_better_gps);
+        }
+        else { // version is MARSHMALLOW or higher
+            alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_no_gps);
+        }
+        alertDialogBuilder.setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mListener.onAlertGpsDialogPositiveClick(GpsDisabledAlertFragment.this);
+            }
+        })
+        .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mListener.onAlertGpsDialogNegativeClick(GpsDisabledAlertFragment.this);
+            }
+        })
+        .setNeutralButton(R.string.alert_no_check, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                mListener.onAlertGpsDialogNeutralClick(GpsDisabledAlertFragment.this);
+            }
+        });
 
         return alertDialogBuilder.create();
 

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/19/16 7:48 PM
+ *  Last modified : 7/19/16 10:01 PM
  *
  *  -----------------------------------------------------------
  */
@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -39,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.google.android.gms.common.ConnectionResult;
@@ -208,7 +210,7 @@ public class MainFragment extends Fragment implements
 
         try { // load main fragment view into main activity
             rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+            hideFloatingButton();
             // create map and initialize it
             MapsInitializer.initialize(this.getActivity());
             mMapView = (MapView) rootView.findViewById(R.id.map);
@@ -262,6 +264,8 @@ public class MainFragment extends Fragment implements
                         }
                         // add location item to history list
                         lists.addItemToHistory(locationItem);
+                        // save map state on memory
+                        saveMapState();
                         // if status bar icon is not disabled create and show it
                         if (!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
                                 .matches(getString(R.string.set_status_bar_icon_disabled))) {
@@ -356,8 +360,8 @@ public class MainFragment extends Fragment implements
                 break;
 
             case COME_BACK_HERE:
-                ButtonCurrentState.setButtonComeBack(getContext());
-                showFloatingButton();
+                ButtonCurrentState.setButtonGetLocation(getContext());
+                hideFloatingButton();
                 break;
 
             case GO_BACK:
@@ -517,9 +521,18 @@ public class MainFragment extends Fragment implements
 
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied.
-                        // update map
-                        updateMap();
+                        // check if android version is MARSHMALLOW or higher and gps is disabled
+                        // if true, show dialog to turn on gps
+                        // this is to circumvent MARSHMALLOW not displaying increase precision dialog when gps is disabled
+                        if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)&&(!mapCurrentState.isGpsEnabled())
+                                &&(sharedPref.getBoolean(Constants.GPS_CHECK, true))) {
+                            DialogFragment dialog = new GpsDisabledAlertFragment();
+                            dialog.setCancelable(false);
+                            dialog.show(getFragmentManager(), "GpsDisabledAlertFragment");
+                        }
+                        else { // All location settings are satisfied
+                            updateMap();
+                        }
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
@@ -530,6 +543,7 @@ public class MainFragment extends Fragment implements
                             // if button is not GREEN
                             if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
+                                hideFloatingButton();
                                 status.startResolutionForResult(
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
@@ -559,7 +573,7 @@ public class MainFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        // save button state on memory
+       // save button state on memory
         buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
         // save map state on memory
         saveMapState();
@@ -680,8 +694,8 @@ public class MainFragment extends Fragment implements
         // if button is not GREEN, start location updates and hide floating button
         if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
-            startLocationUpdates();
             hideFloatingButton();
+            startLocationUpdates();
         } else { // stop location updates, show floating button and set saved location on map
             stopLocationUpdates();
             showFloatingButton();

@@ -1,3 +1,7 @@
+####**Beta 0.2.2**
+- Improvements on user interface for Marshmallow (6.x)
+- Fixed bugs.
+
 ####**Beta 0.2.1**
 - Added automatic backup of bookmarks
 - Improvements on user interface
