@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/19/16 7:50 PM
+ *  Last modified : 7/20/16 9:54 PM
  *
  *  -----------------------------------------------------------
  */
@@ -186,23 +186,20 @@ public class Lists {
                 getBackupDirectory(context).mkdir();
             }
             // full path backup file name
-            File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+            File backupFile = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
             // if file already exists delete it
-            if (file.exists()) {
-                file.delete();
+            if (backupFile.exists()) {
+                backupFile.delete();
             }
             // check if file is created successfully
-            if (file.createNewFile()) {
-                // create a writer to file
-                FileWriter fileWriter = new FileWriter(file);
+            if (backupFile.createNewFile()) {
                 // get json string from memory
                 String jsonString = listsSavedState.getBookmarksJsonState();
-                // write json string to file
-                fileWriter.write(jsonString);
-                fileWriter.close();
+                // write json string to backup file
+                writeStringToFile(jsonString, backupFile);
                 // if auto backup is not enabled show toast with confirmation and the backup file full path
                 if(!auto) {
-                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + file.toString());
+                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + backupFile.toString());
                     Toasts.showBackupBookmarks();
                 }
             }
@@ -222,20 +219,10 @@ public class Lists {
             // check if backup directory exists
             if ((getBackupDirectory(context).exists())) {
                 // full path backup file name
-                File file = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
+                File backupFile = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
                 // check if backup file exists
-                if (file.exists()) {
-                    // create a reader from file
-                    FileReader fileReader = new FileReader(file);
-                    // get file length in characters
-                    int fileLength = (int) file.length();
-                    // create an array of characters with the length of file
-                    char jsonCharArray[] = new char[fileLength];
-                    // read file and put data in the array of characters
-                    fileReader.read(jsonCharArray, 0, fileLength);
-                    // convert the array of characters into a string
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String jsonString = stringBuilder.append(jsonCharArray).toString();
+                if (backupFile.exists()) {
+                    String jsonString = readStringFromFile(backupFile);
                     // save json bookmarks list in memory
                     listsSavedState.setBookmarksState(jsonString);
                     // get bookmarks list from memory
@@ -256,6 +243,25 @@ public class Lists {
             Toasts.showBackupBookmarks();
 
         }
+    }
+
+    private void writeStringToFile(String string, File file) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        // write string to file
+        fileWriter.write(string);
+        fileWriter.close();
+    }
+
+    private String readStringFromFile(File file) throws IOException {
+        FileReader fileReader = new FileReader(file);
+        int fileLength = (int) file.length();
+        char charArray[] = new char[fileLength];
+        // read file and put data in the array of characters
+        fileReader.read(charArray, 0, fileLength);
+        fileReader.close();
+        // convert the array of characters into a string and return it
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(charArray).toString();
     }
 
     private File getBackupDirectory(Context context) {

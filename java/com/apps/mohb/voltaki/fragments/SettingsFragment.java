@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 7/18/16 8:30 PM
+ *  Last modified : 7/20/16 10:08 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,7 +27,9 @@ import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.MainActivity;
 import com.apps.mohb.voltaki.R;
 import com.apps.mohb.voltaki.lists.Lists;
+import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.messaging.Notification;
+import com.google.android.gms.maps.GoogleMap;
 
 // Setting fragment that shows the options in the settings screen
 
@@ -44,6 +46,7 @@ public class SettingsFragment extends PreferenceFragment {
         // to their values. When their values change, their summaries are
         // updated to reflect the new value, per the Android Design
         // guidelines.
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_map_type)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_nav_option)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_nav_mode)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_zoom_level)));
@@ -105,7 +108,6 @@ public class SettingsFragment extends PreferenceFragment {
                 Notification notification = new Notification();
                 notification.changeNotificationIconColor(getActivity().getApplicationContext(),
                         stringValue, Constants.NOTIFICATION_ID);
-
             } else
             // if value changed is the maximum history items then calls method that will
             // will update history list number of items to the value set
@@ -113,6 +115,16 @@ public class SettingsFragment extends PreferenceFragment {
                     stringValue.matches(getString(R.string.set_max_history_items_10)) ||
                     stringValue.matches(getString(R.string.set_max_history_items_unlimited))) {
                 updateHistoryMaxItems();
+            } else
+            // if value changed is the map type then update map
+            if (stringValue.matches(getString(R.string.set_map_type_normal))) {
+                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            } else
+            if (stringValue.matches(getString(R.string.set_map_type_satellite))) {
+                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            } else
+            if (stringValue.matches(getString(R.string.set_map_type_hybrid))) {
+                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             }
 
             if (preference instanceof ListPreference) {

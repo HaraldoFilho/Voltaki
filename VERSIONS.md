@@ -1,3 +1,8 @@
+####**Beta 0.2.3**
+- Added settings option to change the map type.
+- Fixed minor bugs.
+- Minor improvements on user interface.
+
 ####**Beta 0.2.2**
 - Improvements on user interface for Marshmallow (6.x)
 - Fixed bugs.

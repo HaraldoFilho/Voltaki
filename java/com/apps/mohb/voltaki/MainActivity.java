@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/19/16 9:51 AM
+ *  Last modified : 7/20/16 8:42 PM
  *
  *  -----------------------------------------------------------
  */
@@ -301,6 +301,9 @@ public class MainActivity extends AppCompatActivity implements
 
         getMenuInflater().inflate(R.menu.main, menu);
 
+        // create "add to bookmarks" menu item
+        menuItemAddBookmark = menu.findItem(R.id.action_add_bookmark);
+
         // create reset menu item and set text according to button state
         menuItemReset = menu.findItem(R.id.action_reset);
         if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
@@ -310,16 +313,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         else {
             menuItemReset.setTitle(R.string.action_reset);
-        }
-
-        // create "add to bookmarks" menu item and set enable status according to button state
-        menuItemAddBookmark = menu.findItem(R.id.action_add_bookmark);
-        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
-            ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)) {
-            menuItemAddBookmark.setEnabled(false);
-        }
-        else {
-            menuItemAddBookmark.setEnabled(true);
         }
 
         return true;
@@ -589,7 +582,7 @@ public class MainActivity extends AppCompatActivity implements
                             gpsDisabledDialog.setCancelable(false);
                             gpsDisabledDialog.show(getSupportFragmentManager(), "GpsDisabledAlertFragment");
                         }
-                    }
+                    } else
                     // if at least one location provider is available start location updates
                     if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
                         startLocationUpdates();

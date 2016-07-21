@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/19/16 10:01 PM
+ *  Last modified : 7/20/16 9:59 PM
  *
  *  -----------------------------------------------------------
  */
@@ -389,57 +389,35 @@ public class MainFragment extends Fragment implements
                 .matches(getString(R.string.set_def_zoom_high))) {
             zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                    .matches(getString(R.string.set_def_zoom_mid))) {
-                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-            } else // if default zoom level is low
-                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                        .matches(getString(R.string.set_def_zoom_low))) {
-                    zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                }
-                else { // if default zoom level is auto
-                    // set the map zoom level according to the default navigation mode
-                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-                        zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-                    } else
-                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
-                        zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                    }
-                    else {
-                        zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-                    }
-                }
-
-
-
-        // if button is RED or ORANGE go to default location (0,0), hide floating button
-        // and disable "add to bookmarks" options menu item on main screen
-        if(ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                < ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
-            mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
-            hideFloatingButton();
-            mListener.onUpdateMainMenuItemAddBookmarksState(false);
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                .matches(getString(R.string.set_def_zoom_mid))) {
+            zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+        } else // if default zoom level is low
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                .matches(getString(R.string.set_def_zoom_low))) {
+            zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
         }
-        else // if button is YELLOW got to the current location, show floating button
-            // and enable "add to bookmarks" options menu item on main screen
-            if(ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                    == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)){
-                mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
-                mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
-                showFloatingButton();
-                mListener.onUpdateMainMenuItemAddBookmarksState(true);
+        else { // if default zoom level is auto
+               // set the map zoom level according to the default navigation mode
+            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+               zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+            } else
+            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
             }
-            else { // if button is GREEN got to the saved location, show floating button
-                // and enable "add to bookmarks" options menu item on main screen
-                mapCurrentState.gotoLocation(mapSavedState.getLatitude(), mapSavedState.getLongitude(), zoomLevel);
-                mapCurrentState.updateUI(mapSavedState.getLatitude(), mapSavedState.getLongitude());
-                if(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                        .matches(getString(R.string.set_status_bar_icon_disabled))) {
-                    startGoBackNotification();
-                }
-                showFloatingButton();
-                mListener.onUpdateMainMenuItemAddBookmarksState(true);
+            else {
+                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
             }
+        }
+
+        // if button is GREEN, came from a list and status bar icon is not disabled
+        // start go back notification
+        if((ButtonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK)&&(lists.isFlagged())
+            &&(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
+                    .matches(getString(R.string.set_status_bar_icon_disabled)))) {
+                lists.setFlag(false);
+                startGoBackNotification();
+        }
 
         // if none location provider is available, set button to RED
         if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
@@ -544,6 +522,8 @@ public class MainFragment extends Fragment implements
                             if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                                 hideFloatingButton();
+                                stopLocationUpdates();
+                                mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
                                 status.startResolutionForResult(
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
@@ -628,6 +608,17 @@ public class MainFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapCurrentState.googleMap = googleMap;
+        if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
+                .matches(getString(R.string.set_map_type_satellite))) {
+            MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        } else
+        if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
+                .matches(getString(R.string.set_map_type_hybrid))) {
+            MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+        else {
+            MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -645,9 +636,12 @@ public class MainFragment extends Fragment implements
 
     public void startLocationUpdates() {
 
-        // if button is not GREEN, turn button ORANGE and set default location (0,0) on map
+        // if button is not GREEN, turn button ORANGE, disable "add to bookmarks"
+        // options menu item on main screen and set default location (0,0) on map
         if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
+            hideFloatingButton();
+            mListener.onUpdateMainMenuItemAddBookmarksState(false);
             ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
             ButtonCurrentState.setButtonGetLocation(getContext());
             mapCurrentState.googleMap.clear();
