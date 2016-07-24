@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Toasts.java
- *  Last modified : 7/12/16 8:11 PM
+ *  Last modified : 7/24/16 12:06 AM
  *
  *  -----------------------------------------------------------
  */
@@ -28,6 +28,7 @@ public class Toasts {
     private static Toast bookmarkAdded;
     private static Toast legalNotices;
     private static Toast helpPage;
+    private static Toast addressNotFound;
 
     private static Context context;
 
@@ -117,6 +118,24 @@ public class Toasts {
     }
 
 
+    // Toast to notify that an address has not been found
+
+    public static void createAddressNotFound() {
+        addressNotFound = Toast.makeText((context), R.string.toast_no_address_found, Toast.LENGTH_SHORT);
+        addressNotFound.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
+    }
+
+    public static void showAddressNotFound() {
+        addressNotFound.show();
+    }
+
+    public static void cancelAddressNotFound() {
+        if (addressNotFound != null) {
+            addressNotFound.cancel();
+        }
+    }
+
+
     // Cancel all toasts
 
     public static void cancelAllToasts() {
@@ -124,6 +143,7 @@ public class Toasts {
         cancelBookmarkAdded();
         cancelLegalNotices();
         cancelHelpPage();
+        cancelAddressNotFound();
     }
 
 }

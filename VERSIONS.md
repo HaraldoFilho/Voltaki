@@ -1,3 +1,6 @@
+####**Beta 0.2.4**
+- Minor improvements on user interface.
+
 ####**Beta 0.2.3**
 - Added settings option to change the map type.
 - Fixed minor bugs.

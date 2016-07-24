@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/20/16 9:59 PM
+ *  Last modified : 7/24/16 12:37 AM
  *
  *  -----------------------------------------------------------
  */
@@ -43,6 +43,7 @@ import android.widget.Button;
 import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.map.MapCurrentState;
+import com.apps.mohb.voltaki.messaging.Toasts;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -105,6 +106,7 @@ public class MainFragment extends Fragment implements
 
     private Lists lists;
     private Vibrator vibrator;
+    private static boolean addressNotFound;
 
 
     // The code of this inner class was extracted and modified from:
@@ -125,8 +127,13 @@ public class MainFragment extends Fragment implements
             mAddressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
             if (resultCode == FetchAddressIntentService.SUCCESS_RESULT) {
                 MapCurrentState.setLocationAddress(mAddressOutput);
+                addressNotFound = false;
             } else {
                 MapCurrentState.setLocationAddress("");
+                if(!addressNotFound) {
+                    Toasts.showAddressNotFound();
+                    addressNotFound = true;
+                }
             }
 
         }
@@ -202,6 +209,9 @@ public class MainFragment extends Fragment implements
 
         // when updating location, this variable is used to check if it is the first location value taken
         isFirstLocationGet = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+
+        // create toast for address not found message
+        Toasts.createAddressNotFound();
 
     }
 
@@ -383,6 +393,9 @@ public class MainFragment extends Fragment implements
 
         // set that no location was get yet
         isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
+
+        // set that no address info was get yet
+        addressNotFound = false;
 
         // if default zoom level is high
         if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))

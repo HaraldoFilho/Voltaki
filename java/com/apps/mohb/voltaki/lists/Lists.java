@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/20/16 9:54 PM
+ *  Last modified : 7/24/16 12:06 AM
  *
  *  -----------------------------------------------------------
  */
@@ -177,6 +177,14 @@ public class Lists {
         this.bookmarkEditText = bookmarkEditText;
     }
 
+    public static boolean isFlagged() {
+        return flag;
+    }
+
+    public static void setFlag(boolean flag) {
+        Lists.flag = flag;
+    }
+
 
     public void backupBookmarks(Context context, boolean auto) throws IOException {
         // check if it is possible to write on external storage
@@ -266,19 +274,10 @@ public class Lists {
 
     private File getBackupDirectory(Context context) {
         // get external storage root directory
-        File dir = Environment.getExternalStorageDirectory();
+        String dir = Environment.getExternalStorageDirectory().toString();
         // construct the backup directory with the application name
-        return new File(dir.toString() + "/" + context.getString(R.string.info_app_name));
+        return new File(dir + "/" + context.getString(R.string.info_app_name));
     }
-
-    public static boolean isFlagged() {
-        return flag;
-    }
-
-    public static void setFlag(boolean flag) {
-        Lists.flag = flag;
-    }
-
 
 
     // These two methods were extracted from:
