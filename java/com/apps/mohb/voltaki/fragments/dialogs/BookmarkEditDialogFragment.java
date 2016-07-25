@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarkEditDialogFragment.java
- *  Last modified : 6/30/16 10:34 PM
+ *  Last modified : 7/24/16 11:56 PM
  *
  *  -----------------------------------------------------------
  */
@@ -50,8 +50,13 @@ public class BookmarkEditDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.setTitle(R.string.dialog_location_name)
-                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+        if(lists.isEditingAddress()) {
+            builder.setTitle(R.string.dialog_location_address);
+        }
+        else {
+            builder.setTitle(R.string.dialog_location_name);
+        }
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         lists.setBookmarkEditText(text.getText().toString());
                         mListener.onBookmarkEditDialogPositiveClick(BookmarkEditDialogFragment.this);

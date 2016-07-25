@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Toasts.java
- *  Last modified : 7/24/16 12:06 AM
+ *  Last modified : 7/24/16 11:34 PM
  *
  *  -----------------------------------------------------------
  */
@@ -28,7 +28,8 @@ public class Toasts {
     private static Toast bookmarkAdded;
     private static Toast legalNotices;
     private static Toast helpPage;
-    private static Toast addressNotFound;
+    private static Toast locationAddress;
+    private static Toast searchAddress;
 
     private static Context context;
 
@@ -60,7 +61,7 @@ public class Toasts {
     }
 
 
-    // Toast to notify that a bookmark was addded
+    // Toast to notify that a bookmark was added
 
     public static void createBookmarkAdded() {
         bookmarkAdded = Toast.makeText((context), R.string.toast_added_bookmark, Toast.LENGTH_SHORT);
@@ -118,20 +119,46 @@ public class Toasts {
     }
 
 
-    // Toast to notify that an address has not been found
+    // Toast to notify that an address has been found or not
 
-    public static void createAddressNotFound() {
-        addressNotFound = Toast.makeText((context), R.string.toast_no_address_found, Toast.LENGTH_SHORT);
-        addressNotFound.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
+    public static void createLocationAddress() {
+        locationAddress = Toast.makeText((context), "", Toast.LENGTH_SHORT);
+        locationAddress.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
     }
 
-    public static void showAddressNotFound() {
-        addressNotFound.show();
+    public static void setLocationAddressText(String text) {
+        locationAddress.setText(text);
     }
 
-    public static void cancelAddressNotFound() {
-        if (addressNotFound != null) {
-            addressNotFound.cancel();
+    public static void setLocationAddressText(int textId) {
+        locationAddress.setText(textId);
+    }
+
+
+    public static void showLocationAddress() {
+        locationAddress.show();
+    }
+
+    public static void cancelLocationAddress() {
+        if (locationAddress != null) {
+            locationAddress.cancel();
+        }
+    }
+
+    // Toast to notify that is searching for address
+
+    public static void createSearchAddress() {
+        searchAddress = Toast.makeText((context), R.string.toast_search_address, Toast.LENGTH_SHORT);
+        searchAddress.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
+    }
+
+    public static void showSearchAddress() {
+        searchAddress.show();
+    }
+
+    public static void cancelSearchAddress() {
+        if (searchAddress != null) {
+            searchAddress.cancel();
         }
     }
 
@@ -143,7 +170,8 @@ public class Toasts {
         cancelBookmarkAdded();
         cancelLegalNotices();
         cancelHelpPage();
-        cancelAddressNotFound();
+        cancelLocationAddress();
+        cancelSearchAddress();
     }
 
 }

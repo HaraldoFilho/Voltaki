@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/24/16 12:37 AM
+ *  Last modified : 7/24/16 11:34 PM
  *
  *  -----------------------------------------------------------
  */
@@ -106,6 +106,7 @@ public class MainFragment extends Fragment implements
 
     private Lists lists;
     private Vibrator vibrator;
+    private static boolean addressFound;
     private static boolean addressNotFound;
 
 
@@ -127,15 +128,21 @@ public class MainFragment extends Fragment implements
             mAddressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
             if (resultCode == FetchAddressIntentService.SUCCESS_RESULT) {
                 MapCurrentState.setLocationAddress(mAddressOutput);
+                if(!addressFound) { // is the first time that an address has been found
+                    Toasts.setLocationAddressText(mAddressOutput);
+                    Toasts.showLocationAddress();
+                    addressFound = true;
+                }
                 addressNotFound = false;
             } else {
                 MapCurrentState.setLocationAddress("");
-                if(!addressNotFound) {
-                    Toasts.showAddressNotFound();
+                if(!addressNotFound) { // is the first time that an address has not been found
+                    Toasts.setLocationAddressText(R.string.toast_no_address_found);
+                    Toasts.showLocationAddress();
                     addressNotFound = true;
                 }
+                addressFound = false;
             }
-
         }
 
         @Override
@@ -210,8 +217,9 @@ public class MainFragment extends Fragment implements
         // when updating location, this variable is used to check if it is the first location value taken
         isFirstLocationGet = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
-        // create toast for address not found message
-        Toasts.createAddressNotFound();
+        // create toasts for address message
+        Toasts.createLocationAddress();
+        Toasts.createSearchAddress();
 
     }
 
@@ -476,7 +484,11 @@ public class MainFragment extends Fragment implements
                     showFloatingButton();
                     // enable "add to bookmarks" options menu item on main screen
                     mListener.onUpdateMainMenuItemAddBookmarksState(true);
-                    // register that the first update was already taken
+                    // if geocoder is present show message of searching for address
+                    if (Geocoder.isPresent()) {
+                        Toasts.showSearchAddress();
+                    }
+                   // register that the first update was already taken
                     isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, false).commit();
                 }
 

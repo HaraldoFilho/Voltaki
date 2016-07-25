@@ -1,3 +1,7 @@
+####**Beta 0.2.5**
+- Improvements on user interface.
+- Added bookmark edit address feature.
+
 ####**Beta 0.2.4**
 - Minor improvements on user interface.
 

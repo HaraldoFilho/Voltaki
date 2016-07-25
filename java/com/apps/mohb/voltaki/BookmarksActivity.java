@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/19/16 7:50 PM
+ *  Last modified : 7/25/16 12:00 AM
  *
  *  -----------------------------------------------------------
  */
@@ -176,20 +176,33 @@ public class BookmarksActivity extends AppCompatActivity implements
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        LocationItem locationItem;
+        DialogFragment dialog;
+
         switch (item.getItemId()) {
 
-            // Edit
-            case R.id.edit:
-                LocationItem locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
+            // Edit name
+            case R.id.editName:
+                locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
                 bookmarksList.setBookmarkEditText(locationItem.getLocationName());
-                DialogFragment dialog = new BookmarkEditDialogFragment();
+                bookmarksList.setEditingAddress(false);
+                dialog = new BookmarkEditDialogFragment();
+                dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
+                return true;
+
+            // Edit address
+            case R.id.editAddress:
+                locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
+                bookmarksList.setBookmarkEditText(locationItem.getLocationAddress());
+                bookmarksList.setEditingAddress(true);
+                dialog = new BookmarkEditDialogFragment();
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
                 return true;
 
             // Delete
             case R.id.delete:
-                DialogFragment alert = new ItemDeleteAlertFragment();
-                alert.show(getSupportFragmentManager(), "ItemDeleteAlertFragment");
+                dialog = new ItemDeleteAlertFragment();
+                dialog.show(getSupportFragmentManager(), "ItemDeleteAlertFragment");
                 return true;
 
             default:
@@ -273,7 +286,12 @@ public class BookmarksActivity extends AppCompatActivity implements
     public void onBookmarkEditDialogPositiveClick(DialogFragment dialog) {
         // update item and refresh list on screen
         // Note: notifyDataSetChanged() doesn't work properly sometimes
-        bookmarksList.updateLocationName(menuInfo.position);
+        if(bookmarksList.isEditingAddress()) {
+            bookmarksList.updateLocationAddress(menuInfo.position);
+        }
+        else {
+            bookmarksList.updateLocationName(menuInfo.position);
+        }
         bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
         bookmarksListView.setAdapter(bookmarksAdapter);
     }

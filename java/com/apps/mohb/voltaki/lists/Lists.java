@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/24/16 12:06 AM
+ *  Last modified : 7/24/16 11:56 PM
  *
  *  -----------------------------------------------------------
  */
@@ -37,6 +37,7 @@ public class Lists {
 
     private int historyMaxItems;
     private static String bookmarkEditText;
+    private static boolean editingAddress;
     private static boolean flag;
 
     private SharedPreferences sharedPref;
@@ -120,6 +121,11 @@ public class Lists {
         saveState();
     }
 
+    public void updateLocationAddress(int position) {
+        bookmarks.get(position).setLocationAddress(bookmarkEditText);
+        saveState();
+    }
+
     public void removeItemFromHistory(int position) {
         history.remove(position);
         saveState();
@@ -175,6 +181,14 @@ public class Lists {
 
     public void setBookmarkEditText(String bookmarkEditText) {
         this.bookmarkEditText = bookmarkEditText;
+    }
+
+    public boolean isEditingAddress() {
+        return editingAddress;
+    }
+
+    public void setEditingAddress(boolean value) {
+        editingAddress = value;
     }
 
     public static boolean isFlagged() {
