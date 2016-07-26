@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ListsSavedState.java
- *  Last modified : 7/18/16 9:58 PM
+ *  Last modified : 7/25/16 11:29 PM
  *
  *  -----------------------------------------------------------
  */
@@ -31,11 +31,13 @@ public class ListsSavedState {
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private Context context;
 
 
     public ListsSavedState(Context context) {
         preferences = context.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         editor = preferences.edit();
+        this.context = context;
     }
 
     // save bookmarks list on memory through a json string
@@ -107,10 +109,10 @@ public class ListsSavedState {
     // write a single location to json string
     public void writeLocationItem(JsonWriter writer, LocationItem locationItem) throws IOException {
         writer.beginObject();
-        writer.name(Constants.JSON_NAME).value(locationItem.getLocationName());
-        writer.name(Constants.JSON_ADDRESS).value(locationItem.getLocationAddress());
-        writer.name(Constants.JSON_LATITUDE).value(locationItem.getLocationLatitude());
-        writer.name(Constants.JSON_LONGITUDE).value(locationItem.getLocationLongitude());
+        writer.name(Constants.JSON_NAME).value(locationItem.getName());
+        writer.name(Constants.JSON_ADDRESS).value(locationItem.getAddress());
+        writer.name(Constants.JSON_LATITUDE).value(locationItem.getLatitude());
+        writer.name(Constants.JSON_LONGITUDE).value(locationItem.getLongitude());
         writer.endObject();
     }
 
@@ -164,7 +166,12 @@ public class ListsSavedState {
 
         }
         jsonReader.endObject();
-        return new LocationItem(locationName, locationAddress, locationLatitude, locationLongitude);
+        LocationItem locationItem = new LocationItem(this.context);
+        locationItem.setName(locationName);
+        locationItem.setAddress(locationAddress);
+        locationItem.setLatitude(locationLatitude);
+        locationItem.setLongitude(locationLongitude);
+        return locationItem;
     }
 
 }

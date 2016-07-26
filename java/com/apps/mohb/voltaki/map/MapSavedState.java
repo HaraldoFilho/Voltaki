@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapSavedState.java
- *  Last modified : 7/12/16 1:47 AM
+ *  Last modified : 7/25/16 10:30 PM
  *
  *  -----------------------------------------------------------
  */
@@ -50,7 +50,7 @@ public class MapSavedState {
     }
 
     public String getAddress() {
-        return preferences.getString(Constants.MAP_ADDRESS, Constants.DEFAULT_MAP_ADDRESS);
+        return preferences.getString(Constants.MAP_ADDRESS, Constants.MAP_NO_ADDRESS);
     }
 
     // This method returns the intent that will call Google Maps set according to preferences defined in Settings

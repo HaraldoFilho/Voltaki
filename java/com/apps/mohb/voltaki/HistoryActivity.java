@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryActivity.java
- *  Last modified : 7/14/16 11:48 PM
+ *  Last modified : 7/26/16 12:09 AM
  *
  *  -----------------------------------------------------------
  */
@@ -182,6 +182,17 @@ public class HistoryActivity extends AppCompatActivity implements
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
                 return true;
 
+            // Share
+            case R.id.share:
+                LocationItem historyItem = historyList.getItemFromHistory(menuInfo.position);
+                LocationItem locationItem = new LocationItem(this);
+                locationItem.setName(historyItem.getName());
+                locationItem.setAddress(historyItem.getAddress());
+                locationItem.setLatitude(historyItem.getLatitude());
+                locationItem.setLongitude(historyItem.getLongitude());
+                locationItem.share();
+                return true;
+
             // Delete
             case R.id.delete:
                 DialogFragment alert = new ItemDeleteAlertFragment();
@@ -210,9 +221,9 @@ public class HistoryActivity extends AppCompatActivity implements
 
         // save location from item on memory
         mapSavedState.setLocationStatus(
-                historyList.getItemFromHistory(position).getLocationLatitude(),
-                historyList.getItemFromHistory(position).getLocationLongitude(),
-                historyList.getItemFromHistory(position).getLocationAddress());
+                historyList.getItemFromHistory(position).getLatitude(),
+                historyList.getItemFromHistory(position).getLongitude(),
+                historyList.getItemFromHistory(position).getAddress());
 
         // flag to tell main activity that
         // the saved location came
@@ -233,12 +244,14 @@ public class HistoryActivity extends AppCompatActivity implements
         LocationItem locationBookmarkItem;
         try { // get item from list
             locationHistoryItem = historyList.getItemFromHistory(menuInfo.position);
-            locationBookmarkItem = new LocationItem(locationHistoryItem.getLocationName(),
-                    locationHistoryItem.getLocationAddress(), locationHistoryItem.getLocationLatitude(),
-                    locationHistoryItem.getLocationLongitude());
+            locationBookmarkItem = new LocationItem(getApplicationContext());
+            locationBookmarkItem.setName(locationHistoryItem.getName());
+            locationBookmarkItem.setAddress(locationHistoryItem.getAddress());
+            locationBookmarkItem.setLatitude(locationHistoryItem.getLatitude());
+            locationBookmarkItem.setLongitude(locationHistoryItem.getLongitude());
             // if user typed a location name add it to bookmark item
             if (!historyList.getBookmarkEditText().isEmpty()) {
-                locationBookmarkItem.setLocationName(historyList.getBookmarkEditText());
+                locationBookmarkItem.setName(historyList.getBookmarkEditText());
             }
             // add item to bookmarks
             historyList.addItemToBookmarks(getApplicationContext(), locationBookmarkItem);

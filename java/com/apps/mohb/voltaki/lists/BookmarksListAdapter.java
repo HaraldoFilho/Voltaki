@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksListAdapter.java
- *  Last modified : 7/12/16 9:32 PM
+ *  Last modified : 7/25/16 8:20 PM
  *
  *  -----------------------------------------------------------
  */
@@ -45,8 +45,8 @@ public class BookmarksListAdapter extends ArrayAdapter {
         TextView txtLocationName = (TextView) convertView.findViewById(R.id.txtLocationName);
         TextView txtLocationAddress = (TextView) convertView.findViewById(R.id.txtLocationAddress);
 
-        txtLocationName.setText(locationItem.getLocationName());
-        txtLocationAddress.setText(locationItem.getLocationAddressText());
+        txtLocationName.setText(locationItem.getName());
+        txtLocationAddress.setText(locationItem.getAddressText());
 
         return convertView;
 

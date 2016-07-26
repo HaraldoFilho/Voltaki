@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 7/24/16 11:56 PM
+ *  Last modified : 7/25/16 11:45 PM
  *
  *  -----------------------------------------------------------
  */
@@ -117,12 +117,14 @@ public class Lists {
     }
 
     public void updateLocationName(int position) {
-        bookmarks.get(position).setLocationName(bookmarkEditText);
+        bookmarks.get(position).setName(bookmarkEditText);
         saveState();
     }
 
     public void updateLocationAddress(int position) {
-        bookmarks.get(position).setLocationAddress(bookmarkEditText);
+        if(!bookmarkEditText.isEmpty()) {
+            bookmarks.get(position).setAddress(bookmarkEditText);
+        }
         saveState();
     }
 

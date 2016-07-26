@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 7/20/16 9:51 PM
+ *  Last modified : 7/25/16 10:57 PM
  *
  *  -----------------------------------------------------------
  */
@@ -43,10 +43,11 @@ public class Constants {
 
     // Map Saved Preferences
     public static final String MAP_FIRST_LOCATION = "MapFirstLocation";
+    public static final String MAP_FIRST_ADDRESS = "MapFirstAddress";
     public static final String MAP_LATITUDE  = "MapLatitude";
     public static final String MAP_LONGITUDE = "MapLongitude";
     public static final String MAP_ADDRESS   = "MapAddress";
-    public static final String DEFAULT_MAP_ADDRESS   = null;
+    public static final String MAP_NO_ADDRESS = "NoAddressFound";
 
     // Lists Saved Preferences
     public static final String BOOKMARKS = "Bookmarks";

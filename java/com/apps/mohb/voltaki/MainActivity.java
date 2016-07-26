@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/20/16 8:42 PM
+ *  Last modified : 7/26/16 12:09 AM
  *
  *  -----------------------------------------------------------
  */
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private static MenuItem menuItemReset;
     private static MenuItem menuItemAddBookmark;
+    private static MenuItem menuItemShare;
 
     private Fragment mainFragment;
     private FragmentManager mainFragmentManager;
@@ -304,11 +305,14 @@ public class MainActivity extends AppCompatActivity implements
         // create "add to bookmarks" menu item
         menuItemAddBookmark = menu.findItem(R.id.action_add_bookmark);
 
+        // create "share" menu item
+        menuItemShare = menu.findItem(R.id.action_share);
+
         // create reset menu item and set text according to button state
         menuItemReset = menu.findItem(R.id.action_reset);
         if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
-            ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
-            ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE))  {
+                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
+                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE))  {
             menuItemReset.setTitle(R.string.action_refresh);
         }
         else {
@@ -333,20 +337,29 @@ public class MainActivity extends AppCompatActivity implements
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
                 break;
 
-            // Reset / Refresh
+            // Share
+            case R.id.action_share:
+                LocationItem locationItem = new LocationItem(this);
+                locationItem.setLatitude(mapCurrentState.getLatitude());
+                locationItem.setLongitude(mapCurrentState.getLongitude());
+                locationItem.setAddress(mapCurrentState.getLocationAddress());
+                locationItem.share();
+                break;
+
+                // Reset / Refresh
             case R.id.action_reset:
                 // if button is not GREEN refresh map
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     reset();
                 } else // if at least one location provider is available show reset dialog
-                if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
-                    DialogFragment alertDialog = new ResetAlertFragment();
-                    alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
-                } else { // show location service disabled warning
-                    locServDisabledDialog.setCancelable(true);
-                    locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
-                }
+                    if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
+                        DialogFragment alertDialog = new ResetAlertFragment();
+                        alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
+                    } else { // show location service disabled warning
+                        locServDisabledDialog.setCancelable(true);
+                        locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
+                    }
                 break;
 
             // Help
@@ -583,10 +596,10 @@ public class MainActivity extends AppCompatActivity implements
                             gpsDisabledDialog.show(getSupportFragmentManager(), "GpsDisabledAlertFragment");
                         }
                     } else
-                    // if at least one location provider is available start location updates
-                    if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
-                        startLocationUpdates();
-                    }
+                        // if at least one location provider is available start location updates
+                        if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
+                            startLocationUpdates();
+                        }
                     break;
             }
         }
@@ -610,6 +623,11 @@ public class MainActivity extends AppCompatActivity implements
         menuItemAddBookmark.setEnabled(state);
     }
 
+    @Override // update state of share menu item on options menu
+    public void onUpdateMainMenuItemShareState(boolean state) {
+        menuItemShare.setEnabled(state);
+    }
+
 
     // MAPS ALERT DIALOG
 
@@ -630,25 +648,18 @@ public class MainActivity extends AppCompatActivity implements
         try {
             // create location item with current latitude and longitude
             locationItem = new LocationItem(this);
-            locationItem.setLocationLatitude(mapCurrentState.getLatitude());
-            locationItem.setLocationLongitude(mapCurrentState.getLongitude());
+            locationItem.setLatitude(mapCurrentState.getLatitude());
+            locationItem.setLongitude(mapCurrentState.getLongitude());
 
             // if a location name was entered in the dialog set it as location name
             if (!lists.getBookmarkEditText().isEmpty()) {
-                locationItem.setLocationName(lists.getBookmarkEditText());
+                locationItem.setName(lists.getBookmarkEditText());
             }
             else { // set current date and time as location name
-                locationItem.setTimeAsLocationName();
+                locationItem.setTimeAsName();
             }
 
-            // if an addres was gotten set it as location addres
-            if (mapCurrentState.getLocationAddress() != "") {
-                locationItem.setLocationAddress(mapCurrentState.getLocationAddress());
-            }
-            else { // set latitude/longitude as location address
-                locationItem.setLocationAddress("Latitude: " + String.valueOf(mapCurrentState.getLatitude())
-                        + ", Longitude: " + String.valueOf(mapCurrentState.getLongitude()));
-            }
+            locationItem.setAddress(mapCurrentState.getLocationAddress());
 
             // add item to bookmarks list and show toast
             if (locationItem != null) {
@@ -681,7 +692,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    // LOCATION  SERVICES DISABLED DIALOG
+    // LOCATION SERVICES DISABLED DIALOG
 
     @Override // Yes
     public void onAlertLocServDialogPositiveClick(DialogFragment dialog) {

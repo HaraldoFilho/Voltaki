@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/24/16 11:34 PM
+ *  Last modified : 7/25/16 11:13 PM
  *
  *  -----------------------------------------------------------
  */
@@ -84,7 +84,8 @@ public class MainFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
 
     private SharedPreferences sharedPref;
-    private SharedPreferences isFirstLocationGet;
+    private SharedPreferences isFirstLocationGot;
+    private static SharedPreferences isFirstAddressGot;
     private String defNavOption;
     private String defDefNavMode;
 
@@ -128,21 +129,19 @@ public class MainFragment extends Fragment implements
             mAddressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
             if (resultCode == FetchAddressIntentService.SUCCESS_RESULT) {
                 MapCurrentState.setLocationAddress(mAddressOutput);
-                if(!addressFound) { // is the first time that an address has been found
-                    Toasts.setLocationAddressText(mAddressOutput);
-                    Toasts.showLocationAddress();
+                if(isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
                     addressFound = true;
                 }
-                addressNotFound = false;
-            } else {
-                MapCurrentState.setLocationAddress("");
-                if(!addressNotFound) { // is the first time that an address has not been found
-                    Toasts.setLocationAddressText(R.string.toast_no_address_found);
-                    Toasts.showLocationAddress();
+            }
+            else {
+                MapCurrentState.setLocationAddress(Constants.MAP_NO_ADDRESS);
+                if(isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
                     addressNotFound = true;
                 }
-                addressFound = false;
             }
+            // register that the first address update was already taken
+            isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, false).commit();
+
         }
 
         @Override
@@ -169,6 +168,7 @@ public class MainFragment extends Fragment implements
         void onReset();
         void onUpdateMainMenuItemResetTitle(int stringId);
         void onUpdateMainMenuItemAddBookmarksState(boolean state);
+        void onUpdateMainMenuItemShareState(boolean state);
     }
 
     @Override
@@ -214,12 +214,13 @@ public class MainFragment extends Fragment implements
         // create an instance of the vibrator
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-        // when updating location, this variable is used to check if it is the first location value taken
-        isFirstLocationGet = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        // when updating location, this variables are used to check if it is the first location value taken
+        isFirstLocationGot = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        isFirstAddressGot = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
         // create toasts for address message
-        Toasts.createLocationAddress();
         Toasts.createSearchAddress();
+        Toasts.createLocationAddress();
 
     }
 
@@ -271,14 +272,15 @@ public class MainFragment extends Fragment implements
                         mListener.onUpdateMainMenuItemResetTitle(R.string.action_reset);
                         // create location item and set its values
                         LocationItem locationItem = new LocationItem(getContext());
-                        locationItem.setTimeAsLocationName();
-                        locationItem.setLocationLatitude(mapCurrentState.getLatitude());
-                        locationItem.setLocationLongitude(mapCurrentState.getLongitude());
-                        if (mapCurrentState.getLocationAddress() != "") { // check if an address was got
-                            locationItem.setLocationAddress(mapCurrentState.getLocationAddress());
-                        } else { // set latitude/longitude as location address
-                            locationItem.setLocationAddress("Latitude: " + String.valueOf(mapCurrentState.getLatitude())
-                                    + ", Longitude: " + String.valueOf(mapCurrentState.getLongitude()));
+                        locationItem.setTimeAsName();
+                        locationItem.setLatitude(mapCurrentState.getLatitude());
+                        locationItem.setLongitude(mapCurrentState.getLongitude());
+                        // check if an address was gotten
+                        if (!mapCurrentState.getLocationAddress().matches(Constants.MAP_NO_ADDRESS)) {
+                            locationItem.setAddress(mapCurrentState.getLocationAddress());
+                        }
+                        else {
+                            locationItem.setAddress(Constants.MAP_NO_ADDRESS);
                         }
                         // add location item to history list
                         lists.addItemToHistory(locationItem);
@@ -378,8 +380,8 @@ public class MainFragment extends Fragment implements
                 break;
 
             case COME_BACK_HERE:
-                ButtonCurrentState.setButtonGetLocation(getContext());
-                hideFloatingButton();
+                ButtonCurrentState.setButtonComeBack(getContext());
+                showFloatingButton();
                 break;
 
             case GO_BACK:
@@ -400,9 +402,11 @@ public class MainFragment extends Fragment implements
     public void onConnected(Bundle connectionHint) {
 
         // set that no location was get yet
-        isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
+        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
 
-        // set that no address info was get yet
+        // set that no address information was get yet
+        isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, true).commit();
+        addressFound = false;
         addressNotFound = false;
 
         // if default zoom level is high
@@ -410,34 +414,34 @@ public class MainFragment extends Fragment implements
                 .matches(getString(R.string.set_def_zoom_high))) {
             zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                .matches(getString(R.string.set_def_zoom_mid))) {
-            zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-        } else // if default zoom level is low
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                .matches(getString(R.string.set_def_zoom_low))) {
-            zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-        }
-        else { // if default zoom level is auto
-               // set the map zoom level according to the default navigation mode
-            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-               zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-            } else
-            if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
-                zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-            }
-            else {
+            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                    .matches(getString(R.string.set_def_zoom_mid))) {
                 zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-            }
-        }
+            } else // if default zoom level is low
+                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                        .matches(getString(R.string.set_def_zoom_low))) {
+                    zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+                }
+                else { // if default zoom level is auto
+                    // set the map zoom level according to the default navigation mode
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+                        zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+                    } else
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                        zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+                    }
+                    else {
+                        zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+                    }
+                }
 
         // if button is GREEN, came from a list and status bar icon is not disabled
         // start go back notification
         if((ButtonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK)&&(lists.isFlagged())
-            &&(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                    .matches(getString(R.string.set_status_bar_icon_disabled)))) {
-                lists.setFlag(false);
-                startGoBackNotification();
+                &&(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
+                .matches(getString(R.string.set_status_bar_icon_disabled)))) {
+            lists.setFlag(false);
+            startGoBackNotification();
         }
 
         // if none location provider is available, set button to RED
@@ -455,8 +459,9 @@ public class MainFragment extends Fragment implements
             }
             // hide floating button
             hideFloatingButton();
-            // and enable "add to bookmarks" options menu item on main screen
+            // and disable "add to bookmarks" and "share" options menu item on main screen
             mListener.onUpdateMainMenuItemAddBookmarksState(false);
+            mListener.onUpdateMainMenuItemShareState(false);
         }
 
         // request location updates
@@ -470,11 +475,11 @@ public class MainFragment extends Fragment implements
 
                 // update current location
                 mapCurrentState.setLastLocation(location);
-                mapCurrentState.setLatitude(mapCurrentState.getLastLocation().getLatitude());
-                mapCurrentState.setLongitude(mapCurrentState.getLastLocation().getLongitude());
+                mapCurrentState.setLatitude(location.getLatitude());
+                mapCurrentState.setLongitude(location.getLongitude());
 
                 // if this is the first location update
-                if(isFirstLocationGet.getBoolean(Constants.MAP_FIRST_LOCATION, true)) {
+                if(isFirstLocationGot.getBoolean(Constants.MAP_FIRST_LOCATION, true)) {
                     // turn button YELLOW
                     ButtonCurrentState.setButtonStatus(ButtonStatus.COME_BACK_HERE);
                     ButtonCurrentState.setButtonComeBack(getContext());
@@ -482,14 +487,15 @@ public class MainFragment extends Fragment implements
                     mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
                     // show floating button
                     showFloatingButton();
-                    // enable "add to bookmarks" options menu item on main screen
+                    // enable "add to bookmarks" and "share" options menu item on main screen
                     mListener.onUpdateMainMenuItemAddBookmarksState(true);
+                    mListener.onUpdateMainMenuItemShareState(true);
                     // if geocoder is present show message of searching for address
                     if (Geocoder.isPresent()) {
                         Toasts.showSearchAddress();
                     }
-                   // register that the first update was already taken
-                    isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, false).commit();
+                    // register that the first update was already taken
+                    isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, false).commit();
                 }
 
                 // move red marker position to the current location
@@ -499,7 +505,20 @@ public class MainFragment extends Fragment implements
                 if (Geocoder.isPresent()) {
                     startIntentService(mapCurrentState.getLastLocation());
                 } else {
-                    mapCurrentState.setLocationAddress("");
+                    mapCurrentState.setLocationAddress(Constants.MAP_NO_ADDRESS);
+                }
+
+                // show address found or not found message
+                if(addressFound) {
+                    Toasts.setLocationAddressText(mapCurrentState.getLocationAddress());
+                    Toasts.showLocationAddress();
+                    addressFound = false;
+                }
+
+                if(addressNotFound) {
+                    Toasts.setLocationAddressText(R.string.toast_no_address_found);
+                    Toasts.showLocationAddress();
+                    addressNotFound = false;
                 }
 
             }
@@ -578,7 +597,7 @@ public class MainFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-       // save button state on memory
+        // save button state on memory
         buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
         // save map state on memory
         saveMapState();
@@ -667,6 +686,7 @@ public class MainFragment extends Fragment implements
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
             hideFloatingButton();
             mListener.onUpdateMainMenuItemAddBookmarksState(false);
+            mListener.onUpdateMainMenuItemShareState(false);
             ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
             ButtonCurrentState.setButtonGetLocation(getContext());
             mapCurrentState.googleMap.clear();
@@ -674,7 +694,7 @@ public class MainFragment extends Fragment implements
         }
 
         // register that the first update was not taken yet
-        isFirstLocationGet.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
+        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LocationItem.java
- *  Last modified : 7/11/16 9:15 PM
+ *  Last modified : 7/26/16 12:15 AM
  *
  *  -----------------------------------------------------------
  */
@@ -13,6 +13,7 @@
 package com.apps.mohb.voltaki.lists;
 
 import android.content.Context;
+import android.content.Intent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,72 +25,64 @@ import com.apps.mohb.voltaki.R;
 
 public class LocationItem {
 
-    private String locationName;
-    private String locationAddress;
-    private double locationLatitude;
-    private double locationLongitude;
+    private String name;
+    private String address;
+    private double latitude;
+    private double longitude;
 
     private Context context;
-
 
     // Constructor which sets only context
     public LocationItem(Context context) {
         this.context = context;
     }
 
-    // Constructor which sets all location fields
-    public LocationItem(String locationName, String locationAddress, double locationLatitude, double locationLongitude) {
-        this.locationName = locationName;
-        this.locationAddress = locationAddress;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
+    public void setName(String locationName) {
+        this.name = locationName;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setLatitude(double locationLatitude) {
+        this.latitude = locationLatitude;
     }
 
-    public void setLocationLatitude(double locationLatitude) {
-        this.locationLatitude = locationLatitude;
+    public void setLongitude(double locationLongitude) {
+        this.longitude = locationLongitude;
     }
 
-    public void setLocationLongitude(double locationLongitude) {
-        this.locationLongitude = locationLongitude;
+    public void setAddress(String locationAddress) {
+        this.address = locationAddress;
     }
 
-    public void setLocationAddress(String locationAddress) {
-        this.locationAddress = locationAddress;
+    public String getName() {
+        return name;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public double getLocationLatitude() {
-        return locationLatitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public double getLocationLongitude() {
-        return locationLongitude;
-    }
-
-    public String getLocationAddress() {
-        return locationAddress;
+    public String getAddress() {
+        return address;
     }
 
     // get location address text that will be added to a bookmarks or history list
-    protected String getLocationAddressText() {
+    protected String getAddressText() {
 
         String latitude;
         String longitude;
         String text;
 
-        // if location item has an address set, return this addres
-        if (!getLocationAddress().isEmpty()) {
-            return getLocationAddress();
-        } else { // returns the location latitude/longitude as address
-            latitude = String.valueOf(getLocationLatitude());
-            longitude = String.valueOf(getLocationLongitude());
+        // if location item has an address set, return this address
+        if (!getAddress().matches(Constants.MAP_NO_ADDRESS)) {
+            return getAddress();
+        }
+        else { // returns the location latitude/longitude as address
+            latitude = String.valueOf(getLatitude());
+            longitude = String.valueOf(getLongitude());
 
             // round latitude value to a maximum length
             if (latitude.length() > Constants.LAT_LNG_MAX_LENGTH) {
@@ -111,7 +104,7 @@ public class LocationItem {
 
     // if a name is not provided to location,
     // set current date and time as location name
-    public void setTimeAsLocationName() {
+    public void setTimeAsName() {
 
         /// get system language
         String systemLanguage = Locale.getDefault().getLanguage().toString();
@@ -134,8 +127,20 @@ public class LocationItem {
 
         SimpleDateFormat date = new SimpleDateFormat(dateFormat, Locale.getDefault());
 
-        locationName = date.format(new Date().getTime());
+        name = date.format(new Date().getTime());
 
+    }
+
+    // share location as a google maps url
+    public void share() {
+        String address;
+        if(!getAddress().matches(Constants.MAP_NO_ADDRESS)) { address = getAddress() + "\n";
+        } else { address = ""; }
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.action_share_title));
+        intent.putExtra(Intent.EXTRA_TEXT, address + "http://maps.google.com/?q=" + getLatitude() + "," + getLongitude());
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share_chooser)));
     }
 
 }

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/25/16 12:00 AM
+ *  Last modified : 7/26/16 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -181,10 +181,21 @@ public class BookmarksActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
 
+            // Share
+            case R.id.share:
+                LocationItem bookmarksItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
+                locationItem = new LocationItem(this);
+                locationItem.setName(bookmarksItem.getName());
+                locationItem.setAddress(bookmarksItem.getAddress());
+                locationItem.setLatitude(bookmarksItem.getLatitude());
+                locationItem.setLongitude(bookmarksItem.getLongitude());
+                locationItem.share();locationItem.share();
+                return true;
+
             // Edit name
             case R.id.editName:
                 locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
-                bookmarksList.setBookmarkEditText(locationItem.getLocationName());
+                bookmarksList.setBookmarkEditText(locationItem.getName());
                 bookmarksList.setEditingAddress(false);
                 dialog = new BookmarkEditDialogFragment();
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
@@ -193,7 +204,12 @@ public class BookmarksActivity extends AppCompatActivity implements
             // Edit address
             case R.id.editAddress:
                 locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
-                bookmarksList.setBookmarkEditText(locationItem.getLocationAddress());
+                if(!locationItem.getAddress().matches(Constants.MAP_NO_ADDRESS)) {
+                    bookmarksList.setBookmarkEditText(locationItem.getAddress());
+                }
+                else {
+                    bookmarksList.setBookmarkEditText("");
+                }
                 bookmarksList.setEditingAddress(true);
                 dialog = new BookmarkEditDialogFragment();
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
@@ -227,9 +243,9 @@ public class BookmarksActivity extends AppCompatActivity implements
 
         // save location from item on memory
         mapSavedState.setLocationStatus(
-                bookmarksList.getItemFromBookmarks(position).getLocationLatitude(),
-                bookmarksList.getItemFromBookmarks(position).getLocationLongitude(),
-                bookmarksList.getItemFromBookmarks(position).getLocationAddress());
+                bookmarksList.getItemFromBookmarks(position).getLatitude(),
+                bookmarksList.getItemFromBookmarks(position).getLongitude(),
+                bookmarksList.getItemFromBookmarks(position).getAddress());
 
         // flag to tell main activity that
         // the saved location came

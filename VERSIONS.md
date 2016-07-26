@@ -1,3 +1,8 @@
+####**Beta 0.3.0**
+- Added sharing feature.
+- Improvements on user interface.
+- Fixed bugs.
+
 ####**Beta 0.2.5**
 - Improvements on user interface.
 - Added bookmark edit address feature.
