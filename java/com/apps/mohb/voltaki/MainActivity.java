@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/26/16 9:16 PM
+ *  Last modified : 7/27/16 7:46 AM
  *
  *  -----------------------------------------------------------
  */
@@ -267,7 +267,12 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        updateActionResetTitle();
+        // set title of refresh/reset action menu item
+        try {
+            updateActionResetTitle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -320,16 +325,14 @@ public class MainActivity extends AppCompatActivity implements
         // create "share" menu item
         menuItemShare = menu.findItem(R.id.action_share);
 
+        if(ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
+            menuItemAddBookmark.setEnabled(false);
+            menuItemShare.setEnabled(false);
+        }
+
         // create reset menu item and set text according to button state
         menuItemReset = menu.findItem(R.id.action_reset);
-        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
-                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
-                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE))  {
-            menuItemReset.setTitle(R.string.action_refresh);
-        }
-        else {
-            menuItemReset.setTitle(R.string.action_reset);
-        }
+        updateActionResetTitle();
 
         return true;
 
@@ -352,7 +355,12 @@ public class MainActivity extends AppCompatActivity implements
             // Share
             case R.id.action_share:
                 LocationItem locationItem = new LocationItem(this);
-                locationItem.setName(getString(R.string.action_share_here));
+                if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE)) {
+                    locationItem.setName(getString(R.string.action_share_here));
+                }
+                else {
+                    locationItem.setName(getString(R.string.action_share_location));
+                }
                 locationItem.setLatitude(mapCurrentState.getLatitude());
                 locationItem.setLongitude(mapCurrentState.getLongitude());
                 locationItem.setAddress(mapCurrentState.getLocationAddress());
@@ -530,16 +538,13 @@ public class MainActivity extends AppCompatActivity implements
 
     // update text of reset item on options menu
     public void updateActionResetTitle() {
-        try {
-            if(ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
-                    > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
-                menuItemReset.setTitle(R.string.action_reset);
-            }
-            else {
-                menuItemReset.setTitle(R.string.action_refresh);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
+                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
+                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE))  {
+            menuItemReset.setTitle(R.string.action_refresh);
+        }
+        else {
+            menuItemReset.setTitle(R.string.action_reset);
         }
     }
 

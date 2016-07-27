@@ -1,3 +1,7 @@
+####**Beta 0.3.2**
+- Improvements on user interface.
+- Fixed bugs.
+
 ####**Beta 0.3.1**
 - Improvements on user interface.
 - Fixed bugs.
