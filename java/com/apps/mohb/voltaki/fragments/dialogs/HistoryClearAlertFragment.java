@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryClearAlertFragment.java
- *  Last modified : 6/25/16 10:46 PM
+ *  Last modified : 7/11/16 8:41 PM
  *
  *  -----------------------------------------------------------
  */
@@ -35,7 +35,7 @@ public class HistoryClearAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_are_you_sure).setMessage(R.string.alert_clear_history_warning)
+        builder.setTitle(R.string.alert_clear_history).setMessage(R.string.alert_clear_history_warning)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onClearHistoryDialogPositiveClick(HistoryClearAlertFragment.this);

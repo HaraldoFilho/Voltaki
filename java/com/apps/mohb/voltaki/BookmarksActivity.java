@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/26/16 12:13 AM
+ *  Last modified : 7/26/16 8:00 PM
  *
  *  -----------------------------------------------------------
  */
@@ -184,12 +184,9 @@ public class BookmarksActivity extends AppCompatActivity implements
             // Share
             case R.id.share:
                 LocationItem bookmarksItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
-                locationItem = new LocationItem(this);
-                locationItem.setName(bookmarksItem.getName());
-                locationItem.setAddress(bookmarksItem.getAddress());
-                locationItem.setLatitude(bookmarksItem.getLatitude());
-                locationItem.setLongitude(bookmarksItem.getLongitude());
-                locationItem.share();locationItem.share();
+                locationItem = new LocationItem(this, bookmarksItem.getName(), bookmarksItem.getAddress(),
+                bookmarksItem.getLatitude(), bookmarksItem.getLongitude());
+                locationItem.share();
                 return true;
 
             // Edit name

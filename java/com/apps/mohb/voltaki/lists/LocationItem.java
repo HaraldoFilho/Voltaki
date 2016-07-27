@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LocationItem.java
- *  Last modified : 7/26/16 12:15 AM
+ *  Last modified : 7/26/16 8:11 PM
  *
  *  -----------------------------------------------------------
  */
@@ -25,16 +25,26 @@ import com.apps.mohb.voltaki.R;
 
 public class LocationItem {
 
+    private Context context;
     private String name;
     private String address;
     private double latitude;
     private double longitude;
 
-    private Context context;
 
     // Constructor which sets only context
     public LocationItem(Context context) {
         this.context = context;
+    }
+
+    // Constructor which sets all location fields
+    public LocationItem(Context context, String locationName, String locationAddress,
+                        double locationLatitude, double locationLongitude) {
+        this.context = context;
+        this.name = locationName;
+        this.address = locationAddress;
+        this.latitude = locationLatitude;
+        this.longitude = locationLongitude;
     }
 
     public void setName(String locationName) {
@@ -139,7 +149,9 @@ public class LocationItem {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.action_share_title));
-        intent.putExtra(Intent.EXTRA_TEXT, address + "http://maps.google.com/?q=" + getLatitude() + "," + getLongitude());
+        intent.putExtra(Intent.EXTRA_TEXT, getName() + ":\n" + address + "http://maps.google.com/?q="
+                + getLatitude() + "," + getLongitude() + "\n" + context.getString(R.string.action_share_message)
+                + ": " + context.getString(R.string.info_app_url));
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share_chooser)));
     }
 

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryActivity.java
- *  Last modified : 7/26/16 12:09 AM
+ *  Last modified : 7/26/16 8:00 PM
  *
  *  -----------------------------------------------------------
  */
@@ -185,11 +185,8 @@ public class HistoryActivity extends AppCompatActivity implements
             // Share
             case R.id.share:
                 LocationItem historyItem = historyList.getItemFromHistory(menuInfo.position);
-                LocationItem locationItem = new LocationItem(this);
-                locationItem.setName(historyItem.getName());
-                locationItem.setAddress(historyItem.getAddress());
-                locationItem.setLatitude(historyItem.getLatitude());
-                locationItem.setLongitude(historyItem.getLongitude());
+                LocationItem locationItem = new LocationItem(this, historyItem.getName(), historyItem.getAddress(),
+                        historyItem.getLatitude(), historyItem.getLongitude());
                 locationItem.share();
                 return true;
 
@@ -244,11 +241,9 @@ public class HistoryActivity extends AppCompatActivity implements
         LocationItem locationBookmarkItem;
         try { // get item from list
             locationHistoryItem = historyList.getItemFromHistory(menuInfo.position);
-            locationBookmarkItem = new LocationItem(getApplicationContext());
-            locationBookmarkItem.setName(locationHistoryItem.getName());
-            locationBookmarkItem.setAddress(locationHistoryItem.getAddress());
-            locationBookmarkItem.setLatitude(locationHistoryItem.getLatitude());
-            locationBookmarkItem.setLongitude(locationHistoryItem.getLongitude());
+            locationBookmarkItem = new LocationItem(getApplicationContext(),
+                    locationHistoryItem.getName(), locationHistoryItem.getAddress(),
+                    locationHistoryItem.getLatitude(), locationHistoryItem.getLongitude());
             // if user typed a location name add it to bookmark item
             if (!historyList.getBookmarkEditText().isEmpty()) {
                 locationBookmarkItem.setName(historyList.getBookmarkEditText());

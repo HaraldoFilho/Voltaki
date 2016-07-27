@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ListsSavedState.java
- *  Last modified : 7/25/16 11:29 PM
+ *  Last modified : 7/26/16 8:00 PM
  *
  *  -----------------------------------------------------------
  */
@@ -166,11 +166,8 @@ public class ListsSavedState {
 
         }
         jsonReader.endObject();
-        LocationItem locationItem = new LocationItem(this.context);
-        locationItem.setName(locationName);
-        locationItem.setAddress(locationAddress);
-        locationItem.setLatitude(locationLatitude);
-        locationItem.setLongitude(locationLongitude);
+        LocationItem locationItem = new LocationItem(this.context, locationName,
+                locationAddress, locationLatitude, locationLongitude);
         return locationItem;
     }
 

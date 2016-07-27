@@ -1,3 +1,7 @@
+####**Beta 0.3.1**
+- Improvements on user interface.
+- Fixed bugs.
+
 ####**Beta 0.3.0**
 - Added sharing feature.
 - Improvements on user interface.

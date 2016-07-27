@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/26/16 12:09 AM
+ *  Last modified : 7/26/16 9:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -30,10 +30,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -131,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         // create navigation drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -150,6 +151,11 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // create instance of map current state
+        mapCurrentState = new MapCurrentState(this);
+        // create instance of button saved state
+        buttonSavedState = new ButtonSavedState(this);
+
         // get user preferences from settings
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
@@ -161,19 +167,25 @@ public class MainActivity extends AppCompatActivity implements
         lastSystemLanguagePref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         lastSystemLanguage = lastSystemLanguagePref.getString(Constants.SYSTEM_LANGUAGE, "");
 
-        // if system language has changed, clear settings because they changed to the new language
         if (!systemLanguage.matches(lastSystemLanguage)) {
+            // if system language has changed, clear settings because they changed to the new language
             lastSystemLanguagePref.edit().putString(Constants.SYSTEM_LANGUAGE, systemLanguage).commit();
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+            // and update notification if button is green
+            if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
+                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
+                // intent that will open Google Maps when notification is clicked
+                Intent intent = new Intent(this, GoBackNotificationActivity.class);
+                Notification notification = new Notification();
+                // update notification
+                notification.cancelNotification(this, Constants.NOTIFICATION_ID);
+                notification.startNotification(intent, this, getString(R.string.info_app_name),
+                        getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
+            }
         }
 
         // if language has changed set user preferences to default values
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        // create instance of map current state
-        mapCurrentState = new MapCurrentState(this);
-        // create instance of button saved state
-        buttonSavedState = new ButtonSavedState(this);
 
         // create instance of bookmarks and history lists
         lists = new Lists(this);
@@ -340,26 +352,28 @@ public class MainActivity extends AppCompatActivity implements
             // Share
             case R.id.action_share:
                 LocationItem locationItem = new LocationItem(this);
+                locationItem.setName(getString(R.string.action_share_here));
                 locationItem.setLatitude(mapCurrentState.getLatitude());
                 locationItem.setLongitude(mapCurrentState.getLongitude());
                 locationItem.setAddress(mapCurrentState.getLocationAddress());
                 locationItem.share();
                 break;
 
-                // Reset / Refresh
+            // Reset / Refresh
             case R.id.action_reset:
                 // if button is not GREEN refresh map
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     reset();
                 } else // if at least one location provider is available show reset dialog
-                    if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
-                        DialogFragment alertDialog = new ResetAlertFragment();
-                        alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
-                    } else { // show location service disabled warning
-                        locServDisabledDialog.setCancelable(true);
-                        locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
-                    }
+                if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
+                    DialogFragment alertDialog = new ResetAlertFragment();
+                    alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
+                }
+                else { // show location service disabled warning
+                    locServDisabledDialog.setCancelable(true);
+                    locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
+                }
                 break;
 
             // Help
