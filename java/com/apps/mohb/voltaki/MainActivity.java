@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/28/16 7:49 AM
+ *  Last modified : 7/28/16 9:18 AM
  *
  *  -----------------------------------------------------------
  */
@@ -527,16 +527,18 @@ public class MainActivity extends AppCompatActivity implements
         fragment.getGoogleApiClient().disconnect();
         fragment.getGoogleApiClient().connect();
 
-        // change reset menu item to Refresh
-        menuItemReset.setTitle(R.string.action_refresh);
+        // change reset menu item
+        updateActionResetTitle();
+
+        // reset lists flag
+        lists.setFlag(false);
 
     }
 
 
     // update text of reset item on options menu
     public void updateActionResetTitle() {
-        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)
-                ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
+        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
                 ||(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE))  {
             menuItemReset.setTitle(R.string.action_refresh);
         }

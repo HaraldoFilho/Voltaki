@@ -1,3 +1,7 @@
+####**Beta 0.3.6**
+- Minor improvement on application stability.
+- Minor improvement on user interface.
+
 ####**Beta 0.3.5**
 - Fixed bugs.
 
