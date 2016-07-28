@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/25/16 11:13 PM
+ *  Last modified : 7/27/16 8:18 PM
  *
  *  -----------------------------------------------------------
  */
@@ -452,16 +452,20 @@ public class MainFragment extends Fragment implements
             if(lists.isFlagged()) {
                 mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
                 mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
+                // enable "add to bookmarks" and "share" options menu item on main screen
+                mListener.onUpdateMainMenuItemAddBookmarksState(true);
+                mListener.onUpdateMainMenuItemShareState(true);
                 lists.setFlag(false);
             }
             else { // got to the default (0,0) location
                 mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
+                // disable "add to bookmarks" and "share" options menu item on main screen
+                mListener.onUpdateMainMenuItemAddBookmarksState(false);
+                mListener.onUpdateMainMenuItemShareState(false);
             }
             // hide floating button
             hideFloatingButton();
-            // and disable "add to bookmarks" and "share" options menu item on main screen
-            mListener.onUpdateMainMenuItemAddBookmarksState(false);
-            mListener.onUpdateMainMenuItemShareState(false);
+
         }
 
         // request location updates

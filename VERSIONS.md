@@ -1,3 +1,9 @@
+####**Beta 0.3.3**
+Improvements on user interface:
+- Resized app bar action icons.
+- Changed navigation drawer items icons.
+- Resized navigation drawer items text.
+
 ####**Beta 0.3.2**
 - Improvements on user interface.
 - Fixed bugs.
@@ -44,4 +50,8 @@
 
 ####**Beta 0.1.0**
 - Initial beta release.
+####**Beta 0.3.2**
+- Improvements on user interface.
+- Fixed bugs.
+
 

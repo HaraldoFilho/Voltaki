@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/27/16 7:46 AM
+ *  Last modified : 7/27/16 8:30 PM
  *
  *  -----------------------------------------------------------
  */
@@ -30,16 +30,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-
-import java.util.Locale;
 
 import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
@@ -57,8 +50,13 @@ import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.MapCurrentState;
+import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
 import com.apps.mohb.voltaki.messaging.Notification;
 import com.apps.mohb.voltaki.messaging.Toasts;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -171,16 +169,20 @@ public class MainActivity extends AppCompatActivity implements
             // if system language has changed, clear settings because they changed to the new language
             lastSystemLanguagePref.edit().putString(Constants.SYSTEM_LANGUAGE, systemLanguage).commit();
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
-            // and update notification if button is green
-            if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
-                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
-                // intent that will open Google Maps when notification is clicked
-                Intent intent = new Intent(this, GoBackNotificationActivity.class);
-                Notification notification = new Notification();
-                // update notification
-                notification.cancelNotification(this, Constants.NOTIFICATION_ID);
-                notification.startNotification(intent, this, getString(R.string.info_app_name),
-                        getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
+            try {
+                // and update notification if button is green
+                if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
+                        || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
+                    // intent that will open Google Maps when notification is clicked
+                    Intent intent = new Intent(this, GoBackNotificationActivity.class);
+                    Notification notification = new Notification();
+                    // update notification
+                    notification.cancelNotification(this, Constants.NOTIFICATION_ID);
+                    notification.startNotification(intent, this, getString(R.string.info_app_name),
+                            getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
