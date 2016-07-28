@@ -1,3 +1,7 @@
+####**Beta 0.3.4**
+Minor improvement on user interface:
+- Show floating button when a location is set on map and app is offline. 
+
 ####**Beta 0.3.3**
 Improvements on user interface:
 - Resized app bar action icons.

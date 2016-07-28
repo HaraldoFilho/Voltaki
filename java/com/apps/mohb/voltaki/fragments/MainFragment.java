@@ -455,6 +455,8 @@ public class MainFragment extends Fragment implements
                 // enable "add to bookmarks" and "share" options menu item on main screen
                 mListener.onUpdateMainMenuItemAddBookmarksState(true);
                 mListener.onUpdateMainMenuItemShareState(true);
+                // show floating button
+                showFloatingButton();
                 lists.setFlag(false);
             }
             else { // got to the default (0,0) location
@@ -462,9 +464,9 @@ public class MainFragment extends Fragment implements
                 // disable "add to bookmarks" and "share" options menu item on main screen
                 mListener.onUpdateMainMenuItemAddBookmarksState(false);
                 mListener.onUpdateMainMenuItemShareState(false);
+                // hide floating button
+                hideFloatingButton();
             }
-            // hide floating button
-            hideFloatingButton();
 
         }
 
@@ -778,14 +780,8 @@ public class MainFragment extends Fragment implements
                 if ((vibrator.hasVibrator()) && (sharedPref.getBoolean(Constants.BUTTON_VIBRATE, true))) {
                     vibrator.vibrate(Constants.VIBRATE_SHORT_TIME);
                 }
-                // if button is YELLOW or GREEN, set red marker back to the center of the map on current location
-                if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                        > ButtonEnums.convertEnumToInt(ButtonStatus.GETTING_LOCATION)) {
-                    mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
-                    mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
-                } else { // set the default location (0,0) on map
-                    mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
-                }
+                mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
+                mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
             }
         });
 
