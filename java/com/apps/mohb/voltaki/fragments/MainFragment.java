@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/27/16 8:18 PM
+ *  Last modified : 7/28/16 7:49 AM
  *
  *  -----------------------------------------------------------
  */
@@ -371,7 +371,12 @@ public class MainFragment extends Fragment implements
 
             case OFFLINE:
                 ButtonCurrentState.setButtonOffline(getContext());
-                hideFloatingButton();
+                if((lists.isFlagged())) {
+                    showFloatingButton();
+                }
+                else {
+                    hideFloatingButton();
+                }
                 break;
 
             case GETTING_LOCATION:
@@ -457,7 +462,6 @@ public class MainFragment extends Fragment implements
                 mListener.onUpdateMainMenuItemShareState(true);
                 // show floating button
                 showFloatingButton();
-                lists.setFlag(false);
             }
             else { // got to the default (0,0) location
                 mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
@@ -614,6 +618,10 @@ public class MainFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        // if button is RED, came from a list set list flag false
+        if((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)&&(lists.isFlagged())) {
+            lists.setFlag(false);
+        }
     }
 
     @Override

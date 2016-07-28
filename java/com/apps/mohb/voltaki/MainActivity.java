@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/27/16 8:30 PM
+ *  Last modified : 7/28/16 7:49 AM
  *
  *  -----------------------------------------------------------
  */
@@ -467,18 +467,13 @@ public class MainActivity extends AppCompatActivity implements
             super.onBackPressed();
             return;
         }
-        // if none location provider is available close the application
-        if ((!mapCurrentState.isNetworkEnabled() && (!mapCurrentState.isGpsEnabled()))) {
-            super.onBackPressed();
-            return;
-        }
 
         // if navigation drawer is opened close it
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else { // cancel all toast and close application
+        else { // cancel all toasts and close application
             Toasts.cancelAllToasts();
             super.onBackPressed();
         }
