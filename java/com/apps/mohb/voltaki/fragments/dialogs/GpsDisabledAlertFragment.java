@@ -39,10 +39,10 @@ public class GpsDisabledAlertFragment extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         // check if android version is LOLLIPOP or lower
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_better_gps);
+            alertDialogBuilder.setTitle(R.string.alert_title_warning).setMessage(R.string.alert_message_better_gps);
         }
         else { // version is MARSHMALLOW or higher
-            alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_no_gps);
+            alertDialogBuilder.setTitle(R.string.alert_title_warning).setMessage(R.string.alert_message_no_gps);
         }
         alertDialogBuilder.setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -54,7 +54,7 @@ public class GpsDisabledAlertFragment extends DialogFragment {
                 mListener.onAlertGpsDialogNegativeClick(GpsDisabledAlertFragment.this);
             }
         })
-        .setNeutralButton(R.string.alert_no_check, new DialogInterface.OnClickListener() {
+        .setNeutralButton(R.string.alert_button_no_check, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 mListener.onAlertGpsDialogNeutralClick(GpsDisabledAlertFragment.this);

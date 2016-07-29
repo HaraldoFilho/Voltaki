@@ -35,7 +35,7 @@ public class ResetAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.alert_reset).setMessage(R.string.alert_reset_map_warning)
+        alertDialogBuilder.setTitle(R.string.alert_title_reset).setMessage(R.string.alert_message_reset_map)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onResetDialogPositiveClick(ResetAlertFragment.this);

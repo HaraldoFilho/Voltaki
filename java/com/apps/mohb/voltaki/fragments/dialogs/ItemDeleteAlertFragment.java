@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ItemDeleteAlertFragment.java
- *  Last modified : 7/11/16 8:41 PM
+ *  Last modified : 7/28/16 7:29 PM
  *
  *  -----------------------------------------------------------
  */
@@ -35,7 +35,7 @@ public class ItemDeleteAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_clear_history).setMessage(R.string.alert_delete_item)
+        builder.setTitle(R.string.alert_title_are_you_sure).setMessage(R.string.alert_message_delete_item)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onItemDeleteDialogPositiveClick(ItemDeleteAlertFragment.this);

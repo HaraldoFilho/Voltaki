@@ -36,7 +36,7 @@ public class LocServDisabledAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.alert_warning).setMessage(R.string.alert_location_provider_needed)
+        alertDialogBuilder.setTitle(R.string.alert_title_warning).setMessage(R.string.alert_message_location_provider_needed)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onAlertLocServDialogPositiveClick(LocServDisabledAlertFragment.this);
@@ -47,7 +47,7 @@ public class LocServDisabledAlertFragment extends DialogFragment {
                         mListener.onAlertLocServDialogNegativeClick(LocServDisabledAlertFragment.this);
                     }
                 })
-                .setNeutralButton(R.string.alert_no_check, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.alert_button_no_check, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onAlertLocServDialogNeutralClick(LocServDisabledAlertFragment.this);

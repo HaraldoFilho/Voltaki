@@ -67,7 +67,8 @@ public class Lists {
 
         // if list is not unlimited, delete old items
         // that exceed the maximum number
-        if (!maxItems.matches(context.getString(R.string.set_max_history_items_unlimited))) {
+        if ((maxItems.matches(Constants.HISTORY_MAX_ITEMS_10))
+                ||(maxItems.matches(Constants.HISTORY_MAX_ITEMS_100))) {
             setHistoryMaxItems(Integer.valueOf(maxItems));
             pruneHistory();
         } else {

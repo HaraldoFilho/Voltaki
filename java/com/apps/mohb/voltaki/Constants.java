@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 7/25/16 10:57 PM
+ *  Last modified : 7/28/16 8:06 PM
  *
  *  -----------------------------------------------------------
  */
@@ -31,6 +31,9 @@ public class Constants {
     public static final String AUTO_BACKUP = "AUTO_BACKUP";
     public static final String LOC_SERV_CHECK = "LOC_SERV_CHECK";
     public static final String GPS_CHECK = "GPS_CHECK";
+
+    public static final String HISTORY_MAX_ITEMS_10 = "10";
+    public static final String HISTORY_MAX_ITEMS_100 = "100";
 
     // System language
     public static final String SYSTEM_LANGUAGE ="SYSTEM_LANGUAGE";

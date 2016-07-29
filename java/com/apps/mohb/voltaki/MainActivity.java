@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/28/16 9:18 AM
+ *  Last modified : 7/28/16 7:55 PM
  *
  *  -----------------------------------------------------------
  */
@@ -169,20 +169,16 @@ public class MainActivity extends AppCompatActivity implements
             // if system language has changed, clear settings because they changed to the new language
             lastSystemLanguagePref.edit().putString(Constants.SYSTEM_LANGUAGE, systemLanguage).commit();
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
-            try {
-                // and update notification if button is green
-                if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
-                        || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
-                    // intent that will open Google Maps when notification is clicked
-                    Intent intent = new Intent(this, GoBackNotificationActivity.class);
-                    Notification notification = new Notification();
-                    // update notification
-                    notification.cancelNotification(this, Constants.NOTIFICATION_ID);
-                    notification.startNotification(intent, this, getString(R.string.info_app_name),
-                            getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            // and update notification if button is green
+            if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
+                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
+                // intent that will open Google Maps when notification is clicked
+                Intent intent = new Intent(this, GoBackNotificationActivity.class);
+                Notification notification = new Notification();
+                // update notification
+                notification.cancelNotification(this, Constants.NOTIFICATION_ID);
+                notification.startNotification(intent, this, getString(R.string.info_app_name),
+                        getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
             }
         }
 

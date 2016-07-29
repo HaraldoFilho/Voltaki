@@ -51,10 +51,10 @@ public class BookmarkEditDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         if(lists.isEditingAddress()) {
-            builder.setTitle(R.string.dialog_location_address);
+            builder.setTitle(R.string.dialog_title_location_address);
         }
         else {
-            builder.setTitle(R.string.dialog_location_name);
+            builder.setTitle(R.string.dialog_title_location_name);
         }
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

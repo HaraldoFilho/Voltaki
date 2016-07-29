@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LocationItem.java
- *  Last modified : 7/26/16 8:11 PM
+ *  Last modified : 7/28/16 7:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -152,7 +152,7 @@ public class LocationItem {
         intent.putExtra(Intent.EXTRA_TEXT, getName() + ":\n" + address + "http://maps.google.com/?q="
                 + getLatitude() + "," + getLongitude() + "\n" + context.getString(R.string.action_share_message)
                 + ": " + context.getString(R.string.info_app_url));
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share_chooser)));
+        context.startActivity(Intent.createChooser(intent, null));
     }
 
 }

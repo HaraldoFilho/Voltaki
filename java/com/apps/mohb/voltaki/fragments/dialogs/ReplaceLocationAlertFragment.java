@@ -35,7 +35,7 @@ public class ReplaceLocationAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_replace).setMessage(R.string.alert_replace_location)
+        builder.setTitle(R.string.alert_title_replace).setMessage(R.string.alert_message_replace_location)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onReplaceLocationDialogPositiveClick(ReplaceLocationAlertFragment.this);

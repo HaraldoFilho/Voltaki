@@ -39,6 +39,7 @@
 
 ###Project Info:
 
+- Status: **Beta**
 - Start Date: May 24, 2016
 - Alpha Release Date: Jun 7, 2016
 - Beta Release Date: Jul 15, 2016

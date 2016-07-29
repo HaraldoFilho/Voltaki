@@ -35,7 +35,7 @@ public class RestoreAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_restore_title).setMessage(R.string.alert_restore_message)
+        builder.setTitle(R.string.alert_title_restore).setMessage(R.string.alert_message_restore)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onRestoreDialogPositiveClick(RestoreAlertFragment.this);

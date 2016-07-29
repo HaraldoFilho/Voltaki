@@ -35,7 +35,7 @@ public class BackupAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_backup_title).setMessage(R.string.alert_backup_message)
+        builder.setTitle(R.string.alert_title_backup).setMessage(R.string.alert_message_backup)
                 .setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onBackupDialogPositiveClick(BackupAlertFragment.this);

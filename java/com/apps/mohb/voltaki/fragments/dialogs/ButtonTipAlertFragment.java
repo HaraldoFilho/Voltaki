@@ -34,8 +34,8 @@ public class ButtonTipAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.dialog_tip).setMessage(R.string.dialog_tip_button_message)
-                .setPositiveButton(R.string.dialog_tip_ok, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setTitle(R.string.dialog_title_tip).setMessage(R.string.dialog_message_tip_button)
+                .setPositiveButton(R.string.dialog_button_tip_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onButtonTipDialogPositiveClick(ButtonTipAlertFragment.this);
                     }

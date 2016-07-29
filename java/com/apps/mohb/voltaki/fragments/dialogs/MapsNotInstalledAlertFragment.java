@@ -34,7 +34,7 @@ public class MapsNotInstalledAlertFragment extends DialogFragment {
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_no_maps).setMessage(R.string.alert_need_maps)
+        builder.setTitle(R.string.alert_title_no_maps).setMessage(R.string.alert_title_need_maps)
                 .setPositiveButton(R.string.alert_button_install, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onMapsAlertDialogPositiveClick(MapsNotInstalledAlertFragment.this);
