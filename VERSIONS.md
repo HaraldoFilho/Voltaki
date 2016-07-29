@@ -1,3 +1,6 @@
+####**Beta 0.3.8**
+- Improvements and fixes on user interface.
+
 ####**Beta 0.3.7**
 - Changed floating button icon.
 - Improvements and fixes on user interface.

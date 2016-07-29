@@ -577,7 +577,9 @@ public class MainFragment extends Fragment implements
                                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                                 hideFloatingButton();
                                 stopLocationUpdates();
-                                mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
+                                if(!lists.isFlagged()) {
+                                    mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
+                                }
                                 status.startResolutionForResult(
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
