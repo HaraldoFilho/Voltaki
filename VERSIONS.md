@@ -1,3 +1,6 @@
+####**Beta 0.4.0**
+- Added feature to view an alphabetically sorted list of bookmarks.
+
 ####**Beta 0.3.9**
 - Fixed bugs.
 - Minor improvements on user interface.

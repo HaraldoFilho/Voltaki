@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/26/16 8:00 PM
+ *  Last modified : 7/30/16 8:51 AM
  *
  *  -----------------------------------------------------------
  */
@@ -135,6 +135,12 @@ public class BookmarksActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         switch (id) {
+
+            // Sort
+            case R.id.action_sort_bookmarks:
+                bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.sortBookmarks());
+                bookmarksListView.setAdapter(bookmarksAdapter);
+                break;
 
             // Backup
             case R.id.action_backup_bookmarks:

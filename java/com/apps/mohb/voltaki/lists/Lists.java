@@ -22,6 +22,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.R;
@@ -91,6 +93,17 @@ public class Lists {
 
     public ArrayList<LocationItem> getBookmarks() {
         return bookmarks;
+    }
+
+    public ArrayList<LocationItem> sortBookmarks() {
+        ArrayList<LocationItem> sortedList = (ArrayList<LocationItem>) bookmarks.clone();
+        Collections.sort(sortedList, new Comparator<LocationItem>() {
+            @Override
+            public int compare(LocationItem lhs, LocationItem rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+        return sortedList;
     }
 
     public void addItemToHistory(LocationItem item) {
