@@ -1,3 +1,7 @@
+####**Beta 0.3.9**
+- Fixed bugs.
+- Minor improvements on user interface.
+
 ####**Beta 0.3.8**
 - Improvements and fixes on user interface.
 

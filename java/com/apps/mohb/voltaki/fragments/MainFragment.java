@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/28/16 7:53 AM
+ *  Last modified : 7/30/16 1:00 AM
  *
  *  -----------------------------------------------------------
  */
@@ -374,19 +374,14 @@ public class MainFragment extends Fragment implements
                 if((lists.isFlagged())) {
                     showFloatingButton();
                 }
-                else {
-                    hideFloatingButton();
-                }
                 break;
 
             case GETTING_LOCATION:
                 ButtonCurrentState.setButtonGetLocation(getContext());
-                hideFloatingButton();
                 break;
 
             case COME_BACK_HERE:
                 ButtonCurrentState.setButtonComeBack(getContext());
-                showFloatingButton();
                 break;
 
             case GO_BACK:
@@ -453,6 +448,8 @@ public class MainFragment extends Fragment implements
         if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
             ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
             ButtonCurrentState.setButtonOffline(getContext());
+            // set reset/refresh action menu item to reset
+            mListener.onUpdateMainMenuItemResetTitle(R.string.action_reset);
             // if a location was clicked on Bookmarks or History lists go to that location
             if(lists.isFlagged()) {
                 mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
@@ -493,6 +490,8 @@ public class MainFragment extends Fragment implements
                     // turn button YELLOW
                     ButtonCurrentState.setButtonStatus(ButtonStatus.COME_BACK_HERE);
                     ButtonCurrentState.setButtonComeBack(getContext());
+                    // set reset/refresh action menu item to refresh
+                    mListener.onUpdateMainMenuItemResetTitle(R.string.action_refresh);
                     // set current location on map
                     mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
                     // show floating button
@@ -584,6 +583,10 @@ public class MainFragment extends Fragment implements
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
                             }
+                            else { // Button is GREEN, so update map with saved location.
+                                updateMap();
+                            }
+
                         } catch (IntentSender.SendIntentException e) {
                             // Ignore the error.
                         }
@@ -611,6 +614,8 @@ public class MainFragment extends Fragment implements
         mMapView.onPause();
         // save button state on memory
         buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
+        // hide floating button
+        hideFloatingButton();
         // save map state on memory
         saveMapState();
         // stop requesting location updates
@@ -620,6 +625,10 @@ public class MainFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        // if button is YELLOW set it to ORANGE because when connect again will search for new location
+        if(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
+            buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+        }
         // if button is RED, came from a list set list flag false
         if((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)&&(lists.isFlagged())) {
             lists.setFlag(false);
@@ -703,8 +712,6 @@ public class MainFragment extends Fragment implements
             hideFloatingButton();
             mListener.onUpdateMainMenuItemAddBookmarksState(false);
             mListener.onUpdateMainMenuItemShareState(false);
-            ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-            ButtonCurrentState.setButtonGetLocation(getContext());
             mapCurrentState.googleMap.clear();
             mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
         }
