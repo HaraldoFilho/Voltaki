@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 7/30/16 8:51 AM
+ *  Last modified : 8/1/16 10:07 PM
  *
  *  -----------------------------------------------------------
  */
@@ -25,12 +25,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
 import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BackupAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.BookmarksSortAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ItemDeleteAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ListsTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ReplaceLocationAlertFragment;
@@ -38,7 +38,6 @@ import com.apps.mohb.voltaki.fragments.dialogs.RestoreAlertFragment;
 import com.apps.mohb.voltaki.lists.BookmarksListAdapter;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
-import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.map.MapSavedState;
 import com.apps.mohb.voltaki.messaging.Toasts;
 
@@ -51,9 +50,9 @@ public class BookmarksActivity extends AppCompatActivity implements
         RestoreAlertFragment.RestoreDialogListener,
         ItemDeleteAlertFragment.ItemDeleteDialogListener,
         ListsTipAlertFragment.ListsTipDialogListener,
-        ReplaceLocationAlertFragment.ReplaceLocationDialogListener {
+        ReplaceLocationAlertFragment.ReplaceLocationDialogListener,
+        BookmarksSortAlertFragment.BookmarksSortAlertDialogListener {
 
-    private MapCurrentState mapCurrentState;
     private MapSavedState mapSavedState;
     private ButtonSavedState buttonSavedState;
 
@@ -72,7 +71,6 @@ public class BookmarksActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_bookmarks);
 
         // initialize state variables
-        mapCurrentState = new MapCurrentState(getApplicationContext());
         mapSavedState = new MapSavedState(getApplicationContext());
         buttonSavedState = new ButtonSavedState(getApplicationContext());
 
@@ -90,7 +88,7 @@ public class BookmarksActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // if a location is not already set on map, set the selected location
-                if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                if (ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     setBookmarkItemOnMap(position);
                 } else { // show dialog asking if wish to replace the location
@@ -138,8 +136,8 @@ public class BookmarksActivity extends AppCompatActivity implements
 
             // Sort
             case R.id.action_sort_bookmarks:
-                bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.sortBookmarks());
-                bookmarksListView.setAdapter(bookmarksAdapter);
+                DialogFragment sortAlert = new BookmarksSortAlertFragment();
+                sortAlert.show(getSupportFragmentManager(), "BookmarksSortAlertFragment");
                 break;
 
             // Backup
@@ -230,30 +228,21 @@ public class BookmarksActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void setBookmarkItemOnMap(int position) {
 
-        // if at least one location provider is enabled set button to GREEN
-        if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
-            ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
-            ButtonCurrentState.setButtonGoBack(getApplicationContext());
-        } else { // set it to RED
-            ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
-            ButtonCurrentState.setButtonOffline(getApplicationContext());
-        }
-
-        // save button state on memory
-        buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
+        // set button to GREEN
+        buttonSavedState.setButtonStatus(ButtonStatus.GO_BACK);
 
         // save location from item on memory
         mapSavedState.setLocationStatus(
                 bookmarksList.getItemFromBookmarks(position).getLatitude(),
                 bookmarksList.getItemFromBookmarks(position).getLongitude(),
                 bookmarksList.getItemFromBookmarks(position).getAddress());
-
-        // flag to tell main activity that
-        // the saved location came
-        // from a list item
-        bookmarksList.setFlag(true);
 
         // close bookmarks screen
         finish();
@@ -295,6 +284,22 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     @Override // No
     public void onRestoreDialogNegativeClick(DialogFragment dialog) {
+        dialog.getDialog().cancel();
+    }
+
+
+    // BOOKMARKS SORT DIALOG
+    @Override
+    public void onSortBookmarksDialogPositiveClick(DialogFragment dialog) {
+        bookmarksList.sortBookmarks();
+        // refresh list on screen
+        // Note: notifyDataSetChanged() doesn't work properly sometimes
+        bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
+        bookmarksListView.setAdapter(bookmarksAdapter);
+    }
+
+    @Override
+    public void onSortBookmarksDialogNegativeClick(DialogFragment dialog) {
         dialog.getDialog().cancel();
     }
 

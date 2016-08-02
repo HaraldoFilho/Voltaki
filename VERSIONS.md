@@ -1,3 +1,10 @@
+####**Beta 0.4.1**
+- Changed bookmarks sort to permanent.
+- Changed button behavior when offline.
+- Updated Google Play Services API version.
+- Fixed bugs.
+- Improvements on user interface.
+
 ####**Beta 0.4.0**
 - Added feature to view an alphabetically sorted list of bookmarks.
 

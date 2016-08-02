@@ -40,7 +40,6 @@ public class Lists {
     private int historyMaxItems;
     private static String bookmarkEditText;
     private static boolean editingAddress;
-    private static boolean flag;
 
     private SharedPreferences sharedPref;
     private ListsSavedState listsSavedState;
@@ -95,15 +94,14 @@ public class Lists {
         return bookmarks;
     }
 
-    public ArrayList<LocationItem> sortBookmarks() {
-        ArrayList<LocationItem> sortedList = (ArrayList<LocationItem>) bookmarks.clone();
-        Collections.sort(sortedList, new Comparator<LocationItem>() {
+    public void sortBookmarks() {
+        Collections.sort(bookmarks, new Comparator<LocationItem>() {
             @Override
             public int compare(LocationItem lhs, LocationItem rhs) {
                 return lhs.getName().compareTo(rhs.getName());
             }
         });
-        return sortedList;
+        saveState();
     }
 
     public void addItemToHistory(LocationItem item) {
@@ -206,15 +204,6 @@ public class Lists {
     public void setEditingAddress(boolean value) {
         editingAddress = value;
     }
-
-    public static boolean isFlagged() {
-        return flag;
-    }
-
-    public static void setFlag(boolean flag) {
-        Lists.flag = flag;
-    }
-
 
     public void backupBookmarks(Context context, boolean auto) throws IOException {
         // check if it is possible to write on external storage

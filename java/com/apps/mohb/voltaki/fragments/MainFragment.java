@@ -5,19 +5,17 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 7/30/16 1:00 AM
+ *  Last modified : 8/1/16 10:09 AM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
@@ -30,7 +28,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -40,9 +37,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.apps.mohb.voltaki.Constants;
+import com.apps.mohb.voltaki.R;
+import com.apps.mohb.voltaki.button.ButtonCurrentState;
+import com.apps.mohb.voltaki.button.ButtonEnums;
+import com.apps.mohb.voltaki.button.ButtonSavedState;
+import com.apps.mohb.voltaki.button.ButtonStatus;
+import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
+import com.apps.mohb.voltaki.lists.Lists;
+import com.apps.mohb.voltaki.lists.LocationItem;
+import com.apps.mohb.voltaki.map.FetchAddressIntentService;
 import com.apps.mohb.voltaki.map.MapCurrentState;
+import com.apps.mohb.voltaki.map.MapSavedState;
+import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
+import com.apps.mohb.voltaki.messaging.Notification;
 import com.apps.mohb.voltaki.messaging.Toasts;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -59,20 +69,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-
-import com.apps.mohb.voltaki.Constants;
-import com.apps.mohb.voltaki.R;
-import com.apps.mohb.voltaki.button.ButtonStatus;
-import com.apps.mohb.voltaki.button.ButtonEnums;
-import com.apps.mohb.voltaki.button.ButtonCurrentState;
-import com.apps.mohb.voltaki.button.ButtonSavedState;
-import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
-import com.apps.mohb.voltaki.lists.Lists;
-import com.apps.mohb.voltaki.lists.LocationItem;
-import com.apps.mohb.voltaki.map.FetchAddressIntentService;
-import com.apps.mohb.voltaki.map.MapSavedState;
-import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
-import com.apps.mohb.voltaki.messaging.Notification;
 
 
 public class MainFragment extends Fragment implements
@@ -308,6 +304,12 @@ public class MainFragment extends Fragment implements
                         startActivity(mapIntent);
                         break;
 
+                    // button is GREEN with red letters
+                    case GO_BACK_OFFLINE:
+                        // open Google Maps
+                        startActivity(mapIntent);
+                        break;
+
                 }
 
             }
@@ -330,7 +332,12 @@ public class MainFragment extends Fragment implements
                         lists.setBookmarkEditText("");
                         DialogFragment dialog = new BookmarkEditDialogFragment();
                         dialog.show(getFragmentManager(), "BookmarkEditDialogFragment");
-                    } else { // open reset dialog
+                    } else
+                    // if button is RED reset
+                    if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
+                        mListener.onReset();
+                    }
+                    else { // open reset dialog
                         DialogFragment alertDialog = new ResetAlertFragment();
                         alertDialog.show(getFragmentManager(), "ResetAlertFragment");
                     }
@@ -371,17 +378,23 @@ public class MainFragment extends Fragment implements
 
             case OFFLINE:
                 ButtonCurrentState.setButtonOffline(getContext());
-                if((lists.isFlagged())) {
-                    showFloatingButton();
-                }
+                hideFloatingButton();
                 break;
 
             case GETTING_LOCATION:
-                ButtonCurrentState.setButtonGetLocation(getContext());
+                if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+                    ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
+                    ButtonCurrentState.setButtonOffline(getContext());
+                }
+                else {
+                    ButtonCurrentState.setButtonGetLocation(getContext());
+                }
+                hideFloatingButton();
                 break;
 
             case COME_BACK_HERE:
                 ButtonCurrentState.setButtonComeBack(getContext());
+                showFloatingButton();
                 break;
 
             case GO_BACK:
@@ -391,6 +404,17 @@ public class MainFragment extends Fragment implements
 
             case GO_BACK_CLICKED:
                 ButtonCurrentState.setButtonGoBackClicked(getContext());
+                showFloatingButton();
+                break;
+
+            case GO_BACK_OFFLINE:
+                if(mapCurrentState.isNetworkEnabled()||mapCurrentState.isGpsEnabled()) {
+                    ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
+                    ButtonCurrentState.setButtonGoBack(getContext());
+                }
+                else {
+                    ButtonCurrentState.setButtonGoBackOffline(getContext());
+                }
                 showFloatingButton();
                 break;
 
@@ -414,61 +438,67 @@ public class MainFragment extends Fragment implements
                 .matches(getString(R.string.set_def_zoom_high))) {
             zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                    .matches(getString(R.string.set_def_zoom_mid))) {
-                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-            } else // if default zoom level is low
-                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                        .matches(getString(R.string.set_def_zoom_low))) {
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                .matches(getString(R.string.set_def_zoom_mid))) {
+            zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+        } else // if default zoom level is low
+        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                .matches(getString(R.string.set_def_zoom_low))) {
+            zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+        }
+        else { // if default zoom level is auto
+               // set the map zoom level according to the default navigation mode
+               if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+                    zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+               } else
+               if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
                     zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                }
-                else { // if default zoom level is auto
-                    // set the map zoom level according to the default navigation mode
-                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-                        zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-                    } else
-                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
-                        zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                    }
-                    else {
-                        zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-                    }
-                }
-
-        // if button is GREEN, came from a list and status bar icon is not disabled
-        // start go back notification
-        if((ButtonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK)&&(lists.isFlagged())
-                &&(!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                .matches(getString(R.string.set_status_bar_icon_disabled)))) {
-            lists.setFlag(false);
-            startGoBackNotification();
+               }
+               else {
+                    zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+               }
         }
 
-        // if none location provider is available, set button to RED
+        // go to the default location (0,0)
+        mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
+        // disable "add to bookmarks" and "share" options menu item on main screen
+        mListener.onUpdateMainMenuItemAddBookmarksState(false);
+        mListener.onUpdateMainMenuItemShareState(false);
+        // set reset/refresh action menu item to reset
+        mListener.onUpdateMainMenuItemResetTitle(R.string.action_reset);
+        // if button is green got to location set on map
+        if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
+            mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
+            mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
+            // enable "add to bookmarks" and "share" options menu item on main screen
+            mListener.onUpdateMainMenuItemAddBookmarksState(true);
+            mListener.onUpdateMainMenuItemShareState(true);
+            // if status bar icon is not disabled start go back notification
+            if (!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
+                    .matches(getString(R.string.set_status_bar_icon_disabled))) {
+                startGoBackNotification();
+            }
+            // if is offline
+            if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+                ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_OFFLINE);
+                ButtonCurrentState.setButtonGoBackOffline(getContext());
+            }
+            // show floating button
+            showFloatingButton();
+
+        } else
+        // if is offline set the button to red
         if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
             ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
             ButtonCurrentState.setButtonOffline(getContext());
-            // set reset/refresh action menu item to reset
-            mListener.onUpdateMainMenuItemResetTitle(R.string.action_reset);
-            // if a location was clicked on Bookmarks or History lists go to that location
-            if(lists.isFlagged()) {
-                mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
-                mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
-                // enable "add to bookmarks" and "share" options menu item on main screen
-                mListener.onUpdateMainMenuItemAddBookmarksState(true);
-                mListener.onUpdateMainMenuItemShareState(true);
-                // show floating button
-                showFloatingButton();
-            }
-            else { // got to the default (0,0) location
-                mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
-                // disable "add to bookmarks" and "share" options menu item on main screen
-                mListener.onUpdateMainMenuItemAddBookmarksState(false);
-                mListener.onUpdateMainMenuItemShareState(false);
-                // hide floating button
-                hideFloatingButton();
-            }
+            hideFloatingButton();
 
+        }
+        else { // set the button to orange
+            ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+            ButtonCurrentState.setButtonGetLocation(getContext());
+            hideFloatingButton();
         }
 
         // request location updates
@@ -576,9 +606,7 @@ public class MainFragment extends Fragment implements
                                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                                 hideFloatingButton();
                                 stopLocationUpdates();
-                                if(!lists.isFlagged()) {
-                                    mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
-                                }
+                                mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
                                 status.startResolutionForResult(
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
@@ -612,8 +640,10 @@ public class MainFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        // save button state on memory
-        buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
+        // save button state on memory if it is not offline
+        if(ButtonCurrentState.getButtonStatus() != ButtonStatus.OFFLINE) {
+            buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
+        }
         // hide floating button
         hideFloatingButton();
         // save map state on memory
@@ -628,10 +658,6 @@ public class MainFragment extends Fragment implements
         // if button is YELLOW set it to ORANGE because when connect again will search for new location
         if(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
             buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-        }
-        // if button is RED, came from a list set list flag false
-        if((ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE)&&(lists.isFlagged())) {
-            lists.setFlag(false);
         }
     }
 
@@ -719,7 +745,8 @@ public class MainFragment extends Fragment implements
         // register that the first update was not taken yet
         isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+
+    /*  if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -730,10 +757,14 @@ public class MainFragment extends Fragment implements
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             return;
+        } */
+        try {
+            // request location updates
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, mLocationListener);
+        } catch (SecurityException e) { // handle a security exception instead of request permission
+            e.printStackTrace();        // as in the above commented code
         }
-        // request location updates
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, mLocationListener);
 
     }
 
@@ -758,7 +789,8 @@ public class MainFragment extends Fragment implements
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
             hideFloatingButton();
             startLocationUpdates();
-        } else { // stop location updates, show floating button and set saved location on map
+        }
+        else { // stop location updates, show floating button and set saved location on map
             stopLocationUpdates();
             showFloatingButton();
             mapCurrentState.gotoLocation(mapSavedState.getLatitude(), mapSavedState.getLongitude(), zoomLevel);

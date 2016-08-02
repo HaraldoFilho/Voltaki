@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonCurrentState.java
- *  Last modified : 7/18/16 8:30 PM
+ *  Last modified : 7/31/16 11:57 PM
  *
  *  -----------------------------------------------------------
  */
@@ -66,7 +66,7 @@ public class ButtonCurrentState {
     public static void setButtonOffline(Context context) {
         setButtonProperties(context, R.color.colorOfflineButton,
                 R.color.colorWhiteTextButton, R.string.button_offline,
-                Constants.TEXT_LARGE, false);
+                Constants.TEXT_LARGE, true);
     }
 
     public static void setButtonGetLocation(Context context) {
@@ -88,5 +88,11 @@ public class ButtonCurrentState {
         setButtonProperties(context, R.color.colorGoBackButton,
                 R.color.colorYellowTextButton, R.string.button_go_back, Constants.TEXT_LARGE, true);
     }
+
+    public static void setButtonGoBackOffline(Context context) {
+        setButtonProperties(context, R.color.colorGoBackButton,
+                R.color.colorOfflineButton, R.string.button_go_back, Constants.TEXT_LARGE, true);
+    }
+
 
 }

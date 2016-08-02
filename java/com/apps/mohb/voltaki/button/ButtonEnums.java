@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonEnums.java
- *  Last modified : 7/8/16 1:07 AM
+ *  Last modified : 8/1/16 9:24 AM
  *
  *  -----------------------------------------------------------
  */
@@ -35,6 +35,9 @@ public class ButtonEnums {
             case GO_BACK_CLICKED:
                 intStatus = 3;
                 break;
+            case GO_BACK_OFFLINE:
+                intStatus = 4;
+                break;
             default:
                 intStatus = 0;
         }
@@ -62,6 +65,9 @@ public class ButtonEnums {
                 break;
             case 3:
                 buttonStatus = ButtonStatus.GO_BACK_CLICKED;
+                break;
+            case 4:
+                buttonStatus = ButtonStatus.GO_BACK_OFFLINE;
                 break;
             default:
                 buttonStatus = null;

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 7/28/16 7:55 PM
+ *  Last modified : 8/1/16 10:05 AM
  *
  *  -----------------------------------------------------------
  */
@@ -171,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
             // and update notification if button is green
             if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
-                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)) {
+                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)
+                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_OFFLINE)) {
                 // intent that will open Google Maps when notification is clicked
                 Intent intent = new Intent(this, GoBackNotificationActivity.class);
                 Notification notification = new Notification();
@@ -216,11 +217,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // check if all location providers are disabled
         if (!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
-            // if button is not GREEN set it to RED
-            if(ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
-                    < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
-                buttonSavedState.setButtonStatus(ButtonStatus.OFFLINE);
-            }
             // if location services dialog is enabled in preferences show it
             if(showNoLocServWarnPref.getBoolean(Constants.LOC_SERV_CHECK, true)) {
                 locServDisabledDialog.setCancelable(false);
@@ -371,14 +367,9 @@ public class MainActivity extends AppCompatActivity implements
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     reset();
-                } else // if at least one location provider is available show reset dialog
-                if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
+                } else {
                     DialogFragment alertDialog = new ResetAlertFragment();
                     alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
-                }
-                else { // show location service disabled warning
-                    locServDisabledDialog.setCancelable(true);
-                    locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
                 }
                 break;
 
@@ -500,14 +491,13 @@ public class MainActivity extends AppCompatActivity implements
         if(mapCurrentState.isGpsEnabled()||mapCurrentState.isNetworkEnabled()) {
             ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
             ButtonCurrentState.setButtonGetLocation(this);
+            buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
         }
         else { // set the button to OFFLINE
             ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
             ButtonCurrentState.setButtonOffline(this);
+            buttonSavedState.setButtonStatus(ButtonStatus.OFFLINE);
         }
-
-        // save the current button status on memory
-        buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
 
         // cancel status bar notification
         Notification notification = new Notification();
@@ -525,9 +515,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // change reset menu item
         updateActionResetTitle();
-
-        // reset lists flag
-        lists.setFlag(false);
 
     }
 
