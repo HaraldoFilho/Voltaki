@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : AboutActivity.java
- *  Last modified : 7/14/16 10:15 PM
+ *  Last modified : 8/2/16 10:50 PM
  *
  *  -----------------------------------------------------------
  */
@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.apps.mohb.voltaki.fragments.dialogs.MaterialIconsDialogFragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import com.apps.mohb.voltaki.fragments.dialogs.LegalNoticesDialogFragment;
@@ -122,6 +123,13 @@ public class AboutActivity extends AppCompatActivity {
             case R.id.action_legal_notices:
                 new GetLegalNotices().execute();
                 break;
+
+            // Icons attribution
+            case R.id.action_material_icons:
+                dialog = new MaterialIconsDialogFragment();
+                dialog.show(getSupportFragmentManager(), "MaterialIconsDialogFragment");
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

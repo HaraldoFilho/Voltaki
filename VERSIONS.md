@@ -1,3 +1,7 @@
+####**Beta 0.4.2**
+- Updated the "Terms of Use" and "Privacy Policy" texts.
+- Added Material Icons Attribution text.
+
 ####**Beta 0.4.1**
 - Changed bookmarks sort to permanent.
 - Changed button behavior when offline.
