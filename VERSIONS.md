@@ -1,3 +1,6 @@
+####**Beta 0.4.3**
+- Added permissions requests at run time for versions 6.x (Marshmallow) or higher.
+
 ####**Beta 0.4.2**
 - Updated the "Terms of Use" and "Privacy Policy" texts.
 - Added Material Icons Attribution text.

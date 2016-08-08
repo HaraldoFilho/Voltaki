@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 7/28/16 8:06 PM
+ *  Last modified : 8/7/16 9:57 PM
  *
  *  -----------------------------------------------------------
  */
@@ -38,6 +38,10 @@ public class Constants {
     // System language
     public static final String SYSTEM_LANGUAGE ="SYSTEM_LANGUAGE";
     public static final String LANGUAGE_PORTUGUESE = "pt";
+
+    // Permissions request
+    public static final int    FINE_LOCATION_PERMISSION_REQUEST = 0;
+    public static final int    WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 1;
 
     // Button saved preferences
     public static final String BUTTON_STATUS = "ButtonStatus";

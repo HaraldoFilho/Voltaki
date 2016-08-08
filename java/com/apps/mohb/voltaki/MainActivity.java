@@ -5,13 +5,14 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/1/16 10:05 AM
+ *  Last modified : 8/7/16 10:21 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +48,7 @@ import com.apps.mohb.voltaki.fragments.dialogs.ButtonTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.LocServDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.MapsNotInstalledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.NoLocPermissionAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
@@ -67,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements
         MapsNotInstalledAlertFragment.MapsNotInstalledAlertDialogListener,
         GpsDisabledAlertFragment.GpsDisabledDialogListener,
         LocServDisabledAlertFragment.LocServDisabledDialogListener,
-        ButtonTipAlertFragment.ButtonTipDialogListener {
+        ButtonTipAlertFragment.ButtonTipDialogListener,
+        NoLocPermissionAlertFragment.NoLocPermissionDialogListener {
 
     private DrawerLayout drawer;
     private static MenuItem menuItemReset;
@@ -203,8 +207,8 @@ public class MainActivity extends AppCompatActivity implements
             gpsDisabledDialog = new GpsDisabledAlertFragment();
         }
 
-
     }
+
 
     @Override
     public void onStart() {
@@ -627,6 +631,41 @@ public class MainActivity extends AppCompatActivity implements
     @Override // update state of share menu item on options menu
     public void onUpdateMainMenuItemShareState(boolean state) {
         menuItemShare.setEnabled(state);
+    }
+
+
+    @Override // read result of permissions requests
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case Constants.FINE_LOCATION_PERMISSION_REQUEST: {
+                // if permission is granted reset
+                if (grantResults.length > 0
+                        && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
+                    reset();
+                }
+                return;
+            }
+        }
+    }
+
+
+    // LOCATION REQUEST DIALOG
+
+    @Override  // Yes
+    public void onAlertNoLocPermDialogPositiveClick(DialogFragment dialog) {
+        // request permissions
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                Constants.FINE_LOCATION_PERMISSION_REQUEST);
+
+    }
+
+    @Override // No
+    public void onAlertNoLocPermDialogNegativeClick(DialogFragment dialog) {
+        dialog.getDialog().cancel();
     }
 
 

@@ -4,8 +4,8 @@
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
- *  File          : GpsDisabledAlertFragment.java
- *  Last modified : 8/7/16 5:56 PM
+ *  File          : NoLocPermissionAlertFragment.java
+ *  Last modified : 8/7/16 9:58 PM
  *
  *  -----------------------------------------------------------
  */
@@ -15,43 +15,35 @@ package com.apps.mohb.voltaki.fragments.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.apps.mohb.voltaki.R;
 
 
-public class GpsDisabledAlertFragment extends DialogFragment {
+public class NoLocPermissionAlertFragment extends DialogFragment {
 
-    public interface GpsDisabledDialogListener {
-        void onAlertGpsDialogPositiveClick(DialogFragment dialog);
-        void onAlertGpsDialogNegativeClick(DialogFragment dialog);
-        void onAlertGpsDialogNeutralClick(DialogFragment dialog);
+    public interface NoLocPermissionDialogListener {
+        void onAlertNoLocPermDialogPositiveClick(DialogFragment dialog);
+        void onAlertNoLocPermDialogNegativeClick(DialogFragment dialog);
     }
 
-    private GpsDisabledDialogListener mListener;
+    private NoLocPermissionDialogListener mListener;
 
 
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.alert_title_warning).setMessage(R.string.alert_message_better_gps);
+        alertDialogBuilder.setTitle(R.string.alert_title_warning).setMessage(R.string.alert_message_loc_permission_needed);
         alertDialogBuilder.setPositiveButton(R.string.alert_button_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mListener.onAlertGpsDialogPositiveClick(GpsDisabledAlertFragment.this);
+                mListener.onAlertNoLocPermDialogPositiveClick(NoLocPermissionAlertFragment.this);
             }
         })
         .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mListener.onAlertGpsDialogNegativeClick(GpsDisabledAlertFragment.this);
-            }
-        })
-        .setNeutralButton(R.string.alert_button_no_check, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                mListener.onAlertGpsDialogNeutralClick(GpsDisabledAlertFragment.this);
+                mListener.onAlertNoLocPermDialogNegativeClick(NoLocPermissionAlertFragment.this);
             }
         });
 
@@ -64,12 +56,12 @@ public class GpsDisabledAlertFragment extends DialogFragment {
         super.onAttach(activity);
         // Verify that the host activity implements the callback interface
         try {
-            // Instantiate the GpsDisableDialogListener so we can send events to the host
-            mListener = (GpsDisabledDialogListener) activity;
+            // Instantiate the NoLocPermissionDialogListener so we can send events to the host
+            mListener = (NoLocPermissionDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(activity.toString()
-                    + " must implement GpsDisableDialogListener");
+                    + " must implement NoLocPermissionDialogListener");
         }
     }
 

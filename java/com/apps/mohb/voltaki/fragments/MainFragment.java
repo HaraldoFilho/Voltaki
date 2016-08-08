@@ -5,20 +5,21 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 8/1/16 10:09 AM
+ *  Last modified : 8/7/16 9:57 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -28,6 +29,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,7 +46,7 @@ import com.apps.mohb.voltaki.button.ButtonEnums;
 import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.NoLocPermissionAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ResetAlertFragment;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
@@ -75,7 +77,6 @@ public class MainFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback {
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -582,18 +583,7 @@ public class MainFragment extends Fragment implements
 
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // check if android version is MARSHMALLOW or higher and gps is disabled
-                        // if true, show dialog to turn on gps
-                        // this is to circumvent MARSHMALLOW not displaying increase precision dialog when gps is disabled
-                        if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)&&(!mapCurrentState.isGpsEnabled())
-                                &&(sharedPref.getBoolean(Constants.GPS_CHECK, true))) {
-                            DialogFragment dialog = new GpsDisabledAlertFragment();
-                            dialog.setCancelable(false);
-                            dialog.show(getFragmentManager(), "GpsDisabledAlertFragment");
-                        }
-                        else { // All location settings are satisfied
-                            updateMap();
-                        }
+                        updateMap();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
@@ -745,25 +735,26 @@ public class MainFragment extends Fragment implements
         // register that the first update was not taken yet
         isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
 
-
-    /*  if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        } */
-        try {
+        // check if location permissions are granted
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             // request location updates
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, mLocationListener);
-        } catch (SecurityException e) { // handle a security exception instead of request permission
-            e.printStackTrace();        // as in the above commented code
+        }
+        else {
+            // check if user already denied permission request
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)){
+                DialogFragment dialog = new NoLocPermissionAlertFragment();
+                dialog.show(getFragmentManager(), "NoLocPermissionAlertFragment");
+            }
+            else {
+                // request permissions
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        Constants.FINE_LOCATION_PERMISSION_REQUEST);
+            }
         }
 
     }

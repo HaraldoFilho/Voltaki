@@ -5,16 +5,19 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 8/1/16 10:07 PM
+ *  Last modified : 8/7/16 10:21 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -30,6 +33,7 @@ import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BackupAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ExternalStoragePermissionsAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarksSortAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ItemDeleteAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ListsTipAlertFragment;
@@ -51,7 +55,8 @@ public class BookmarksActivity extends AppCompatActivity implements
         ItemDeleteAlertFragment.ItemDeleteDialogListener,
         ListsTipAlertFragment.ListsTipDialogListener,
         ReplaceLocationAlertFragment.ReplaceLocationDialogListener,
-        BookmarksSortAlertFragment.BookmarksSortAlertDialogListener {
+        BookmarksSortAlertFragment.BookmarksSortAlertDialogListener,
+        ExternalStoragePermissionsAlertFragment.ExternalStoragePermissionsDialogListener {
 
     private MapSavedState mapSavedState;
     private ButtonSavedState buttonSavedState;
@@ -63,6 +68,9 @@ public class BookmarksActivity extends AppCompatActivity implements
     private BookmarksListAdapter bookmarksAdapter;
 
     private AdapterView.AdapterContextMenuInfo menuInfo;
+
+    private static MenuItem menuItemBackup;
+    private static MenuItem menuItemRestore;
 
 
     @Override
@@ -116,6 +124,23 @@ public class BookmarksActivity extends AppCompatActivity implements
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }
 
+        // check permissions to access exteral storage
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)) {
+            // check if user already denied permission request
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
+                DialogFragment dialog = new ExternalStoragePermissionsAlertFragment();
+                dialog.show(getSupportFragmentManager(), "ExternalStoragePermissionsAlertFragment");
+            }
+            else {
+                // request permissions
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST);
+            }
+        }
+
     }
 
 
@@ -124,6 +149,20 @@ public class BookmarksActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.bookmarks, menu);
+
+        menuItemBackup = menu.findItem(R.id.action_backup_bookmarks);
+        menuItemRestore = menu.findItem(R.id.action_restore_bookmarks);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            menuItemBackup.setEnabled(true);
+            menuItemRestore.setEnabled(true);
+        }
+        else {
+            menuItemBackup.setEnabled(false);
+            menuItemRestore.setEnabled(false);
+        }
+
         return true;
     }
 
@@ -250,6 +289,24 @@ public class BookmarksActivity extends AppCompatActivity implements
     }
 
 
+    @Override // read result of permissions requests
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case Constants.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST: {
+                // if permission is granted enable menu items
+                if (grantResults.length > 0
+                        && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
+                    menuItemBackup.setEnabled(true);
+                    menuItemRestore.setEnabled(true);
+                }
+                return;
+            }
+        }
+    }
+
+
     // BOOKMARK BACKUP DIALOG
 
     @Override // Yes
@@ -289,6 +346,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
 
     // BOOKMARKS SORT DIALOG
+
     @Override
     public void onSortBookmarksDialogPositiveClick(DialogFragment dialog) {
         bookmarksList.sortBookmarks();
@@ -365,6 +423,23 @@ public class BookmarksActivity extends AppCompatActivity implements
     public void onListsTipDialogPositiveClick(DialogFragment dialog) {
         // tells application to do not show tip again
         showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).commit();
+        dialog.getDialog().cancel();
+    }
+
+
+    // WRITE EXTERNAL STORAGE PERMISSION DIALOG
+
+    @Override // Yes
+    public void onAlertExtStoragePermDialogPositiveClick(DialogFragment dialog) {
+        // request permissions
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                Constants.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST);
+
+    }
+
+    @Override // No
+    public void onAlertExtStoragePermDialogNegativeClick(DialogFragment dialog) {
         dialog.getDialog().cancel();
     }
 
