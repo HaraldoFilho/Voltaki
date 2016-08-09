@@ -1,3 +1,7 @@
+####**Beta 0.4.4**
+- Removed settings option to turn on/off GPS disabled warning.
+- Changed navigation drawer icon and text.
+
 ####**Beta 0.4.3**
 - Added permissions requests at run time for versions 6.x (Marshmallow) or higher.
 

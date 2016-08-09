@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/7/16 10:21 PM
+ *  Last modified : 8/7/16 10:27 PM
  *
  *  -----------------------------------------------------------
  */
@@ -593,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 // user choose to not turn on location provider that is off
                 case Activity.RESULT_CANCELED:
-                    // if check gps turned off is enabled in settings and gps is turned off
+                    // if check gps turned off is enabled and gps is turned off
                     if ((sharedPref.getBoolean(Constants.GPS_CHECK, true)) && (!mapCurrentState.isGpsEnabled())) {
                         // if network location provider is available show gps disabled alert dialog
                         if (mapCurrentState.isNetworkEnabled()) {

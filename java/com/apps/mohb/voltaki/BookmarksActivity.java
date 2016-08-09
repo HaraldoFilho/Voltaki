@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 8/7/16 10:21 PM
+ *  Last modified : 8/8/16 8:00 PM
  *
  *  -----------------------------------------------------------
  */
@@ -124,7 +124,7 @@ public class BookmarksActivity extends AppCompatActivity implements
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }
 
-        // check permissions to access exteral storage
+        // check permissions to access external storage
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED)) {
             // check if user already denied permission request
