@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/7/16 10:27 PM
+ *  Last modified : 8/9/16 7:15 AM
  *
  *  -----------------------------------------------------------
  */
@@ -84,13 +84,14 @@ public class MainActivity extends AppCompatActivity implements
     private MapCurrentState mapCurrentState;
     private ButtonSavedState buttonSavedState;
 
-    private SharedPreferences sharedPref;
-    private SharedPreferences lastSystemLanguagePref;
     private String lastSystemLanguage;
     private String systemLanguage;
 
+    private SharedPreferences sharedPref;
+    private SharedPreferences lastSystemLanguagePref;
     private SharedPreferences showTipPref;
     private SharedPreferences showNoLocServWarnPref;
+    private SharedPreferences showGpsCheckWarnPref;
 
     private boolean okPlayServices;
     private boolean okMaps;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showNoLocServWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        showGpsCheckWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
         // get system language
         systemLanguage = Locale.getDefault().getLanguage().toString();
@@ -594,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements
                 // user choose to not turn on location provider that is off
                 case Activity.RESULT_CANCELED:
                     // if check gps turned off is enabled and gps is turned off
-                    if ((sharedPref.getBoolean(Constants.GPS_CHECK, true)) && (!mapCurrentState.isGpsEnabled())) {
+                    if ((showGpsCheckWarnPref.getBoolean(Constants.GPS_CHECK_SHOW, true)) && (!mapCurrentState.isGpsEnabled())) {
                         // if network location provider is available show gps disabled alert dialog
                         if (mapCurrentState.isNetworkEnabled()) {
                             gpsDisabledDialog.setCancelable(false);
@@ -772,7 +774,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // Do not show again
     public void onAlertGpsDialogNeutralClick(DialogFragment dialog) {
-        sharedPref.edit().putBoolean(Constants.GPS_CHECK, false).commit();
+        showGpsCheckWarnPref.edit().putBoolean(Constants.GPS_CHECK_SHOW, false).commit();
         // if network location provider is enabled start location updates
         if(mapCurrentState.isNetworkEnabled()) {
             startLocationUpdates();

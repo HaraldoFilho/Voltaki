@@ -1,3 +1,7 @@
+####**Beta 0.4.5**
+- Removed disabled GPS warning from settings shared preferences.
+- Changed navigation drawer icon size.
+
 ####**Beta 0.4.4**
 - Removed settings option to turn on/off GPS disabled warning.
 - Changed navigation drawer icon and text.

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 8/7/16 9:57 PM
+ *  Last modified : 8/9/16 7:15 AM
  *
  *  -----------------------------------------------------------
  */
@@ -30,7 +30,6 @@ public class Constants {
     public static final String STATUS_BAR_ICON = "STATUS_BAR_ICON";
     public static final String AUTO_BACKUP = "AUTO_BACKUP";
     public static final String LOC_SERV_CHECK = "LOC_SERV_CHECK";
-    public static final String GPS_CHECK = "GPS_CHECK";
 
     public static final String HISTORY_MAX_ITEMS_10 = "10";
     public static final String HISTORY_MAX_ITEMS_100 = "100";
@@ -80,6 +79,9 @@ public class Constants {
     public static final int    LOC_REQ_FAST_INTERVAL = 500;
 
     public static final int    REQUEST_CHECK_SETTINGS = 0x1;
+
+    public static final String GPS_CHECK_SHOW = "GpsCheckShow";
+
 
     // Lists
     public static final int    LIST_ADAPTER_RESOURCE_ID = 0;
