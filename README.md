@@ -2,9 +2,11 @@
 
 ###About the application:
 
-**_Voltaki_** is a simple application where you you can mark places to go back later using *Google Maps™* app. The app saves a history of the places which you have marked and you can also add a bookmark in the places you go back more frequently.
+**_Voltaki_** is a simple Android™ application which with only one button you can mark places and go back to them later using *Google Maps™* app. 
+The app saves a history of the places you have marked and you can add a bookmark in the places you go back more frequently. 
+You can also share your current or saved locations.
 
-*Google Maps is a trademark of Google, Inc.*
+*Android and Google Maps are trademarks of Google, Inc.*
 
 ###This application uses:
 
