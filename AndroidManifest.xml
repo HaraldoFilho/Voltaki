@@ -81,6 +81,12 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".FeedbackActivity"
+            android:label="@string/action_feedback"
+            android:parentActivityName=".AboutActivity"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".messaging.GoBackNotificationActivity" />
 
         <service

@@ -1,3 +1,6 @@
+####**Beta 0.4.6**
+- Added app bar icons in About screen to access website's contact and bug report forms.
+
 ####**Beta 0.4.5**
 - Removed disabled GPS warning from settings shared preferences.
 - Changed navigation drawer icon size.

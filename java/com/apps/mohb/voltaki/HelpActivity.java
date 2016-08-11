@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HelpActivity.java
- *  Last modified : 7/12/16 8:59 PM
+ *  Last modified : 8/10/16 11:35 PM
  *
  *  -----------------------------------------------------------
  */
@@ -91,6 +91,7 @@ public class HelpActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Compose a e-mail to send a question
     private void composeEmail(String[] addresses, String subject) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
