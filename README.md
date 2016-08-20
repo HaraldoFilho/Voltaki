@@ -41,10 +41,11 @@ You can also share your current or saved locations.
 
 ###Project Info:
 
-- Status: **in Beta**
+- Status: **in Production**
 - Start Date: May 24, 2016
 - Alpha Release Date: Jun 7, 2016
 - Beta Release Date: Jul 15, 2016
+- Production Release Date: Aug 20, 2016
 - Developer: Haraldo Albergaria Filho
 
 ###Development Tools:

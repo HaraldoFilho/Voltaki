@@ -1,3 +1,6 @@
+####**1.0.0**
+- First public release of the application. Includes all bug fixes and improvements implemented in the Beta versions.
+
 ####**Beta 0.4.6**
 - Added app bar icons in About screen to access website's contact and bug report forms.
 
