@@ -4,8 +4,8 @@
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
- *  File          : WebActivity.java
- *  Last modified : 8/10/16 11:21 PM
+ *  File          : FeedbackActivity.java
+ *  Last modified : 8/11/16 12:04 AM
  *
  *  -----------------------------------------------------------
  */
@@ -40,13 +40,13 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-     }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         // load help page in webView
-        webView.loadUrl(bundle.getString("url"));
+        webView.loadUrl(getString(R.string.url_website) + bundle.getString("url"));
     }
 
     @Override

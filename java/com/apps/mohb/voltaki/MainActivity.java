@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/9/16 7:15 AM
+ *  Last modified : 8/22/16 11:46 PM
  *
  *  -----------------------------------------------------------
  */

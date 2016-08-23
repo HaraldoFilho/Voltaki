@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HelpActivity.java
- *  Last modified : 8/10/16 11:35 PM
+ *  Last modified : 8/23/16 8:02 PM
  *
  *  -----------------------------------------------------------
  */
@@ -56,7 +56,7 @@ public class HelpActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // load help page in webView
-        webView.loadUrl(bundle.getString("url"));
+        webView.loadUrl(getString(R.string.url_website) + bundle.getString("url"));
     }
 
     @Override
