@@ -44,8 +44,9 @@ import com.apps.mohb.voltaki.fragments.MainFragment;
 import com.apps.mohb.voltaki.fragments.NoMapsFragment;
 import com.apps.mohb.voltaki.fragments.NoPlayServicesFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.ButtonTipAlertFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.GpsDisabledAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ButtonAddBookmarkTipAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ButtonRefreshTipAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ButtonResetTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.LocServDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.MapsNotInstalledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.NoLocPermissionAlertFragment;
@@ -68,10 +69,11 @@ public class MainActivity extends AppCompatActivity implements
         ResetAlertFragment.ResetDialogListener,
         BookmarkEditDialogFragment.BookmarkEditDialogListener,
         MapsNotInstalledAlertFragment.MapsNotInstalledAlertDialogListener,
-        GpsDisabledAlertFragment.GpsDisabledDialogListener,
         LocServDisabledAlertFragment.LocServDisabledDialogListener,
-        ButtonTipAlertFragment.ButtonTipDialogListener,
-        NoLocPermissionAlertFragment.NoLocPermissionDialogListener {
+        NoLocPermissionAlertFragment.NoLocPermissionDialogListener,
+        ButtonRefreshTipAlertFragment.ButtonRefreshTipDialogListener,
+        ButtonResetTipAlertFragment.ButtonResetTipDialogListener,
+        ButtonAddBookmarkTipAlertFragment.ButtonAddBookmarkTipDialogListener {
 
     private DrawerLayout drawer;
     private static MenuItem menuItemReset;
@@ -87,11 +89,11 @@ public class MainActivity extends AppCompatActivity implements
     private String lastSystemLanguage;
     private String systemLanguage;
 
-    private SharedPreferences sharedPref;
     private SharedPreferences lastSystemLanguagePref;
-    private SharedPreferences showTipPref;
+    private SharedPreferences showRefreshTipPref;
+    private SharedPreferences showResetTipPref;
+    private SharedPreferences showAddBookmarkPref;
     private SharedPreferences showNoLocServWarnPref;
-    private SharedPreferences showGpsCheckWarnPref;
 
     private boolean okPlayServices;
     private boolean okMaps;
@@ -99,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements
     private Lists lists;
 
     private DialogFragment locServDisabledDialog;
-    private DialogFragment gpsDisabledDialog;
 
     protected GoogleApiAvailability googleApiAvailability;
     private int googlePlayServicesAvailability;
@@ -160,10 +161,10 @@ public class MainActivity extends AppCompatActivity implements
         buttonSavedState = new ButtonSavedState(this);
 
         // get user preferences from settings
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        showRefreshTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        showResetTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        showAddBookmarkPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showNoLocServWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        showGpsCheckWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
         // get system language
         systemLanguage = Locale.getDefault().getLanguage().toString();
@@ -202,11 +203,6 @@ public class MainActivity extends AppCompatActivity implements
         // create location services disabled dialog
         if (locServDisabledDialog == null) {
             locServDisabledDialog  = new LocServDisabledAlertFragment();
-        }
-
-        // create gps disabled dialog
-        if (gpsDisabledDialog == null) {
-            gpsDisabledDialog = new GpsDisabledAlertFragment();
         }
 
     }
@@ -258,15 +254,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        // if gps is enabled cancel gps disabled dialog
-        if (mapCurrentState.isGpsEnabled()) {
-            Dialog dialogGps = gpsDisabledDialog.getDialog();
-            if (dialogGps != null) {
-                dialogGps.setCancelable(true);
-                dialogGps.cancel();
-            }
-        }
-
         // set title of refresh/reset action menu item
         try {
             updateActionResetTitle();
@@ -295,12 +282,6 @@ public class MainActivity extends AppCompatActivity implements
             mainFragment = new MainFragment();
             mainFragmentManager = getSupportFragmentManager();
             mainFragmentManager.beginTransaction().replace(R.id.container, mainFragment).commit();
-        }
-
-        // if button tips is enabled in preferences show it
-        if (showTipPref.getBoolean(Constants.BUTTON_TIP_SHOW, true)) {
-            DialogFragment dialog = new ButtonTipAlertFragment();
-            dialog.show(getSupportFragmentManager(), "ButtonTipAlertFragment");
         }
 
     }
@@ -372,8 +353,22 @@ public class MainActivity extends AppCompatActivity implements
                 // if button is not GREEN refresh map
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
+                    // if button is YELLOW show button refresh tip dialog
+                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                            == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
+                        if (showRefreshTipPref.getBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, true)) {
+                            DialogFragment tipDialog = new ButtonRefreshTipAlertFragment();
+                            tipDialog.show(getSupportFragmentManager(), "ButtonRefreshTipAlertFragment");
+                        }
+                    }
+                    else { // if it is RED show reset tip dialog
+                        if (showResetTipPref.getBoolean(Constants.BUTTON_RESET_TIP_SHOW, true)) {
+                            DialogFragment tipDialog = new ButtonResetTipAlertFragment();
+                            tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
+                        }
+                    }
                     reset();
-                } else {
+                } else { // show reset dialog
                     DialogFragment alertDialog = new ResetAlertFragment();
                     alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
                 }
@@ -595,18 +590,10 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 // user choose to not turn on location provider that is off
                 case Activity.RESULT_CANCELED:
-                    // if check gps turned off is enabled and gps is turned off
-                    if ((showGpsCheckWarnPref.getBoolean(Constants.GPS_CHECK_SHOW, true)) && (!mapCurrentState.isGpsEnabled())) {
-                        // if network location provider is available show gps disabled alert dialog
-                        if (mapCurrentState.isNetworkEnabled()) {
-                            gpsDisabledDialog.setCancelable(false);
-                            gpsDisabledDialog.show(getSupportFragmentManager(), "GpsDisabledAlertFragment");
-                        }
-                    } else
-                        // if at least one location provider is available start location updates
-                        if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
-                            startLocationUpdates();
-                        }
+                    // if at least one location provider is available start location updates
+                    if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
+                        startLocationUpdates();
+                    }
                     break;
             }
         }
@@ -713,6 +700,11 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
+        if(showAddBookmarkPref.getBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, true)) {
+            DialogFragment tipDialog = new ButtonAddBookmarkTipAlertFragment();
+            tipDialog.show(getSupportFragmentManager(), "ButtonAddBookmarkTipAlertFragment");
+        }
+
     }
 
     @Override // Cancel
@@ -726,6 +718,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override // Yes
     public void onResetDialogPositiveClick(DialogFragment dialog) {
         reset();
+        if(showResetTipPref.getBoolean(Constants.BUTTON_RESET_TIP_SHOW, true)) {
+            DialogFragment tipDialog = new ButtonResetTipAlertFragment();
+            tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
+        }
+
     }
 
     @Override // No
@@ -755,41 +752,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    // GPS DISABLED DIALOG
-
-    @Override // Yes
-    public void onAlertGpsDialogPositiveClick(DialogFragment dialog) {
-        // open locations settings
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-    }
-
-    @Override // No
-    public void onAlertGpsDialogNegativeClick(DialogFragment dialog) {
-        // if network location provider is enabled start location updates
-        if(mapCurrentState.isNetworkEnabled()) {
-            startLocationUpdates();
-        }
-    }
+    // BUTTON ADD BOOKMARK TIP DIALOG
 
     @Override // Do not show again
-    public void onAlertGpsDialogNeutralClick(DialogFragment dialog) {
-        showGpsCheckWarnPref.edit().putBoolean(Constants.GPS_CHECK_SHOW, false).commit();
-        // if network location provider is enabled start location updates
-        if(mapCurrentState.isNetworkEnabled()) {
-            startLocationUpdates();
-        }
+    public void onButtonAddBookmarkTipDialogPositiveClick(DialogFragment dialog) {
+        showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).commit();
     }
 
 
-    // BUTTON TIPS DIALOG
+    // BUTTON REFRESH TIP DIALOG
 
     @Override // Do not show again
-    public void onButtonTipDialogPositiveClick(DialogFragment dialog) {
-        showTipPref.edit().putBoolean(Constants.BUTTON_TIP_SHOW, false).commit();
-        if(mapCurrentState.isNetworkEnabled()||mapCurrentState.isGpsEnabled()) {
-            startLocationUpdates();
-        }
+    public void onButtonRefreshTipDialogPositiveClick(DialogFragment dialog) {
+        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).commit();
+    }
+
+
+    // BUTTON RESET TIP DIALOG
+
+    @Override
+    public void onButtonResetTipDialogPositiveClick(DialogFragment dialog) {
+        showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).commit();
     }
 
 }

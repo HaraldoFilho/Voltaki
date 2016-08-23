@@ -45,7 +45,9 @@ public class Constants {
     // Button saved preferences
     public static final String BUTTON_STATUS = "ButtonStatus";
     public static final int    DEFAULT_BUTTON_STATUS = 0;
-    public static final String BUTTON_TIP_SHOW = "ButtonTipShow";
+    public static final String BUTTON_RESET_TIP_SHOW = "ButtonResetTipShow";
+    public static final String BUTTON_REFRESH_TIP_SHOW = "ButtonRefreshTipShow";
+    public static final String BUTTON_ADD_BOOKMARK_TIP_SHOW = "ButtonAddBookmarkTipShow";
 
     // Map Saved Preferences
     public static final String MAP_FIRST_LOCATION = "MapFirstLocation";
@@ -80,9 +82,6 @@ public class Constants {
 
     public static final int    REQUEST_CHECK_SETTINGS = 0x1;
 
-    public static final String GPS_CHECK_SHOW = "GpsCheckShow";
-
-
     // Lists
     public static final int    LIST_ADAPTER_RESOURCE_ID = 0;
     public static final int    LIST_HEAD   = 0;
@@ -95,7 +94,6 @@ public class Constants {
     public static final int    TEXT_LARGE  = 20;
 
     // Feedback and question
-    public static final int    FEEDBACK_ARRAY_SIZE = 1;
     public static final int    QUESTION_ARRAY_SIZE = 1;
 
     // Vibrator

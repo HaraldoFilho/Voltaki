@@ -1,3 +1,6 @@
+####**1.0.1**
+- Improvements on user interface (tips dialogs).
+
 ####**1.0.0**
 - First public release of the application. Includes all bug fixes and improvements implemented in the Beta versions.
 

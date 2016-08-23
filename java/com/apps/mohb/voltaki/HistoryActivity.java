@@ -101,9 +101,9 @@ public class HistoryActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        // show tip if it hasn't shown before
+        // show tip if it hasn't shown before and list is not empty
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        if (showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true)) {
+        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true))&&(!historyList.getHistory().isEmpty())) {
             DialogFragment dialog = new ListsTipAlertFragment();
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }

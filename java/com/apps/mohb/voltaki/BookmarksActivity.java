@@ -117,9 +117,9 @@ public class BookmarksActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
 
-        // show tip if it hasn't shown before
+        // show tip if it hasn't shown before and list is not empty
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        if (showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true)) {
+        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true))&&(!bookmarksList.getBookmarks().isEmpty())) {
             DialogFragment dialog = new ListsTipAlertFragment();
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }
