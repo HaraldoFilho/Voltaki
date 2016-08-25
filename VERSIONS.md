@@ -1,3 +1,6 @@
+####**1.0.3**
+- Improvements on user interface.
+
 ####**1.0.2**
 - Fixed app url on sharing text.
 

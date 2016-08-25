@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapCurrentState.java
- *  Last modified : 7/14/16 11:48 PM
+ *  Last modified : 8/24/16 10:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -34,6 +34,7 @@ public class MapCurrentState {
     private Context context;
 
     public static GoogleMap googleMap;
+    public static boolean mapMoved;
     private Marker marker;
 
     private static Location location;

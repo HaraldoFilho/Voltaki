@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 8/7/16 9:57 PM
+ *  Last modified : 8/24/16 10:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -71,12 +71,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class MainFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GoogleMap.OnCameraMoveStartedListener,
+        GoogleMap.OnCameraIdleListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -160,12 +163,13 @@ public class MainFragment extends Fragment implements
 
     }
 
-    // interface to update menu items on main activity's options menu
+    // interface to interact with MainActivity
     public interface OnFragmentInteractionListener {
         void onReset();
         void onUpdateMainMenuItemResetTitle(int stringId);
         void onUpdateMainMenuItemAddBookmarksState(boolean state);
         void onUpdateMainMenuItemShareState(boolean state);
+        void onMapMoved();
     }
 
     @Override
@@ -703,6 +707,24 @@ public class MainFragment extends Fragment implements
         }
         else {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+        mapCurrentState.mapMoved = false;
+        MapCurrentState.googleMap.setOnCameraMoveStartedListener(this);
+        MapCurrentState.googleMap.setOnCameraIdleListener(this);
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == REASON_GESTURE) {
+            mapCurrentState.mapMoved = true;
+        }
+    }
+
+    @Override
+    public void onCameraIdle() {
+        if (mapCurrentState.mapMoved) {
+            mapCurrentState.mapMoved = false;
+            mListener.onMapMoved();
         }
     }
 

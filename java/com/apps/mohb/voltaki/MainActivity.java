@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/22/16 11:46 PM
+ *  Last modified : 8/24/16 9:52 PM
  *
  *  -----------------------------------------------------------
  */
@@ -47,6 +47,7 @@ import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ButtonAddBookmarkTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ButtonRefreshTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ButtonResetTipAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.FloatingButtonTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.LocServDisabledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.MapsNotInstalledAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.NoLocPermissionAlertFragment;
@@ -73,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements
         NoLocPermissionAlertFragment.NoLocPermissionDialogListener,
         ButtonRefreshTipAlertFragment.ButtonRefreshTipDialogListener,
         ButtonResetTipAlertFragment.ButtonResetTipDialogListener,
-        ButtonAddBookmarkTipAlertFragment.ButtonAddBookmarkTipDialogListener {
+        ButtonAddBookmarkTipAlertFragment.ButtonAddBookmarkTipDialogListener,
+        FloatingButtonTipAlertFragment.FloatingButtonTipDialogListener {
 
     private DrawerLayout drawer;
     private static MenuItem menuItemReset;
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements
     private SharedPreferences lastSystemLanguagePref;
     private SharedPreferences showRefreshTipPref;
     private SharedPreferences showResetTipPref;
+    private SharedPreferences showFloatingButtonTipPref;
     private SharedPreferences showAddBookmarkPref;
     private SharedPreferences showNoLocServWarnPref;
 
@@ -160,9 +163,10 @@ public class MainActivity extends AppCompatActivity implements
         // create instance of button saved state
         buttonSavedState = new ButtonSavedState(this);
 
-        // get user preferences from settings
+        // get shared preferences variables
         showRefreshTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showResetTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        showFloatingButtonTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showAddBookmarkPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showNoLocServWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
@@ -350,27 +354,29 @@ public class MainActivity extends AppCompatActivity implements
 
             // Reset / Refresh
             case R.id.action_reset:
-                // if button is not GREEN refresh map
+                // if button is YELLOW show map refresh tip dialog
                 if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                        < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
-                    // if button is YELLOW show button refresh tip dialog
-                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
-                            == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
-                        if (showRefreshTipPref.getBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, true)) {
-                            DialogFragment tipDialog = new ButtonRefreshTipAlertFragment();
-                            tipDialog.show(getSupportFragmentManager(), "ButtonRefreshTipAlertFragment");
-                        }
-                    }
-                    else { // if it is RED show reset tip dialog
-                        if (showResetTipPref.getBoolean(Constants.BUTTON_RESET_TIP_SHOW, true)) {
-                            DialogFragment tipDialog = new ButtonResetTipAlertFragment();
-                            tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
-                        }
+                        == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
+                    if (showRefreshTipPref.getBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, true)) {
+                        DialogFragment tipDialog = new ButtonRefreshTipAlertFragment();
+                        tipDialog.show(getSupportFragmentManager(), "ButtonRefreshTipAlertFragment");
                     }
                     reset();
-                } else { // show reset dialog
-                    DialogFragment alertDialog = new ResetAlertFragment();
-                    alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
+                }
+                else { // if it is GREEN or RED show reset tip dialog
+                    if (showResetTipPref.getBoolean(Constants.BUTTON_RESET_TIP_SHOW, true)) {
+                        DialogFragment tipDialog = new ButtonResetTipAlertFragment();
+                        tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
+                    }
+                    // if it is RED reset
+                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                            == ButtonEnums.convertEnumToInt(ButtonStatus.OFFLINE)) {
+                        reset();
+                    }
+                    else { // if it is GREEN show reset dialog
+                        DialogFragment alertDialog = new ResetAlertFragment();
+                        alertDialog.show(getSupportFragmentManager(), "ResetAlertFragment");
+                    }
                 }
                 break;
 
@@ -403,37 +409,32 @@ public class MainActivity extends AppCompatActivity implements
         switch (id) {
 
             // Bookmarks
-            case R.id.nav_bookmarks: {
+            case R.id.nav_bookmarks:
                 intent = new Intent(this, BookmarksActivity.class);
                 break;
-            }
 
             // History
-            case R.id.nav_history: {
+            case R.id.nav_history:
                 intent = new Intent(this, HistoryActivity.class);
                 break;
-            }
 
             // Settings
-            case R.id.nav_settings: {
+            case R.id.nav_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 break;
-            }
 
             // Help
-            case R.id.nav_help: {
+            case R.id.nav_help:
                 intent = new Intent(this, HelpActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("url", getString(R.string.url_help));
                 intent.putExtras(bundle);
                 break;
-            }
 
             // About
-            case R.id.nav_about: {
+            case R.id.nav_about:
                 intent = new Intent(this, AboutActivity.class);
                 break;
-            }
         }
 
         // go to item clicked
@@ -622,6 +623,14 @@ public class MainActivity extends AppCompatActivity implements
         menuItemShare.setEnabled(state);
     }
 
+    @Override // show tip when map is moved
+    public void onMapMoved() {
+        if(showFloatingButtonTipPref.getBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, true)) {
+            DialogFragment tipDialog = new FloatingButtonTipAlertFragment();
+            tipDialog.show(getSupportFragmentManager(), "FloatingButtonTipAlertFragment");
+        }
+    }
+
 
     @Override // read result of permissions requests
     public void onRequestPermissionsResult(int requestCode,
@@ -718,11 +727,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override // Yes
     public void onResetDialogPositiveClick(DialogFragment dialog) {
         reset();
-        if(showResetTipPref.getBoolean(Constants.BUTTON_RESET_TIP_SHOW, true)) {
-            DialogFragment tipDialog = new ButtonResetTipAlertFragment();
-            tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
-        }
-
     }
 
     @Override // No
@@ -774,5 +778,14 @@ public class MainActivity extends AppCompatActivity implements
     public void onButtonResetTipDialogPositiveClick(DialogFragment dialog) {
         showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).commit();
     }
+
+
+    // FLOATING BUTTON TIP DIALOG
+
+    @Override
+    public void onFloatingButtonTipDialogPositiveClick(DialogFragment dialog) {
+        showFloatingButtonTipPref.edit().putBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, false).commit();
+    }
+
 
 }

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 8/9/16 7:15 AM
+ *  Last modified : 8/24/16 9:49 PM
  *
  *  -----------------------------------------------------------
  */
@@ -48,6 +48,7 @@ public class Constants {
     public static final String BUTTON_RESET_TIP_SHOW = "ButtonResetTipShow";
     public static final String BUTTON_REFRESH_TIP_SHOW = "ButtonRefreshTipShow";
     public static final String BUTTON_ADD_BOOKMARK_TIP_SHOW = "ButtonAddBookmarkTipShow";
+    public static final String FLOATING_BUTTON_TIP_SHOW = "FloatingButtonTipShow";
 
     // Map Saved Preferences
     public static final String MAP_FIRST_LOCATION = "MapFirstLocation";
