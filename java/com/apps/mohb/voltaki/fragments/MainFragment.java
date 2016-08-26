@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 8/24/16 10:16 PM
+ *  Last modified : 8/26/16 12:01 AM
  *
  *  -----------------------------------------------------------
  */
@@ -53,7 +53,6 @@ import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.FetchAddressIntentService;
 import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.map.MapSavedState;
-import com.apps.mohb.voltaki.messaging.GoBackNotificationActivity;
 import com.apps.mohb.voltaki.messaging.Notification;
 import com.apps.mohb.voltaki.messaging.Toasts;
 import com.google.android.gms.common.ConnectionResult;
@@ -71,7 +70,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 
 
 public class MainFragment extends Fragment implements
@@ -107,6 +105,7 @@ public class MainFragment extends Fragment implements
 
     private Lists lists;
     private Vibrator vibrator;
+    private Notification notification;
     private static boolean addressFound;
     private static boolean addressNotFound;
 
@@ -170,6 +169,8 @@ public class MainFragment extends Fragment implements
         void onUpdateMainMenuItemAddBookmarksState(boolean state);
         void onUpdateMainMenuItemShareState(boolean state);
         void onMapMoved();
+        void onButtonLongPressed();
+        void onFloatingLongPressed();
     }
 
     @Override
@@ -214,6 +215,9 @@ public class MainFragment extends Fragment implements
 
         // create an instance of the vibrator
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+        // create an instance of notification
+        notification = new Notification();
 
         // when updating location, this variables are used to check if it is the first location value taken
         isFirstLocationGot = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
@@ -287,10 +291,9 @@ public class MainFragment extends Fragment implements
                         lists.addItemToHistory(locationItem);
                         // save map state on memory
                         saveMapState();
-                        // if status bar icon is not disabled create and show it
-                        if (!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                                .matches(getString(R.string.set_status_bar_icon_disabled))) {
-                            startGoBackNotification();
+                        // if notification is enabled show it
+                        if (sharedPref.getBoolean(Constants.NOTIFICATION, true)) {
+                            notification.startGoBackNotification(getContext());
                         }
                         break;
 
@@ -338,15 +341,15 @@ public class MainFragment extends Fragment implements
                         DialogFragment dialog = new BookmarkEditDialogFragment();
                         dialog.show(getFragmentManager(), "BookmarkEditDialogFragment");
                     } else
-                    // if button is RED reset
-                    if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
-                        mListener.onReset();
-                    }
-                    else { // open reset dialog
-                        DialogFragment alertDialog = new ResetAlertFragment();
-                        alertDialog.show(getFragmentManager(), "ResetAlertFragment");
-                    }
-
+                        // if button is RED reset
+                        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
+                            mListener.onReset();
+                        }
+                        else { // open reset dialog
+                            DialogFragment alertDialog = new ResetAlertFragment();
+                            alertDialog.show(getFragmentManager(), "ResetAlertFragment");
+                        }
+                    mListener.onButtonLongPressed();
                 }
 
                 return true;
@@ -443,26 +446,26 @@ public class MainFragment extends Fragment implements
                 .matches(getString(R.string.set_def_zoom_high))) {
             zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                .matches(getString(R.string.set_def_zoom_mid))) {
-            zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-        } else // if default zoom level is low
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
-                .matches(getString(R.string.set_def_zoom_low))) {
-            zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-        }
-        else { // if default zoom level is auto
-               // set the map zoom level according to the default navigation mode
-               if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
-                    zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-               } else
-               if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                    .matches(getString(R.string.set_def_zoom_mid))) {
+                zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+            } else // if default zoom level is low
+                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                        .matches(getString(R.string.set_def_zoom_low))) {
                     zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-               }
-               else {
-                    zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
-               }
-        }
+                }
+                else { // if default zoom level is auto
+                    // set the map zoom level according to the default navigation mode
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
+                        zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
+                    } else
+                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                        zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
+                    }
+                    else {
+                        zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
+                    }
+                }
 
         // go to the default location (0,0)
         mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
@@ -479,10 +482,12 @@ public class MainFragment extends Fragment implements
             // enable "add to bookmarks" and "share" options menu item on main screen
             mListener.onUpdateMainMenuItemAddBookmarksState(true);
             mListener.onUpdateMainMenuItemShareState(true);
-            // if status bar icon is not disabled start go back notification
-            if (!sharedPref.getString(Constants.STATUS_BAR_ICON, getString(R.string.set_status_bar_icon_default))
-                    .matches(getString(R.string.set_status_bar_icon_disabled))) {
-                startGoBackNotification();
+            // if notification is enabled start go back notification
+            if (sharedPref.getBoolean(Constants.NOTIFICATION, true)) {
+                notification.startGoBackNotification(getContext());
+            }
+            else {
+                notification.cancelNotification(getContext(), Constants.NOTIFICATION_ID);
             }
             // if is offline
             if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
@@ -493,18 +498,18 @@ public class MainFragment extends Fragment implements
             showFloatingButton();
 
         } else
-        // if is offline set the button to red
-        if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
-            ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
-            ButtonCurrentState.setButtonOffline(getContext());
-            hideFloatingButton();
+            // if is offline set the button to red
+            if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+                ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
+                ButtonCurrentState.setButtonOffline(getContext());
+                hideFloatingButton();
 
-        }
-        else { // set the button to orange
-            ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-            ButtonCurrentState.setButtonGetLocation(getContext());
-            hideFloatingButton();
-        }
+            }
+            else { // set the button to orange
+                ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+                ButtonCurrentState.setButtonGetLocation(getContext());
+                hideFloatingButton();
+            }
 
         // request location updates
         mLocationRequest = createLocationRequest();
@@ -860,6 +865,7 @@ public class MainFragment extends Fragment implements
                             vibrator.vibrate(Constants.VIBRATE_SHORT_TIME);
                         }
                         mListener.onReset();
+                        mListener.onFloatingLongPressed();
                     }
                 }
 
@@ -870,16 +876,6 @@ public class MainFragment extends Fragment implements
         floatingButton.show();
 
     }
-
-    protected void startGoBackNotification() {
-        // intent that will open Google Maps when notification is clicked
-        Intent intent = new Intent(getContext(), GoBackNotificationActivity.class);
-        Notification notification = new Notification();
-        // show status bar icon
-        notification.startNotification(intent, getContext(), getResources().getString(R.string.info_app_name),
-                getActivity().getApplicationContext().getResources().getString(R.string.notification_go_back), Constants.NOTIFICATION_ID);
-    }
-
 
 }
 

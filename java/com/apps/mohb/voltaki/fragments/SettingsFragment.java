@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 7/20/16 10:08 PM
+ *  Last modified : 8/26/16 12:56 AM
  *
  *  -----------------------------------------------------------
  */
@@ -15,6 +15,7 @@ package com.apps.mohb.voltaki.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingsFragment extends PreferenceFragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,6 @@ public class SettingsFragment extends PreferenceFragment {
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_nav_option)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_nav_mode)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_zoom_level)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_status_bar_icon)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_max_history_items)));
     }
 
@@ -95,20 +96,9 @@ public class SettingsFragment extends PreferenceFragment {
             = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
+
             String stringValue = value.toString();
 
-            // if value changed is status bar icon being disabled then cancel notification
-            if (stringValue.matches(getString(R.string.set_status_bar_icon_disabled))) {
-                Notification notification = new Notification();
-                notification.cancelNotification(getActivity().getApplicationContext(), Constants.NOTIFICATION_ID);
-            } else
-            // if value changed is the status bar icon color then calls method that will change the icon color
-            if ((stringValue.matches(getString(R.string.set_status_bar_icon_default))) ||
-                    (stringValue.matches(getString(R.string.set_status_bar_icon_grey)))) {
-                Notification notification = new Notification();
-                notification.changeNotificationIconColor(getActivity().getApplicationContext(),
-                        stringValue, Constants.NOTIFICATION_ID);
-            } else
             // if value changed is the maximum history items then calls method that will
             // will update history list number of items to the value set
             if (stringValue.matches(getString(R.string.set_max_history_items_default)) ||
@@ -131,7 +121,7 @@ public class SettingsFragment extends PreferenceFragment {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+                int index = listPreference.findIndexOfValue(value.toString());
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(
@@ -139,19 +129,21 @@ public class SettingsFragment extends PreferenceFragment {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
-            }
-            else {
+            } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                preference.setSummary(stringValue);
+                preference.setSummary(value.toString());
             }
 
             return true;
+
         }
+
     };
 
     private void updateHistoryMaxItems() {
         Lists lists = new Lists(getActivity().getApplicationContext());
         lists.pruneHistory();
     }
+
 }

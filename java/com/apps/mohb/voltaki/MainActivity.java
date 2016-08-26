@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 8/24/16 9:52 PM
+ *  Last modified : 8/25/16 10:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -332,6 +332,10 @@ public class MainActivity extends AppCompatActivity implements
 
             // Add to bookmarks
             case R.id.action_add_bookmark:
+                if(showAddBookmarkPref.getBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, true)) {
+                    DialogFragment tipDialog = new ButtonAddBookmarkTipAlertFragment();
+                    tipDialog.show(getSupportFragmentManager(), "ButtonAddBookmarkTipAlertFragment");
+                }
                 lists.setBookmarkEditText("");
                 DialogFragment dialog = new BookmarkEditDialogFragment();
                 dialog.show(getSupportFragmentManager(), "BookmarkEditDialogFragment");
@@ -625,12 +629,26 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // show tip when map is moved
     public void onMapMoved() {
-        if(showFloatingButtonTipPref.getBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, true)) {
+        if (showFloatingButtonTipPref.getBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, true)) {
             DialogFragment tipDialog = new FloatingButtonTipAlertFragment();
             tipDialog.show(getSupportFragmentManager(), "FloatingButtonTipAlertFragment");
         }
     }
 
+    @Override // disable tip when button is long pressed
+    public void onButtonLongPressed() {
+        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
+            showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).commit();
+        }
+        else {
+            showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).commit();
+        }
+    }
+
+    @Override // disable tip when floating button is long pressed
+    public void onFloatingLongPressed() {
+        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).commit();
+    }
 
     @Override // read result of permissions requests
     public void onRequestPermissionsResult(int requestCode,
@@ -707,11 +725,6 @@ public class MainActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(showAddBookmarkPref.getBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, true)) {
-            DialogFragment tipDialog = new ButtonAddBookmarkTipAlertFragment();
-            tipDialog.show(getSupportFragmentManager(), "ButtonAddBookmarkTipAlertFragment");
         }
 
     }

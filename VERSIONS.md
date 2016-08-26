@@ -1,3 +1,7 @@
+####**1.0.4**
+- Tips are disabled when buttons are long pressed.
+- Changed notification icon to "Material Design" standard.
+
 ####**1.0.3**
 - Improvements on user interface.
 
