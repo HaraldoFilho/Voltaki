@@ -5,13 +5,12 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 8/26/16 12:56 AM
+ *  Last modified : 8/27/16 8:25 AM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments;
-
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -31,6 +30,7 @@ import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.messaging.Notification;
 import com.google.android.gms.maps.GoogleMap;
+
 
 // Setting fragment that shows the options in the settings screen
 
@@ -53,6 +53,7 @@ public class SettingsFragment extends PreferenceFragment {
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_nav_mode)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_zoom_level)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_max_history_items)));
+        setPreferenceClickListener(findPreference(Constants.NOTIFICATION));
     }
 
     // start main activity if back arrow is pressed in the app bar
@@ -140,6 +141,28 @@ public class SettingsFragment extends PreferenceFragment {
         }
 
     };
+
+    // Listen to changes on Notification setting
+    private Preference.OnPreferenceClickListener preferenceClickListener
+            = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Notification notification = new Notification();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            // if Notification setting is checked start notification
+            if (sharedPreferences.getBoolean(Constants.NOTIFICATION, true)) {
+                notification.startGoBackNotification(getActivity().getApplicationContext());
+            }
+            else { // cancel notification
+                notification.cancelNotification(getActivity().getApplicationContext(), Constants.NOTIFICATION_ID);
+            }
+            return true;
+        }
+    };
+
+    private void setPreferenceClickListener(Preference preference) {
+        preference.setOnPreferenceClickListener(preferenceClickListener);
+    }
 
     private void updateHistoryMaxItems() {
         Lists lists = new Lists(getActivity().getApplicationContext());

@@ -1,3 +1,7 @@
+####**1.0.5**
+- Improved notification icon design.
+- Changes on notification settings are immediately reflected on the status bar.
+
 ####**1.0.4**
 - Tips are disabled when buttons are long pressed.
 - Changed notification icon to "Material Design" standard.
