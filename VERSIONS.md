@@ -1,3 +1,6 @@
+####**1.0.6**
+- Fixed bug of notification being shown when it is activated in settings even when app is not in GO BACK state
+
 ####**1.0.5**
 - Improved notification icon design.
 - Changes on notification settings are immediately reflected on the status bar.

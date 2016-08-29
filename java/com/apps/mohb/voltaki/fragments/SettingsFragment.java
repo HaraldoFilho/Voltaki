@@ -26,6 +26,9 @@ import android.view.MenuItem;
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.MainActivity;
 import com.apps.mohb.voltaki.R;
+import com.apps.mohb.voltaki.button.ButtonCurrentState;
+import com.apps.mohb.voltaki.button.ButtonEnums;
+import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.messaging.Notification;
@@ -149,8 +152,10 @@ public class SettingsFragment extends PreferenceFragment {
         public boolean onPreferenceClick(Preference preference) {
             Notification notification = new Notification();
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            // if Notification setting is checked start notification
-            if (sharedPreferences.getBoolean(Constants.NOTIFICATION, true)) {
+            // if button is GREEN and Notification setting is checked start notification
+            if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                    > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)
+                    &&(sharedPreferences.getBoolean(Constants.NOTIFICATION, true))) {
                 notification.startGoBackNotification(getActivity().getApplicationContext());
             }
             else { // cancel notification
