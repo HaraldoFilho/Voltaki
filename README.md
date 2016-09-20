@@ -62,7 +62,7 @@ You can also share your current or saved locations.
  
 - **Software:**
 
- - elementary OS Linux
+ - elementary OS
  - Android Studio
  - GIMP Image Editor
  - Google Chrome
