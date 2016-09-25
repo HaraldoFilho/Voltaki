@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--Map Type preferences-->
+    <ListPreference
+        android:key="@string/set_key_map_type"
+        android:title="@string/set_title_map_type"
+        android:entries="@array/setting_map_type"
+        android:entryValues="@array/setting_map_type"
+        android:defaultValue="@string/set_map_type_default" />
+
+    <!--Navigation Option preferences-->
+    <ListPreference
+        android:key="@string/set_key_nav_option"
+        android:title="@string/set_title_nav_option"
+        android:entries="@array/setting_nav_option"
+        android:entryValues="@array/setting_nav_option"
+        android:defaultValue="@string/set_nav_option_default" />
+
+    <!--Default Navigation Mode preferences-->
+    <ListPreference
+        android:key="@string/set_key_def_nav_mode"
+        android:title="@string/set_title_def_nav_mode"
+        android:entries="@array/setting_def_nav_mode"
+        android:entryValues="@array/setting_def_nav_mode"
+        android:defaultValue="@string/set_def_nav_mode_default" />
+
+    <!--Default Zoom Level preferences-->
+    <ListPreference
+        android:key="@string/set_key_def_zoom_level"
+        android:title="@string/set_title_def_zoom_level"
+        android:entries="@array/setting_def_zoom_level"
+        android:entryValues="@array/setting_def_zoom_level"
+        android:defaultValue="@string/set_def_zoom_level_default" />
+
+    <!--Notification preferences-->
+    <CheckBoxPreference
+        android:key="@string/set_key_notification"
+        android:title="@string/set_title_notification"
+        android:summaryOn="@string/set_notification_summ_on"
+        android:summaryOff="@string/set_notification_summ_off"
+        android:defaultValue="true" />
+
+    <!--Vibrate Feedback preferences-->
+    <CheckBoxPreference
+        android:key="@string/set_key_vib_feedback"
+        android:title="@string/set_title_vib_feedback"
+        android:summaryOn="@string/set_vib_summ_on"
+        android:summaryOff="@string/set_vib_summ_off"
+        android:defaultValue="true" />
+
+    <!--Button Long Click preferences-->
+    <CheckBoxPreference
+        android:key="@string/set_key_long_click_actions"
+        android:title="@string/set_title_long_click_actions"
+        android:summaryOn="@string/set_long_click_summ_on"
+        android:summaryOff="@string/set_long_click_summ_off"
+        android:defaultValue="true" />
+
+    <!--Bookmarks Auto Backup preferences-->
+    <CheckBoxPreference
+        android:key="@string/set_key_auto_backup"
+        android:title="@string/set_title_auto_backup"
+        android:summaryOn="@string/set_backup_summ_on"
+        android:summaryOff="@string/set_backup_summ_off"
+        android:defaultValue="false" />
+
+    <!--Maximum History Items preferences-->
+    <ListPreference
+        android:key="@string/set_key_max_history_items"
+        android:title="@string/set_title_max_history_items"
+        android:entries="@array/setting_max_history_items"
+        android:entryValues="@array/setting_max_history_items"
+        android:defaultValue="@string/set_max_history_items_default" />
+
+</PreferenceScreen>

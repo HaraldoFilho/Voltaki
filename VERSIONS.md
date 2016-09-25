@@ -1,3 +1,6 @@
+####**1.0.7**
+- Added declarations on manifest to deal with new location hardware policy to API 21 or higher.
+
 ####**1.0.6**
 - Fixed bug of notification being shown when it is activated in settings even when app is not in GO BACK state
 
