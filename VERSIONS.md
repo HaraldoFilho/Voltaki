@@ -1,3 +1,7 @@
+####**1.0.8**
+- Changed website references on portuguese version.
+- Made green color of navigation drawer icon be the same of background.
+
 ####**1.0.7**
 - Added declarations on manifest to deal with new location hardware policy to API 21 or higher.
 

@@ -153,5 +153,7 @@
     <string name="dialog_message_tip_button_refresh">Você também pode atualizar o mapa pressionando o botão flutuante verde por alguns segundos enquanto o botão principal estiver amarelo\n</string>
     <string name="dialog_message_tip_button_reset">Você também pode reiniciar pressionando o botão por alguns segundos enquanto ele estiver verde ou vermelho\n</string>
     <string name="dialog_message_tip_floating_button">Pressione o botão flutuante verde para retornar o marcador  vermelho para o centro\n</string>
+    <string name="info_feedback_email">duvida@mohb-apps.com.br</string>
+    <string name="url_website">https://mohb-apps.com.br/</string>
 
 </resources>
