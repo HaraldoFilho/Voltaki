@@ -155,5 +155,6 @@
     <string name="dialog_message_tip_floating_button">Pressione o botão flutuante verde para retornar o marcador  vermelho para o centro\n</string>
     <string name="info_feedback_email">duvida@mohb-apps.com.br</string>
     <string name="url_website">https://mohb-apps.com.br/</string>
+    <string name="info_website">mohb-apps.com.br</string>
 
 </resources>

@@ -10,7 +10,7 @@
     <string name="info_app_name" translatable="false">Voltaki</string>
     <string name="info_app_url" translatable="false">http://goo.gl/3zOJcC</string>
     <string name="info_name" translatable="false">mohb apps</string>
-    <string name="info_website" translatable="false">mohb-apps.com</string>
+    <string name="info_website">mohb-apps.com</string>
     <string name="info_feedback_email">feedback@mohb-apps.com</string>
     <string name="info_developer">Developer:</string>
     <string name="info_developer_name" translatable="false">Haraldo Albergaria Filho</string>
