@@ -1,12 +1,21 @@
 # Voltaki
 
-### About the application:
+### About the application
 
 **_Voltaki_** is an application for Android™ on which with only one button you can mark places and go back to them later using *Google Maps™* app. The app saves a history of the places you have marked and you can add a bookmark in the places you want to save for future reference. You can also share your current or saved locations.
 
 *Android and Google Maps are trademarks of Google, Inc.*
 
-### This application uses:
+### Project Info
+
+- Status: **in Production**
+- Start Date: May 24, 2016
+- Alpha Release Date: Jun 7, 2016
+- Beta Release Date: Jul 15, 2016
+- Production Release Date: Aug 20, 2016
+- Developer: Haraldo Albergaria Filho
+
+#### This application uses:
 
 - Activities
 - Fragments
@@ -37,18 +46,9 @@
 - Internationalization
 - Time/Date
 
-### Project Info:
+### Development Tools
 
-- Status: **in Production**
-- Start Date: May 24, 2016
-- Alpha Release Date: Jun 7, 2016
-- Beta Release Date: Jul 15, 2016
-- Production Release Date: Aug 20, 2016
-- Developer: Haraldo Albergaria Filho
-
-### Development Tools:
-
-#### Hardware:
+#### Hardware
 
   - Dell Vostro 5470 Laptop Computer
   
@@ -59,14 +59,14 @@
       - NVIDIA Corporation GK208M GeForce GT 740M (rev a1)
     - Storage: SSD Kingston V300 240GB
  
-#### Software:
+#### Software
 
   - elementary OS
   - Android Studio
   - GIMP Image Editor
   - Google Chrome
  
-#### Version Control:
+#### Version Control
 
   - Git
   - Bitbucket
