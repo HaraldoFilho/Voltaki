@@ -126,15 +126,15 @@ public class MainFragment extends Fragment implements
             // Display the address string
             // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
-            if (resultCode == FetchAddressIntentService.SUCCESS_RESULT) {
+            if ((resultCode == FetchAddressIntentService.SUCCESS_RESULT)
+                    && (!mAddressOutput.isEmpty())) {
                 MapCurrentState.setLocationAddress(mAddressOutput);
-                if(isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
+                if (isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
                     addressFound = true;
                 }
-            }
-            else {
+            } else {
                 MapCurrentState.setLocationAddress(Constants.MAP_NO_ADDRESS);
-                if(isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
+                if (isFirstAddressGot.getBoolean(Constants.MAP_FIRST_ADDRESS, true)) {
                     addressNotFound = true;
                 }
             }
@@ -165,11 +165,17 @@ public class MainFragment extends Fragment implements
     // interface to interact with MainActivity
     public interface OnFragmentInteractionListener {
         void onReset();
+
         void onUpdateMainMenuItemResetTitle(int stringId);
+
         void onUpdateMainMenuItemAddBookmarksState(boolean state);
+
         void onUpdateMainMenuItemShareState(boolean state);
+
         void onMapMoved();
+
         void onButtonLongPressed();
+
         void onFloatingLongPressed();
     }
 
@@ -283,8 +289,7 @@ public class MainFragment extends Fragment implements
                         // check if an address was gotten
                         if (!mapCurrentState.getLocationAddress().matches(Constants.MAP_NO_ADDRESS)) {
                             locationItem.setAddress(mapCurrentState.getLocationAddress());
-                        }
-                        else {
+                        } else {
                             locationItem.setAddress(Constants.MAP_NO_ADDRESS);
                         }
                         // add location item to history list
@@ -344,8 +349,7 @@ public class MainFragment extends Fragment implements
                         // if button is RED reset
                         if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
                             mListener.onReset();
-                        }
-                        else { // open reset dialog
+                        } else { // open reset dialog
                             DialogFragment alertDialog = new ResetAlertFragment();
                             alertDialog.show(getFragmentManager(), "ResetAlertFragment");
                         }
@@ -390,11 +394,10 @@ public class MainFragment extends Fragment implements
                 break;
 
             case GETTING_LOCATION:
-                if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+                if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
                     ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
                     ButtonCurrentState.setButtonOffline(getContext());
-                }
-                else {
+                } else {
                     ButtonCurrentState.setButtonGetLocation(getContext());
                 }
                 hideFloatingButton();
@@ -416,11 +419,10 @@ public class MainFragment extends Fragment implements
                 break;
 
             case GO_BACK_OFFLINE:
-                if(mapCurrentState.isNetworkEnabled()||mapCurrentState.isGpsEnabled()) {
+                if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
                     ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
                     ButtonCurrentState.setButtonGoBack(getContext());
-                }
-                else {
+                } else {
                     ButtonCurrentState.setButtonGoBackOffline(getContext());
                 }
                 showFloatingButton();
@@ -453,16 +455,13 @@ public class MainFragment extends Fragment implements
                 if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
                         .matches(getString(R.string.set_def_zoom_low))) {
                     zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                }
-                else { // if default zoom level is auto
+                } else { // if default zoom level is auto
                     // set the map zoom level according to the default navigation mode
                     if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_walk))) {
                         zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
-                    } else
-                    if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
+                    } else if (defDefNavMode.matches(getString(R.string.set_def_nav_mode_drive))) {
                         zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
-                    }
-                    else {
+                    } else {
                         zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
                     }
                 }
@@ -485,12 +484,11 @@ public class MainFragment extends Fragment implements
             // if notification is enabled start go back notification
             if (sharedPref.getBoolean(Constants.NOTIFICATION, true)) {
                 notification.startGoBackNotification(getContext());
-            }
-            else {
+            } else {
                 notification.cancelNotification(getContext(), Constants.NOTIFICATION_ID);
             }
             // if is offline
-            if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+            if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
                 ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_OFFLINE);
                 ButtonCurrentState.setButtonGoBackOffline(getContext());
             }
@@ -499,13 +497,12 @@ public class MainFragment extends Fragment implements
 
         } else
             // if is offline set the button to red
-            if(!mapCurrentState.isNetworkEnabled()&&!mapCurrentState.isGpsEnabled()) {
+            if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
                 ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
                 ButtonCurrentState.setButtonOffline(getContext());
                 hideFloatingButton();
 
-            }
-            else { // set the button to orange
+            } else { // set the button to orange
                 ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
                 ButtonCurrentState.setButtonGetLocation(getContext());
                 hideFloatingButton();
@@ -526,7 +523,7 @@ public class MainFragment extends Fragment implements
                 mapCurrentState.setLongitude(location.getLongitude());
 
                 // if this is the first location update
-                if(isFirstLocationGot.getBoolean(Constants.MAP_FIRST_LOCATION, true)) {
+                if (isFirstLocationGot.getBoolean(Constants.MAP_FIRST_LOCATION, true)) {
                     // turn button YELLOW
                     ButtonCurrentState.setButtonStatus(ButtonStatus.COME_BACK_HERE);
                     ButtonCurrentState.setButtonComeBack(getContext());
@@ -558,13 +555,13 @@ public class MainFragment extends Fragment implements
                 }
 
                 // show address found or not found message
-                if(addressFound) {
+                if (addressFound) {
                     Toasts.setLocationAddressText(mapCurrentState.getLocationAddress());
                     Toasts.showLocationAddress();
                     addressFound = false;
                 }
 
-                if(addressNotFound) {
+                if (addressNotFound) {
                     Toasts.setLocationAddressText(R.string.toast_no_address_found);
                     Toasts.showLocationAddress();
                     addressNotFound = false;
@@ -609,8 +606,7 @@ public class MainFragment extends Fragment implements
                                 status.startResolutionForResult(
                                         getActivity(),
                                         Constants.REQUEST_CHECK_SETTINGS);
-                            }
-                            else { // Button is GREEN, so update map with saved location.
+                            } else { // Button is GREEN, so update map with saved location.
                                 updateMap();
                             }
 
@@ -623,7 +619,7 @@ public class MainFragment extends Fragment implements
                         // to fix the settings so we won't show the dialog.
                         // if at least one location provider is available
                         // update map
-                        if(mapCurrentState.isNetworkEnabled()||mapCurrentState.isGpsEnabled()) {
+                        if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
                             updateMap();
                         }
                         break;
@@ -640,7 +636,7 @@ public class MainFragment extends Fragment implements
         super.onPause();
         mMapView.onPause();
         // save button state on memory if it is not offline
-        if(ButtonCurrentState.getButtonStatus() != ButtonStatus.OFFLINE) {
+        if (ButtonCurrentState.getButtonStatus() != ButtonStatus.OFFLINE) {
             buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
         }
         // hide floating button
@@ -655,7 +651,7 @@ public class MainFragment extends Fragment implements
         super.onStop();
         mGoogleApiClient.disconnect();
         // if button is YELLOW set it to ORANGE because when connect again will search for new location
-        if(ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
+        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
             buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
         }
     }
@@ -705,12 +701,10 @@ public class MainFragment extends Fragment implements
         if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
                 .matches(getString(R.string.set_map_type_satellite))) {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        } else
-        if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
+        } else if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
                 .matches(getString(R.string.set_map_type_hybrid))) {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        }
-        else {
+        } else {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
         mapCurrentState.mapMoved = false;
@@ -768,15 +762,13 @@ public class MainFragment extends Fragment implements
             // request location updates
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, mLocationListener);
-        }
-        else {
+        } else {
             // check if user already denied permission request
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
                 DialogFragment dialog = new NoLocPermissionAlertFragment();
                 dialog.show(getFragmentManager(), "NoLocPermissionAlertFragment");
-            }
-            else {
+            } else {
                 // request permissions
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -795,7 +787,7 @@ public class MainFragment extends Fragment implements
 
     // start service that will get location address
     protected void startIntentService(Location lastLocation) {
-        Intent intentAddress = new Intent(getContext(), FetchAddressIntentService.class);
+        Intent intentAddress = new Intent(getActivity().getApplicationContext(), FetchAddressIntentService.class);
         intentAddress.putExtra(FetchAddressIntentService.RECEIVER, mResultReceiver);
         intentAddress.putExtra(FetchAddressIntentService.LOCATION_DATA_EXTRA, lastLocation);
         getActivity().startService(intentAddress);
@@ -807,8 +799,7 @@ public class MainFragment extends Fragment implements
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
             hideFloatingButton();
             startLocationUpdates();
-        }
-        else { // stop location updates, show floating button and set saved location on map
+        } else { // stop location updates, show floating button and set saved location on map
             stopLocationUpdates();
             showFloatingButton();
             mapCurrentState.gotoLocation(mapSavedState.getLatitude(), mapSavedState.getLongitude(), zoomLevel);

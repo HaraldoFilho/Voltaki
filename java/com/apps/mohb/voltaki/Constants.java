@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2017 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 8/25/16 11:31 PM
+ *  Last modified : 8/13/17 5:40 PM
  *
  *  -----------------------------------------------------------
  */
@@ -41,6 +41,9 @@ public class Constants {
     // Permissions request
     public static final int    FINE_LOCATION_PERMISSION_REQUEST = 0;
     public static final int    WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 1;
+
+    // Log
+    public static final String LOG_TAG = "DEBUG_VOLTAKI";
 
     // Button saved preferences
     public static final String BUTTON_STATUS = "ButtonStatus";
@@ -108,5 +111,6 @@ public class Constants {
     // Toasts
     public static final int    TOAST_X_OFFSET = 0;
     public static final int    TOAST_Y_OFFSET = 0;
+
 
 }

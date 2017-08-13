@@ -1,4 +1,16 @@
 /*
+ *  Copyright (c) 2017 mohb apps - All Rights Reserved
+ *
+ *  Project       : Voltaki
+ *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
+ *
+ *  File          : FetchAddressIntentService.java
+ *  Last modified : 8/13/17 6:09 PM
+ *
+ *  -----------------------------------------------------------
+ */
+
+/*
  *  This code was extracted and modified from:
  *  https://developer.android.com/training/location/display-address.html
  *  according to Creative Commons Attribution 2.5 license:
@@ -18,23 +30,21 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.apps.mohb.voltaki.Constants;
+import com.apps.mohb.voltaki.R;
+import com.apps.mohb.voltaki.fragments.MainFragment;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.apps.mohb.voltaki.Constants;
-import com.apps.mohb.voltaki.fragments.MainFragment;
-import com.apps.mohb.voltaki.R;
 
 
 public class FetchAddressIntentService extends IntentService {
 
-    public static final int    SUCCESS_RESULT = 0;
-    public static final int    FAILURE_RESULT = 1;
+    public static final int SUCCESS_RESULT = 0;
+    public static final int FAILURE_RESULT = 1;
     public static final String PACKAGE_NAME = "com.google.android.gms.location.sample.locationaddress";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
@@ -49,6 +59,7 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
 
         String errorMessage = "";
 
@@ -66,12 +77,13 @@ public class FetchAddressIntentService extends IntentService {
                     location.getLongitude(),
                     // In this sample, get just a single address.
                     1);
+
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
-            Log.e("Location Address", "Location Service not available", ioException);
+            Log.e(Constants.LOG_TAG, "Location Service not available", ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
-            Log.e("Location Address", "Invalid Latitude,Longitude used" + ". " +
+            Log.e(Constants.LOG_TAG, "Invalid Latitude,Longitude used" + ". " +
                     "Latitude = " + location.getLatitude() +
                     ", Longitude = " +
                     location.getLongitude(), illegalArgumentException);
@@ -79,23 +91,15 @@ public class FetchAddressIntentService extends IntentService {
 
         // Handle case where no address was found.
         if (addresses == null || addresses.isEmpty()) {
+
             if (errorMessage.isEmpty()) {
                 errorMessage = getString(R.string.toast_no_address_found);
-                Log.e("Location Address", errorMessage);
+                Log.e(Constants.LOG_TAG, errorMessage);
             }
             deliverResultToReceiver(FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(Constants.LIST_HEAD);
-            ArrayList<String> addressFragments = new ArrayList<String>();
-
-            // Fetch the address lines using getAddressLine,
-            // join them, and send them to the thread.
-            for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                addressFragments.add(address.getAddressLine(i));
-            }
-            deliverResultToReceiver(SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"),
-                            addressFragments));
+            deliverResultToReceiver(SUCCESS_RESULT, address.getAddressLine(Constants.LIST_HEAD));
         }
     }
 

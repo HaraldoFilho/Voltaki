@@ -1,3 +1,6 @@
+#### **1.0.9**
+- Fixed problem of app not displaying location address due to changes on the format of address result delivered by the addresses' server.
+
 #### **1.0.8**
 - Changed website references on portuguese version.
 - Made green color of navigation drawer icon be the same of background.
