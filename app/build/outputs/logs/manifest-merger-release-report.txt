@@ -1,0 +1,246 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:2:1-101:12
+	package
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:4:5-36
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:6:5-49
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:3:5-51
+	android:versionCode
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:5:5-47
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:13:22-76
+uses-feature#android.hardware.location.gps
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:15:5-66
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:15:19-63
+uses-feature#android.hardware.location.network
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:16:5-70
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:16:19-67
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:19:5-78
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:22:22-76
+uses-permission#android.permission.INTERNET
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:23:5-67
+MERGED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:20:5-66
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:23:22-64
+uses-permission#android.permission.VIBRATE
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:26:5-66
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:26:22-63
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:29:5-81
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:29:22-78
+application
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:32:5-99:19
+MERGED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:appcompat-v7:25.3.1] /home/mohb/.android/build-cache/9833da44e0974dd8155085e536c474523e614bf5/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /home/mohb/.android/build-cache/7dbf69482a2fda76bdd919f81f707bcfc6cde2b1/output/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /home/mohb/.android/build-cache/b4e3c6341f4d946200795733bf17a61769e2bd3c/output/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:transition:25.3.1] /home/mohb/.android/build-cache/ab6dd65ac29f7b676b70a63e141263a69a7d8ac3/output/AndroidManifest.xml:26:5-20
+MERGED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:24:5-19
+MERGED from [com.google.android.gms:play-services-location:11.0.4] /home/mohb/.android/build-cache/7dbb7f4666a02e497fcc599a9739a1f3d41ed07c/output/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:18:5-20:19
+MERGED from [com.google.android.gms:play-services-tasks:11.0.4] /home/mohb/.android/build-cache/36532298f9162b7a31eda55de66516973c10ad44/output/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-basement:11.0.4] /home/mohb/.android/build-cache/230e53c8f78e5befe6b29c7fe11958bbe95d7cbe/output/AndroidManifest.xml:19:5-21:19
+MERGED from [com.android.support:support-v4:25.3.1] /home/mohb/.android/build-cache/38fa683294479b97b65d129e5027e23d673dbdbd/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] /home/mohb/.android/build-cache/55073f5a5fb0975087535a2d9720662b950d6cfb/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] /home/mohb/.android/build-cache/1020f04d9e8b045a4b1e6615971244f159c2c191/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] /home/mohb/.android/build-cache/645d6f51d18f24c5f38084610942197eb8b2cb0c/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] /home/mohb/.android/build-cache/42b46fc30e9dfdde6581332bf436d13a9a256a01/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-compat:25.3.1] /home/mohb/.android/build-cache/f6e5cbb935342361ea8e9cf6d0f741f7fca32b60/output/AndroidManifest.xml:29:5-20
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:36:9-46
+	android:supportsRtl
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:37:9-35
+	android:allowBackup
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:34:9-35
+	android:icon
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:35:9-43
+	android:theme
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:38:9-40
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:33:9-68
+meta-data#com.google.android.geo.API_KEY
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:39:9-41:55
+	android:value
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:41:13-52
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:40:13-58
+activity#com.apps.mohb.voltaki.SplashActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:43:9-50:20
+	android:theme
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:45:13-47
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:44:13-43
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:46:13-49:29
+action#android.intent.action.MAIN
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:47:17-69
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:47:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:48:17-77
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:48:27-74
+activity#com.apps.mohb.voltaki.MainActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:51:9-55:59
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:54:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:53:13-50
+	android:theme
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:55:13-56
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:52:13-41
+activity#com.apps.mohb.voltaki.BookmarksActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:57:9-61:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:61:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:59:13-61
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:60:13-55
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:58:13-46
+activity#com.apps.mohb.voltaki.HistoryActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:63:9-67:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:67:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:65:13-59
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:66:13-55
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:64:13-44
+activity#com.apps.mohb.voltaki.HelpActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:69:9-73:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:73:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:71:13-56
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:72:13-55
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:70:13-41
+activity#com.apps.mohb.voltaki.AboutActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:75:9-79:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:79:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:77:13-57
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:78:13-55
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:76:13-42
+activity#com.apps.mohb.voltaki.SettingsActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:81:9-85:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:85:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:83:13-60
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:84:13-55
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:82:13-45
+activity#com.apps.mohb.voltaki.FeedbackActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:87:9-91:52
+	android:screenOrientation
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:91:13-49
+	android:label
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:89:13-52
+	android:parentActivityName
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:90:13-56
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:88:13-45
+activity#com.apps.mohb.voltaki.messaging.GoBackNotificationActivity
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:93:9-74
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:93:19-71
+service#com.apps.mohb.voltaki.map.FetchAddressIntentService
+ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:95:9-97:40
+	android:exported
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:97:13-37
+	android:name
+		ADDED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml:96:13-58
+uses-sdk
+INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:multidex:1.0.1] /home/mohb/.android/build-cache/2cc69d0bad63b81745e5af36f0e8ed62ed486a09/output/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:25.3.1] /home/mohb/.android/build-cache/9833da44e0974dd8155085e536c474523e614bf5/output/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /home/mohb/.android/build-cache/7dbf69482a2fda76bdd919f81f707bcfc6cde2b1/output/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /home/mohb/.android/build-cache/b4e3c6341f4d946200795733bf17a61769e2bd3c/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /home/mohb/.android/build-cache/a8d82e963f0e4f1a367e67885500db23e3bca2f2/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.3.1] /home/mohb/.android/build-cache/ab6dd65ac29f7b676b70a63e141263a69a7d8ac3/output/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:23:5-43
+MERGED from [com.google.android.gms:play-services-location:11.0.4] /home/mohb/.android/build-cache/7dbb7f4666a02e497fcc599a9739a1f3d41ed07c/output/AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:17:5-43
+MERGED from [com.google.android.gms:play-services-tasks:11.0.4] /home/mohb/.android/build-cache/36532298f9162b7a31eda55de66516973c10ad44/output/AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-basement:11.0.4] /home/mohb/.android/build-cache/230e53c8f78e5befe6b29c7fe11958bbe95d7cbe/output/AndroidManifest.xml:17:5-43
+MERGED from [com.android.support:support-v4:25.3.1] /home/mohb/.android/build-cache/38fa683294479b97b65d129e5027e23d673dbdbd/output/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] /home/mohb/.android/build-cache/55073f5a5fb0975087535a2d9720662b950d6cfb/output/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] /home/mohb/.android/build-cache/1020f04d9e8b045a4b1e6615971244f159c2c191/output/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] /home/mohb/.android/build-cache/645d6f51d18f24c5f38084610942197eb8b2cb0c/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] /home/mohb/.android/build-cache/42b46fc30e9dfdde6581332bf436d13a9a256a01/output/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.3.1] /home/mohb/.android/build-cache/f6e5cbb935342361ea8e9cf6d0f741f7fca32b60/output/AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mohb/AndroidStudioProjects/Voltaki/app/src/main/AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:appcompat-v7:25.3.1] /home/mohb/.android/build-cache/9833da44e0974dd8155085e536c474523e614bf5/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /home/mohb/.android/build-cache/7dbf69482a2fda76bdd919f81f707bcfc6cde2b1/output/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /home/mohb/.android/build-cache/b4e3c6341f4d946200795733bf17a61769e2bd3c/output/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /home/mohb/.android/build-cache/a8d82e963f0e4f1a367e67885500db23e3bca2f2/output/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:transition:25.3.1] /home/mohb/.android/build-cache/ab6dd65ac29f7b676b70a63e141263a69a7d8ac3/output/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-v4:25.3.1] /home/mohb/.android/build-cache/38fa683294479b97b65d129e5027e23d673dbdbd/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] /home/mohb/.android/build-cache/55073f5a5fb0975087535a2d9720662b950d6cfb/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] /home/mohb/.android/build-cache/1020f04d9e8b045a4b1e6615971244f159c2c191/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] /home/mohb/.android/build-cache/645d6f51d18f24c5f38084610942197eb8b2cb0c/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] /home/mohb/.android/build-cache/42b46fc30e9dfdde6581332bf436d13a9a256a01/output/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-compat:25.3.1] /home/mohb/.android/build-cache/f6e5cbb935342361ea8e9cf6d0f741f7fca32b60/output/AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:design:25.3.1] /home/mohb/.android/build-cache/3a2e9efe9b2329d1005c7c7ce3bc6a52044ba230/output/AndroidManifest.xml:26:9-47
+uses-feature#0x00020000
+ADDED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:21:5-77
+	android:glEsVersion
+		ADDED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:21:19-51
+	android:required
+		ADDED from [com.google.android.gms:play-services-maps:11.0.4] /home/mohb/.android/build-cache/002f4e3bdf9ee384adb389f64addc853532d90d4/output/AndroidManifest.xml:21:52-75
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:19:9-172
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:19:146-170
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:19:86-145
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /home/mohb/.android/build-cache/a656dd7719eb5088b96fe73f0960c657ab35ee63/output/AndroidManifest.xml:19:19-85
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:11.0.4] /home/mohb/.android/build-cache/230e53c8f78e5befe6b29c7fe11958bbe95d7cbe/output/AndroidManifest.xml:20:9-121
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:11.0.4] /home/mohb/.android/build-cache/230e53c8f78e5befe6b29c7fe11958bbe95d7cbe/output/AndroidManifest.xml:20:66-119
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:11.0.4] /home/mohb/.android/build-cache/230e53c8f78e5befe6b29c7fe11958bbe95d7cbe/output/AndroidManifest.xml:20:20-65
