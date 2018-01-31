@@ -46,4 +46,23 @@
 - Internationalization
 - Time/Date
 
+### API Key
+
+This application uses a *Google Maps™* API Key, that for obvious reasons it was removed from this repository. An API Key can be obtained following the instructions here:
+https://developers.google.com/maps/documentation/android/signup
+
+After get the key, the file **google_maps_api.xml** must be created at **_./app/src/debug/res/values/_** with the following content:
+
+```xml
+<resources>
+
+    <!--Google Maps API Debug Key-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        ### API Key (it starts with "AIza") ###
+    </string>
+
+</resources>
+```
+
+
 ####
