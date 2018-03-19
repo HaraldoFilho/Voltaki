@@ -15,37 +15,6 @@
 - Production Release Date: Aug 20, 2016
 - Developer: Haraldo Albergaria Filho
 
-#### This application uses:
-
-- Activities
-- Fragments
-- Intents
-- Settings
-- Splash Screen
-- Array Lists
-- Dialogs
-- Toasts
-- Notification
-- Button
-- Floating Button
-- Text View
-- Image View
-- List View
-- Map View
-- Web View
-- Vibrator
-- GPS
-- Network Location
-- Internet
-- Async Task
-- Json Write/Read
-- File Write/Read
-- Shared Preferences
-- Google Play Services API
-- Google Maps API
-- Internationalization
-- Time/Date
-
 ### API Key
 
 This application uses a *Google Maps™* API Key, that for obvious reasons it was removed from this repository. An API Key can be obtained following the instructions here:
