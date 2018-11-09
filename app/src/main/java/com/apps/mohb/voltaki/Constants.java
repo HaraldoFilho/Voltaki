@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2017 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 8/13/17 5:40 PM
+ *  Last modified : 11/8/18 11:55 PM
  *
  *  -----------------------------------------------------------
  */

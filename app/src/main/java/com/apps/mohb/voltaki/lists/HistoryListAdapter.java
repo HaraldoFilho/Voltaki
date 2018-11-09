@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryListAdapter.java
- *  Last modified : 7/25/16 8:20 PM
+ *  Last modified : 11/8/18 11:55 PM
  *
  *  -----------------------------------------------------------
  */

@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : NoLocPermissionAlertFragment.java
- *  Last modified : 8/7/16 9:58 PM
+ *  Last modified : 11/8/18 11:55 PM
  *
  *  -----------------------------------------------------------
  */

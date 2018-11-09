@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonRefreshTipAlertFragment.java
- *  Last modified : 8/22/16 10:12 PM
+ *  Last modified : 11/8/18 11:55 PM
  *
  *  -----------------------------------------------------------
  */

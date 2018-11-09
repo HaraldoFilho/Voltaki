@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : GoBackNotificationActivity.java
- *  Last modified : 7/12/16 1:49 AM
+ *  Last modified : 11/8/18 11:55 PM
  *
  *  -----------------------------------------------------------
  */

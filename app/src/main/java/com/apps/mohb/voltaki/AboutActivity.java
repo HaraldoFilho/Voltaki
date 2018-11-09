@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2016 mohb apps - All Rights Reserved
+ *  Copyright (c) 2018 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : AboutActivity.java
- *  Last modified : 8/10/16 11:35 PM
+ *  Last modified : 11/8/18 11:41 PM
  *
  *  -----------------------------------------------------------
  */
@@ -13,7 +13,6 @@
 package com.apps.mohb.voltaki;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.apps.mohb.voltaki.fragments.dialogs.LegalNoticesDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.MaterialIconsDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.PrivacyPolicyDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.TermsOfUseDialogFragment;
-import com.apps.mohb.voltaki.messaging.Toasts;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 
 public class AboutActivity extends AppCompatActivity {
 
+    /* ##### DEPRECATED #####
     // Class to load Legal Notices text from internet
     private class GetLegalNotices extends AsyncTask {
 
@@ -70,6 +67,7 @@ public class AboutActivity extends AppCompatActivity {
         }
 
     }
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +127,12 @@ public class AboutActivity extends AppCompatActivity {
                 dialog.show(getSupportFragmentManager(), "PrivacyPolicyDialogFragment");
                 break;
 
+            /* ##### DEPRECATED #####
             // Legal notices
             case R.id.action_legal_notices:
                 new GetLegalNotices().execute();
                 break;
+            */
 
             // Icons attribution
             case R.id.action_material_icons:

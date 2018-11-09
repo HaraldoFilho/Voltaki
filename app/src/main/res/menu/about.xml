@@ -23,11 +23,15 @@
         android:orderInCategory="4"
         android:title="@string/action_privacy_policy"
         app:showAsAction="never" />
+
+    <!-- ##### DEPRECATED #####
     <item
         android:id="@+id/action_legal_notices"
         android:orderInCategory="5"
         android:title="@string/action_legal_notices"
         app:showAsAction="never" />
+    -->
+
     <item
         android:id="@+id/action_material_icons"
         android:orderInCategory="6"
