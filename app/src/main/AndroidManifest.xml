@@ -96,6 +96,9 @@
             android:name=".map.FetchAddressIntentService"
             android:exported="false" />
 
+        <!-- Needed to fix crash when using legacy maps library on >= Android 9.0 -->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
     </application>
 
 </manifest>

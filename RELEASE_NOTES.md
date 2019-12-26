@@ -1,3 +1,9 @@
+#### **1.0.11**
+- Improvements on user interface.
+
+#### **1.0.10**
+- Added Android 8.0 (Oreo) support.
+
 #### **1.0.9**
 - Fixed problem of app not displaying location address due to changes on the format of address result delivered by the addresses' server.
 
