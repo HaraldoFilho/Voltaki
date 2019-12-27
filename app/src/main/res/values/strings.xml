@@ -3,8 +3,8 @@
 
     <!--Application version-->
     <string name="version_name">version: </string>
-    <string name="version_number" translatable="false">1.0.11</string>
-    <string name="version_code" translatable="false">84</string>
+    <string name="version_number" translatable="false">1.0.12</string>
+    <string name="version_code" translatable="false">85</string>
 
     <!--Application information-->
     <string name="info_app_name" translatable="false">Voltaki</string>
@@ -140,6 +140,8 @@
     <string name="toast_get_help_page">Loading help page from internet...</string>
 
     <!--Notification-->
+    <string name="notification_channel_name">Go Back</string>
+    <string name="notification_channel_description">Click this notification to go back to original location</string>
     <string name="notification_go_back">Click to go back</string>
     <string name="notification_blank" translatable="false"></string>
 

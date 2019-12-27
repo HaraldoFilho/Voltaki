@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2019 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 12/27/19 8:54 PM
  *
  *  -----------------------------------------------------------
  */
@@ -298,6 +298,7 @@ public class MainFragment extends Fragment implements
                         saveMapState();
                         // if notification is enabled show it
                         if (sharedPref.getBoolean(Constants.NOTIFICATION, true)) {
+                            notification.createNotificationChannel(getContext());
                             notification.startGoBackNotification(getContext());
                         }
                         break;

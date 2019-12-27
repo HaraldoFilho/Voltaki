@@ -156,5 +156,7 @@
     <string name="info_feedback_email">duvida@mohb-apps.com.br</string>
     <string name="url_website">https://mohb-apps.com.br/</string>
     <string name="info_website">mohb-apps.com.br</string>
+    <string name="notification_channel_description">Toque na notificação para voltar ao lugar original</string>
+    <string name="notification_channel_name">Voltar</string>
 
 </resources>

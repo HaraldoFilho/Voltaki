@@ -1,3 +1,6 @@
+#### **1.0.12**
+- Fixed bug of not showing notification on Android 8.0 (Oreo) and higher.
+
 #### **1.0.11**
 - Improvements on user interface.
 
