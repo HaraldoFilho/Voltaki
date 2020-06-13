@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : AboutActivity.java
- *  Last modified : 11/8/18 11:41 PM
+ *  Last modified : 6/13/20 12:34 PM
  *
  *  -----------------------------------------------------------
  */
@@ -13,6 +13,7 @@
 package com.apps.mohb.voltaki;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -99,20 +100,18 @@ public class AboutActivity extends AppCompatActivity {
 
             // Feedback
             case R.id.action_feedback:
-                intent = new Intent(this, FeedbackActivity.class);
-                bundle = new Bundle();
-                bundle.putString("url", getString(R.string.url_contact));
-                intent.putExtras(bundle);
-                startActivity(intent);
+                String[] feedback_address = new String[Constants.QUESTION_ARRAY_SIZE];
+                feedback_address[Constants.LIST_HEAD] = getString(R.string.info_feedback_email);
+                composeEmail(feedback_address, getString(R.string.action_feedback)
+                        + " " + getString(R.string.info_app_name));
                 break;
 
             // Bug report
             case R.id.action_bug_report:
-                intent = new Intent(this, FeedbackActivity.class);
-                bundle = new Bundle();
-                bundle.putString("url", getString(R.string.url_bug_report));
-                intent.putExtras(bundle);
-                startActivity(intent);
+                String[] bug_address = new String[Constants.QUESTION_ARRAY_SIZE];
+                bug_address[Constants.LIST_HEAD] = getString(R.string.info_bug_email);
+                composeEmail(bug_address, getString(R.string.action_bug_report)
+                        + " " + getString(R.string.info_app_name));
                 break;
 
             // Terms of use
@@ -143,6 +142,17 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Compose a e-mail to send a question
+    private void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
 }

@@ -56,7 +56,7 @@ public class HelpActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // load help page in webView
-        webView.loadUrl(getString(R.string.url_website) + bundle.getString("url"));
+        webView.loadUrl(getString(R.string.url_help_path) + bundle.getString("url"));
     }
 
     @Override

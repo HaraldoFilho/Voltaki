@@ -426,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_help:
                 intent = new Intent(this, HelpActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("url", getString(R.string.url_help));
+                bundle.putString("url", getString(R.string.url_help_index));
                 intent.putExtras(bundle);
                 break;
 

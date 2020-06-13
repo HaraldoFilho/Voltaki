@@ -1,3 +1,6 @@
+#### **1.1.0**
+- Changes on help and feedback pages.
+
 #### **1.0.12**
 - Fixed bug of not showing notification on Android 8.0 (Oreo) and higher.
 

@@ -95,11 +95,6 @@
     <string name="dialog_button_tip_ok">Não mostrar novamente</string>
     <string name="dialog_message_tip_lists">Toque em um item para voltar para o local ou pressione por alguns segundos para ver opções\n</string>
     <string name="alert_title_warning">ATENÇÃO!</string>
-    <string name="url_help">voltaki-ajuda</string>
-    <string name="url_help_bookmarks">voltaki-ajuda-marcadores</string>
-    <string name="url_help_history">voltaki-ajuda-historico</string>
-    <string name="url_help_main">voltaki-ajuda-principal</string>
-    <string name="url_help_settings">voltaki-ajuda-configuracoes</string>
     <string name="alert_message_location_provider_needed">Suas configurações de localização estão desligadas. É necessário pelo menos um provedor de localização para o aplicativo funcionar. Você deseja ir para as configurações para ligá-la? Se você responder não você não será capaz de obter novas localizações, apenas consultar os Marcadores e Histórico\n</string>
     <string name="action_back">Voltar à origem</string>
     <string name="alert_title_replace">Substituir local?</string>
@@ -147,16 +142,14 @@
     <string name="alert_message_ext_storage_access">Voltaki precisa de acesso ao armazenamento externo para poder fazer e restaurar backups dos marcadores.  Você deseja ver novamente a janela de solicitação de permissão?\n</string>
     <string name="action_report_bug">Relatar uma falha</string>
     <string name="action_website">Website</string>
-    <string name="url_bug_report">relatorio-de-falha</string>
-    <string name="url_contact">contato</string>
     <string name="dialog_message_tip_button_add_bookmark">Você também pode adicionar um marcador pressionando o botão por alguns segundos enquanto ele estiver amarelo\n</string>
     <string name="dialog_message_tip_button_refresh">Você também pode atualizar o mapa pressionando o botão flutuante verde por alguns segundos enquanto o botão principal estiver amarelo\n</string>
     <string name="dialog_message_tip_button_reset">Você também pode reiniciar pressionando o botão por alguns segundos enquanto ele estiver verde ou vermelho\n</string>
     <string name="dialog_message_tip_floating_button">Pressione o botão flutuante verde para retornar o marcador  vermelho para o centro\n</string>
-    <string name="info_feedback_email">duvida@mohb-apps.com.br</string>
-    <string name="url_website">https://mohb-apps.com.br/</string>
+    <string name="url_help_path">https://mohb-apps.github.io/Voltaki/help/br/</string>
     <string name="info_website">mohb-apps.com.br</string>
     <string name="notification_channel_description">Toque na notificação para voltar ao lugar original</string>
     <string name="notification_channel_name">Voltar</string>
+    <string name="action_bug_report">Falha no aplicativo</string>
 
 </resources>

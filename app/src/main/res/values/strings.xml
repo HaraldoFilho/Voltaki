@@ -3,15 +3,16 @@
 
     <!--Application version-->
     <string name="version_name">version: </string>
-    <string name="version_number" translatable="false">1.0.12</string>
-    <string name="version_code" translatable="false">85</string>
+    <string name="version_number" translatable="false">1.1.0</string>
+    <string name="version_code" translatable="false">86</string>
 
     <!--Application information-->
     <string name="info_app_name" translatable="false">Voltaki</string>
     <string name="info_app_url" translatable="false">http://goo.gl/3zOJcC</string>
     <string name="info_name" translatable="false">mohb apps</string>
     <string name="info_website">mohb-apps.com</string>
-    <string name="info_feedback_email">feedback@mohb-apps.com</string>
+    <string name="info_feedback_email" translatable="false">feedback@mohb-apps.com</string>
+    <string name="info_bug_email" translatable="false">bug@mohb-apps.com</string>
     <string name="info_developer">Developer:</string>
     <string name="info_developer_name" translatable="false">Haraldo Albergaria Filho</string>
     <string name="info_skype" translatable="false">skype: mohb.apps</string>
@@ -67,6 +68,7 @@
     <string name="action_website">Website</string>
     <string name="action_feedback">Feedback</string>
     <string name="action_question">Question</string>
+    <string name="action_bug_report">Bug in application</string>
     <string name="action_about_application">about application</string>
     <string name="action_backup_bookmarks">Backup</string>
     <string name="action_restore_bookmarks">Restore</string>
@@ -158,14 +160,12 @@
     <string name="layout_no_maps_text">Voltaki needs Google Maps to work\nPlease, install or activate Google Maps and reopen the application </string>
 
     <!--Help pages-->
-    <string name="url_website">https://mohb-apps.com/</string>
-    <string name="url_help">voltaki-help</string>
-    <string name="url_help_main">voltaki-help-main</string>
-    <string name="url_help_bookmarks">voltaki-help-bookmarks</string>
-    <string name="url_help_history">voltaki-help-history</string>
-    <string name="url_help_settings">voltaki-help-settings</string>
-    <string name="url_contact">contact</string>
-    <string name="url_bug_report">bug-report</string>
+    <string name="url_help_path">https://mohb-apps.github.io/Voltaki/help/</string>
+    <string name="url_help_index" translatable="false">index.html</string>
+    <string name="url_help_main" translatable="false">main.html</string>
+    <string name="url_help_bookmarks" translatable="false">bookmarks.html</string>
+    <string name="url_help_history" translatable="false">history.html</string>
+    <string name="url_help_settings" translatable="false">settings.html</string>
 
     <!-- Settings Map Type-->
     <string name="set_key_map_type" translatable="false">MAP_TYPE</string>
