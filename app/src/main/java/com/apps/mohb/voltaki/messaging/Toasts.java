@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Toasts.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 6/14/20 12:36 AM
  *
  *  -----------------------------------------------------------
  */
@@ -26,8 +26,6 @@ public class Toasts {
 
     private static Toast backupBookmarks;
     private static Toast bookmarkAdded;
-    private static Toast legalNotices;
-    private static Toast helpPage;
     private static Toast locationAddress;
     private static Toast searchAddress;
 
@@ -78,47 +76,6 @@ public class Toasts {
         }
     }
 
-
-    // Toast to notify that is getting Legal Notices text from the internet
-
-    public static void createLegalNotices() {
-        legalNotices = Toast.makeText((context), "", Toast.LENGTH_SHORT);
-        legalNotices.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
-    }
-
-    public static void setLegalNoticesText(int textId) {
-        legalNotices.setText(textId);
-    }
-
-    public static void showLegalNotices() {
-        legalNotices.show();
-    }
-
-    public static void cancelLegalNotices() {
-        if (legalNotices != null) {
-            legalNotices.cancel();
-        }
-    }
-
-
-    // Toast to notify that is getting a help page from the internet
-
-    public static void createHelpPage() {
-        helpPage = Toast.makeText((context), R.string.toast_get_help_page, Toast.LENGTH_SHORT);
-        helpPage.setGravity(Gravity.CENTER, Constants.TOAST_X_OFFSET, Constants.TOAST_Y_OFFSET);
-    }
-
-    public static void showHelpPage() {
-        helpPage.show();
-    }
-
-    public static void cancelHelpPage() {
-        if (helpPage != null) {
-            helpPage.cancel();
-        }
-    }
-
-
     // Toast to notify that an address has been found or not
 
     public static void createLocationAddress() {
@@ -168,8 +125,6 @@ public class Toasts {
     public static void cancelAllToasts() {
         cancelBackupBookmarks();
         cancelBookmarkAdded();
-        cancelLegalNotices();
-        cancelHelpPage();
         cancelLocationAddress();
         cancelSearchAddress();
     }

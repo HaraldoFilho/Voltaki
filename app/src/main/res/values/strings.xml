@@ -3,8 +3,8 @@
 
     <!--Application version-->
     <string name="version_name">version: </string>
-    <string name="version_number" translatable="false">1.1.0</string>
-    <string name="version_code" translatable="false">86</string>
+    <string name="version_number" translatable="false">1.1.1</string>
+    <string name="version_code" translatable="false">87</string>
 
     <!--Application information-->
     <string name="info_app_name" translatable="false">Voltaki</string>

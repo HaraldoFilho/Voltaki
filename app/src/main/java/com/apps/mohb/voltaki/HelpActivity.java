@@ -21,8 +21,6 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.apps.mohb.voltaki.messaging.Toasts;
-
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -46,10 +44,6 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // show toast to inform that will
-        // get help page from internet
-        Toasts.createHelpPage();
-        Toasts.showHelpPage();
     }
 
     @Override
@@ -62,8 +56,6 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // cancel toast if page if exit help screen
-        Toasts.cancelHelpPage();
     }
 
     @Override
