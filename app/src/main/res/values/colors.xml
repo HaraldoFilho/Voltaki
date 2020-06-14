@@ -4,7 +4,7 @@
     <!--Color pallete-->
     <color name="colorPrimary">#1fc406</color>
     <color name="colorPrimaryDark">#1a7c07</color>
-    <color name="colorAccent">#35dc43</color>
+    <color name="colorAccent">#31cf3e</color>
 
     <!--Button colors-->
     <color name="colorGetLocationButton">#ff7b00</color>

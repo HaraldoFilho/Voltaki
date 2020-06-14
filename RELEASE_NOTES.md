@@ -1,3 +1,9 @@
+#### **1.1.2**
+- Improvements on user interface.
+
+#### **1.1.1**
+- Improvements on user interface.
+
 #### **1.1.0**
 - Changes on help and feedback pages.
 

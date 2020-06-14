@@ -8,8 +8,8 @@ android {
         applicationId "com.apps.mohb.voltaki"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 87
-        versionName "1.1.1"
+        versionCode 88
+        versionName "1.1.2"
 
         // Enabling multidex support.
         multiDexEnabled true
