@@ -147,7 +147,7 @@
     <string name="dialog_message_tip_button_reset">Você também pode reiniciar pressionando o botão por alguns segundos enquanto ele estiver verde ou vermelho\n</string>
     <string name="dialog_message_tip_floating_button">Pressione o botão flutuante verde para retornar o marcador  vermelho para o centro\n</string>
     <string name="url_help_path">https://mohb-apps.github.io/Voltaki/help/br/</string>
-    <string name="info_website">mohb-apps.com.br</string>
+    <string name="info_website">mohb.app/br</string>
     <string name="notification_channel_description">Toque na notificação para voltar ao lugar original</string>
     <string name="notification_channel_name">Voltar</string>
     <string name="action_bug_report">Falha no aplicativo</string>
