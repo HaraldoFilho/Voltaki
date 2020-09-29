@@ -1,22 +1,24 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BackupAlertFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 2:28 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.apps.mohb.voltaki.R;
 
@@ -31,6 +33,7 @@ public class BackupAlertFragment extends DialogFragment {
     private BackupDialogListener mListener;
 
 
+    @NonNull
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -52,15 +55,15 @@ public class BackupAlertFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the BackupDialogListener so we can send events to the host
-            mListener = (BackupDialogListener) activity;
+            mListener = (BackupDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement BackupDialogListener");
         }
     }

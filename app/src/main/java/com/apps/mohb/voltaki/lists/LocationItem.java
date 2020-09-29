@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LocationItem.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/23/20 11:12 PM
  *
  *  -----------------------------------------------------------
  */

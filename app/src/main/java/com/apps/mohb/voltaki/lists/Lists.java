@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 8:08 PM
  *
  *  -----------------------------------------------------------
  */
@@ -17,6 +17,10 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import com.apps.mohb.voltaki.Constants;
+import com.apps.mohb.voltaki.R;
+import com.apps.mohb.voltaki.messaging.Toasts;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,10 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import com.apps.mohb.voltaki.Constants;
-import com.apps.mohb.voltaki.R;
-import com.apps.mohb.voltaki.messaging.Toasts;
 
 
 // This class manages the Bookmarks and History lists
@@ -43,6 +43,8 @@ public class Lists {
 
     private SharedPreferences sharedPref;
     private ListsSavedState listsSavedState;
+
+    private Toasts toasts;
 
 
     public Lists(Context context) {
@@ -68,13 +70,18 @@ public class Lists {
 
         // if list is not unlimited, delete old items
         // that exceed the maximum number
+        assert maxItems != null;
         if ((maxItems.matches(Constants.HISTORY_MAX_ITEMS_10))
                 ||(maxItems.matches(Constants.HISTORY_MAX_ITEMS_100))) {
-            setHistoryMaxItems(Integer.valueOf(maxItems));
+            setHistoryMaxItems(Integer.parseInt(maxItems));
             pruneHistory();
         } else {
             historyMaxItems = Constants.UNLIMITED;
         }
+
+        toasts = new Toasts(context);
+        toasts.createBackupBookmarks();
+
     }
 
     public void saveState() {
@@ -194,7 +201,7 @@ public class Lists {
     }
 
     public void setBookmarkEditText(String bookmarkEditText) {
-        this.bookmarkEditText = bookmarkEditText;
+        Lists.bookmarkEditText = bookmarkEditText;
     }
 
     public boolean isEditingAddress() {
@@ -206,6 +213,7 @@ public class Lists {
     }
 
     public void backupBookmarks(Context context, boolean auto) throws IOException {
+
         // check if it is possible to write on external storage
         if (isExternalStorageWritable()) {
             // if backup directory doesn't exist create it
@@ -218,6 +226,7 @@ public class Lists {
             if (backupFile.exists()) {
                 backupFile.delete();
             }
+
             // check if file is created successfully
             if (backupFile.createNewFile()) {
                 // get json string from memory
@@ -226,16 +235,16 @@ public class Lists {
                 writeStringToFile(jsonString, backupFile);
                 // if auto backup is not enabled show toast with confirmation and the backup file full path
                 if(!auto) {
-                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + backupFile.toString());
-                    Toasts.showBackupBookmarks();
+                    toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + backupFile.toString());
+                    toasts.showBackupBookmarks();
                 }
             }
 
         }
         else { // if auto backup is not enabled show toast informing that external storage is unavailable
             if(!auto) {
-                Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
-                Toasts.showBackupBookmarks();
+                toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
+                toasts.showBackupBookmarks();
             }
         }
     }
@@ -249,6 +258,8 @@ public class Lists {
                 File backupFile = new File(getBackupDirectory(context) + "/" + Constants.BOOKMARKS_BACKUP_FILE);
                 // check if backup file exists
                 if (backupFile.exists()) {
+                    toasts.setBackupBookmarksText(context.getString(R.string.toast_restore_bookmarks) + backupFile.toString());
+                    toasts.showBackupBookmarks();
                     String jsonString = readStringFromFile(backupFile);
                     // save json bookmarks list in memory
                     listsSavedState.setBookmarksState(jsonString);
@@ -256,18 +267,18 @@ public class Lists {
                     bookmarks = listsSavedState.getBookmarksState();
                 }
                 else { // show toast informing that backup file has not been found
-                    Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
-                    Toasts.showBackupBookmarks();
+                    toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
+                    toasts.showBackupBookmarks();
                 }
             }
             else { // show toast informing that backup file has not been found
-                Toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
-                Toasts.showBackupBookmarks();
+                toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
+                toasts.showBackupBookmarks();
             }
         }
         else { // show toast informing that external storage is unavailable
-            Toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
-            Toasts.showBackupBookmarks();
+            toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
+            toasts.showBackupBookmarks();
 
         }
     }
@@ -282,20 +293,17 @@ public class Lists {
     private String readStringFromFile(File file) throws IOException {
         FileReader fileReader = new FileReader(file);
         int fileLength = (int) file.length();
-        char charArray[] = new char[fileLength];
+        char[] charArray = new char[fileLength];
         // read file and put data in the array of characters
         fileReader.read(charArray, 0, fileLength);
         fileReader.close();
         // convert the array of characters into a string and return it
-        StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append(charArray).toString();
+        return String.valueOf(charArray);
     }
 
     private File getBackupDirectory(Context context) {
-        // get external storage root directory
-        String dir = Environment.getExternalStorageDirectory().toString();
-        // construct the backup directory with the application name
-        return new File(dir + "/" + context.getString(R.string.info_app_name));
+       return new File(String.valueOf(context.getExternalFilesDir(
+                Environment.DIRECTORY_DOCUMENTS)));
     }
 
 
@@ -305,20 +313,14 @@ public class Lists {
     /* Checks if external storage is available for read and write */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
     public boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
 }

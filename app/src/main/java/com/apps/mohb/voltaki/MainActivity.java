@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -22,23 +22,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
-import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.MainFragment;
 import com.apps.mohb.voltaki.fragments.NoMapsFragment;
@@ -60,8 +60,10 @@ import com.apps.mohb.voltaki.messaging.Notification;
 import com.apps.mohb.voltaki.messaging.Toasts;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -86,12 +88,8 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager mainFragmentManager;
 
     private MapCurrentState mapCurrentState;
-    private ButtonSavedState buttonSavedState;
+    private ButtonCurrentState buttonCurrentState;
 
-    private String lastSystemLanguage;
-    private String systemLanguage;
-
-    private SharedPreferences lastSystemLanguagePref;
     private SharedPreferences showRefreshTipPref;
     private SharedPreferences showResetTipPref;
     private SharedPreferences showFloatingButtonTipPref;
@@ -102,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements
     private boolean okMaps;
 
     private Lists lists;
+    private Toasts toasts;
 
     private DialogFragment locServDisabledDialog;
 
     protected GoogleApiAvailability googleApiAvailability;
-    private int googlePlayServicesAvailability;
 
 
     @Override
@@ -139,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // create toasts instance
+        toasts = new Toasts(getApplicationContext());
+
         // create navigation drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 // if drawer is opened cancel all toasts
-                Toasts.cancelAllToasts();
+                toasts.cancelAllToasts();
             }
         };
 
@@ -154,13 +155,13 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         // create items on navigation drawer and listen for clicks
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // create instance of map current state
         mapCurrentState = new MapCurrentState(this);
-        // create instance of button saved state
-        buttonSavedState = new ButtonSavedState(this);
+        // create instance of button current state
+        buttonCurrentState = new ButtonCurrentState(this);
 
         // get shared preferences variables
         showRefreshTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
@@ -170,19 +171,20 @@ public class MainActivity extends AppCompatActivity implements
         showNoLocServWarnPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
         // get system language
-        systemLanguage = Locale.getDefault().getLanguage().toString();
+        String systemLanguage = Locale.getDefault().getLanguage().toString();
         // get last system language set on device
-        lastSystemLanguagePref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        lastSystemLanguage = lastSystemLanguagePref.getString(Constants.SYSTEM_LANGUAGE, "");
+        SharedPreferences lastSystemLanguagePref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        String lastSystemLanguage = lastSystemLanguagePref.getString(Constants.SYSTEM_LANGUAGE, "");
 
+        assert lastSystemLanguage != null;
         if (!systemLanguage.matches(lastSystemLanguage)) {
             // if system language has changed, clear settings because they changed to the new language
-            lastSystemLanguagePref.edit().putString(Constants.SYSTEM_LANGUAGE, systemLanguage).commit();
-            PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+            lastSystemLanguagePref.edit().putString(Constants.SYSTEM_LANGUAGE, systemLanguage).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
             // and update notification if button is green
-            if ((buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK)
-                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)
-                    || (buttonSavedState.getButtonStatus() == ButtonStatus.GO_BACK_OFFLINE)) {
+            if ((buttonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK)
+                    || (buttonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK_CLICKED)
+                    || (buttonCurrentState.getButtonStatus() == ButtonStatus.GO_BACK_OFFLINE)) {
                 // intent that will open Google Maps when notification is clicked
                 Intent intent = new Intent(this, GoBackNotificationActivity.class);
                 Notification notification = new Notification();
@@ -201,8 +203,7 @@ public class MainActivity extends AppCompatActivity implements
         lists = new Lists(this);
 
         // set context for all toasts and create added to bookmarks toast
-        Toasts.setContext(this);
-        Toasts.createBookmarkAdded();
+        toasts.createBookmarkAdded();
 
         // create location services disabled dialog
         if (locServDisabledDialog == null) {
@@ -276,9 +277,9 @@ public class MainActivity extends AppCompatActivity implements
         if (mainFragment == null) {
             // if all location providers are disabled and button is not GREEN set button to RED
             if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()
-                    && (ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
+                    && (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK))) {
-                buttonSavedState.setButtonStatus(ButtonStatus.OFFLINE);
+                buttonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
             }
             // create map and button
             mainFragment = new MainFragment();
@@ -308,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements
         // create "share" menu item
         menuItemShare = menu.findItem(R.id.action_share);
 
-        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
+        if (buttonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
             menuItemAddBookmark.setEnabled(false);
             menuItemShare.setEnabled(false);
         }
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements
             // Share
             case R.id.action_share:
                 LocationItem locationItem = new LocationItem(this);
-                if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE)) {
+                if ((buttonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE)) {
                     locationItem.setName(getString(R.string.action_share_here));
                 } else {
                     locationItem.setName(getString(R.string.action_share_location));
@@ -356,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements
             // Reset / Refresh
             case R.id.action_reset:
                 // if button is YELLOW show map refresh tip dialog
-                if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                         == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
                     if (showRefreshTipPref.getBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, true)) {
                         DialogFragment tipDialog = new ButtonRefreshTipAlertFragment();
@@ -369,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements
                         tipDialog.show(getSupportFragmentManager(), "ButtonResetTipAlertFragment");
                     }
                     // if it is RED reset
-                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                    if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                             == ButtonEnums.convertEnumToInt(ButtonStatus.OFFLINE)) {
                         reset();
                     } else { // if it is GREEN show reset dialog
@@ -397,7 +398,6 @@ public class MainActivity extends AppCompatActivity implements
 
     /// NAVIGATION DRAWER MENU
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -461,41 +461,24 @@ public class MainActivity extends AppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else { // cancel all toasts and close application
-            Toasts.cancelAllToasts();
+            toasts.cancelAllToasts();
             super.onBackPressed();
         }
 
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // if Google Play Services or Google Maps is not available stop execution
-        if ((!okPlayServices) || (!okMaps)) {
-            return;
-        }
-
-        // if none location provider is available stop execution
-        if ((!mapCurrentState.isNetworkEnabled() && (!mapCurrentState.isGpsEnabled()))) {
-            return;
-        }
-
-    }
-
 
     // Reset
     public void reset() {
 
         // if at least one location provider is enabled set button to GETTING LOCATION
         if (mapCurrentState.isGpsEnabled() || mapCurrentState.isNetworkEnabled()) {
-            ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-            ButtonCurrentState.setButtonGetLocation(this);
-            buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+            buttonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+            buttonCurrentState.setButtonGetLocation(this);
+            buttonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
         } else { // set the button to OFFLINE
-            ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
-            ButtonCurrentState.setButtonOffline(this);
-            buttonSavedState.setButtonStatus(ButtonStatus.OFFLINE);
+            buttonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
+            buttonCurrentState.setButtonOffline(this);
+            buttonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
         }
 
         // cancel status bar notification
@@ -509,6 +492,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // restart Google Map API client
         MainFragment fragment = (MainFragment) mainFragmentManager.findFragmentById(R.id.container);
+        assert fragment != null;
         fragment.getGoogleApiClient().disconnect();
         fragment.getGoogleApiClient().connect();
 
@@ -520,8 +504,8 @@ public class MainActivity extends AppCompatActivity implements
 
     // update text of reset item on options menu
     public void updateActionResetTitle() {
-        if ((ButtonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
-                || (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE)) {
+        if ((buttonCurrentState.getButtonStatus() == ButtonStatus.GETTING_LOCATION)
+                || (buttonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE)) {
             menuItemReset.setTitle(R.string.action_refresh);
         } else {
             menuItemReset.setTitle(R.string.action_reset);
@@ -531,12 +515,13 @@ public class MainActivity extends AppCompatActivity implements
 
     public void startLocationUpdates() {
         MainFragment fragment = (MainFragment) mainFragmentManager.findFragmentById(R.id.container);
+        assert fragment != null;
         fragment.startLocationUpdates();
     }
 
     private void checkGoogleAppsApiAvailability() {
 
-        googlePlayServicesAvailability = googleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        int googlePlayServicesAvailability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
 
         // Check if Google Play Services is installed
         if (googlePlayServicesAvailability == ConnectionResult.SUCCESS) {
@@ -545,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements
 
             try {
                 // Checks is Google Maps is installed
-                if (getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0).enabled) {
+                if (getPackageManager().getApplicationInfo("com.google.android.gms", 0).enabled) {
                     okMaps = true;
                 } else {
                     okMaps = false;
@@ -564,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements
 
             okPlayServices = false;
             // shows error dialog to ask user to install Play Services
-            googleApiAvailability.getInstance().getErrorDialog(this, googlePlayServicesAvailability, 0).show();
+            GoogleApiAvailability.getInstance().getErrorDialog(this, googlePlayServicesAvailability, 0).show();
 
         }
     }
@@ -580,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements
                 // user choose to turn on location provider that was off
                 case Activity.RESULT_OK:
                     // if button is not green reset map
-                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                    if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                             < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                         reset();
                     }
@@ -629,30 +614,26 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // disable tip when button is long pressed
     public void onButtonLongPressed() {
-        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
-            showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).commit();
+        if (buttonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
+            showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).apply();
         } else {
-            showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).commit();
+            showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).apply();
         }
     }
 
     @Override // disable tip when floating button is long pressed
     public void onFloatingLongPressed() {
-        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).commit();
+        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).apply();
     }
 
     @Override // read result of permissions requests
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch (requestCode) {
-            case Constants.FINE_LOCATION_PERMISSION_REQUEST: {
-                // if permission is granted reset
-                if (grantResults.length > 0
-                        && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
-                    reset();
-                }
-                return;
+        if (requestCode == Constants.FINE_LOCATION_PERMISSION_REQUEST) {// if permission is granted reset
+            if (grantResults.length > 0
+                    && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
+                reset();
             }
         }
     }
@@ -670,9 +651,9 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @Override // No
+@Override // No
     public void onAlertNoLocPermDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -708,10 +689,8 @@ public class MainActivity extends AppCompatActivity implements
             locationItem.setAddress(mapCurrentState.getLocationAddress());
 
             // add item to bookmarks list and show toast
-            if (locationItem != null) {
-                lists.addItemToBookmarks(this, locationItem);
-                Toasts.showBookmarkAdded();
-            }
+            lists.addItemToBookmarks(this, locationItem);
+            toasts.showBookmarkAdded();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -719,9 +698,9 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @Override // Cancel
+@Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -732,9 +711,9 @@ public class MainActivity extends AppCompatActivity implements
         reset();
     }
 
-    @Override // No
+@Override // No
     public void onResetDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -754,7 +733,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // Do not show again
     public void onAlertLocServDialogNeutralClick(DialogFragment dialog) {
-        showNoLocServWarnPref.edit().putBoolean(Constants.LOC_SERV_CHECK, false).commit();
+        showNoLocServWarnPref.edit().putBoolean(Constants.LOC_SERV_CHECK, false).apply();
         createMainFragment();
     }
 
@@ -763,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // Do not show again
     public void onButtonAddBookmarkTipDialogPositiveClick(DialogFragment dialog) {
-        showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).commit();
+        showAddBookmarkPref.edit().putBoolean(Constants.BUTTON_ADD_BOOKMARK_TIP_SHOW, false).apply();
     }
 
 
@@ -771,7 +750,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override // Do not show again
     public void onButtonRefreshTipDialogPositiveClick(DialogFragment dialog) {
-        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).commit();
+        showRefreshTipPref.edit().putBoolean(Constants.BUTTON_REFRESH_TIP_SHOW, false).apply();
     }
 
 
@@ -779,7 +758,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onButtonResetTipDialogPositiveClick(DialogFragment dialog) {
-        showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).commit();
+        showResetTipPref.edit().putBoolean(Constants.BUTTON_RESET_TIP_SHOW, false).apply();
     }
 
 
@@ -787,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFloatingButtonTipDialogPositiveClick(DialogFragment dialog) {
-        showFloatingButtonTipPref.edit().putBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, false).commit();
+        showFloatingButtonTipPref.edit().putBoolean(Constants.FLOATING_BUTTON_TIP_SHOW, false).apply();
     }
 
 

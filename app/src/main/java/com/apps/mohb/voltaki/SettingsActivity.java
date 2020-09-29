@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsActivity.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 5:58 PM
  *
  *  -----------------------------------------------------------
  */
@@ -16,13 +16,16 @@ package com.apps.mohb.voltaki;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
 import com.apps.mohb.voltaki.fragments.SettingsFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.PreferencesResetAlertFragment;
+
+import java.util.Objects;
 
 
 public class SettingsActivity extends AppCompatActivity implements
@@ -84,11 +87,11 @@ public class SettingsActivity extends AppCompatActivity implements
     @Override // Yes
     public void onAlertDialogPositiveClick(DialogFragment dialog) {
         // Clear settings on memory
-        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
         // Set defaults on memory
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         // Update settings screen with the default values
-        getFragmentManager().beginTransaction().detach(settingsFragment);
+        getFragmentManager().beginTransaction().detach(settingsFragment).commit();
         settingsFragment = new SettingsFragment();
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, settingsFragment)
@@ -97,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity implements
 
     @Override // No
     public void onAlertDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 }

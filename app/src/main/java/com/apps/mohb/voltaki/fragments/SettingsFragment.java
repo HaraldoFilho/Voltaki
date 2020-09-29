@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -22,6 +22,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import androidx.annotation.RequiresApi;
 
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.MainActivity;
@@ -148,12 +150,14 @@ public class SettingsFragment extends PreferenceFragment {
     // Listen to changes on Notification setting
     private Preference.OnPreferenceClickListener preferenceClickListener
             = new Preference.OnPreferenceClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Notification notification = new Notification();
+        Notification notification = new Notification();
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            ButtonCurrentState buttonCurrentState = new ButtonCurrentState(getContext());
             // if button is GREEN and Notification setting is checked start notification
-            if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+            if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                     > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)
                     &&(sharedPreferences.getBoolean(Constants.NOTIFICATION, true))) {
                 notification.startGoBackNotification(getActivity().getApplicationContext());

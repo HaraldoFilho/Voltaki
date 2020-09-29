@@ -1,25 +1,26 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LegalNoticesDialogFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 6:40 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.widget.TextView;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.apps.mohb.voltaki.R;
 
@@ -37,21 +38,22 @@ public class LegalNoticesDialogFragment extends DialogFragment {
 
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        assert getArguments() != null;
         String legalNotices = getArguments().getString("notices");
 
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        View view = layoutInflater.inflate(R.layout.fragment_about_dialog, null);
+        View view = View.inflate(getContext(), R.layout.fragment_about_dialog, null);
 
-        TextView textViewTitle = (TextView) view.findViewById(R.id.txtTitle);
-        TextView textView = (TextView) view.findViewById(R.id.txtText);
+        TextView textViewTitle = view.findViewById(R.id.txtTitle);
+        TextView textView = view.findViewById(R.id.txtText);
 
         textViewTitle.setText(getText(R.string.action_legal_notices));
         textView.setText(legalNotices);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(view);
 
         return alertDialogBuilder.create();
@@ -59,8 +61,8 @@ public class LegalNoticesDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
     }
 
 }

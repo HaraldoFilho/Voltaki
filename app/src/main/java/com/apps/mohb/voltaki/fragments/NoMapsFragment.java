@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : NoMapsFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 2:46 PM
  *
  *  -----------------------------------------------------------
  */
@@ -13,10 +13,11 @@
 package com.apps.mohb.voltaki.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.apps.mohb.voltaki.R;
 

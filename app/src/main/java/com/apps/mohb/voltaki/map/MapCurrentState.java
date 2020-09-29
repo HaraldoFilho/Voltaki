@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapCurrentState.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 3:20 PM
  *
  *  -----------------------------------------------------------
  */
@@ -35,7 +35,6 @@ public class MapCurrentState {
 
     public static GoogleMap googleMap;
     public static boolean mapMoved;
-    private Marker marker;
 
     private static Location location;
     private static double latitude;
@@ -79,7 +78,7 @@ public class MapCurrentState {
         locationAddress = mLocationAddress;
     }
 
-    public static void gotoLocation(double latitude, double longitude, int zoomLevel) {
+    public void gotoLocation(double latitude, double longitude, int zoomLevel) {
         googleMap.clear();
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,
                 longitude), zoomLevel));
@@ -89,8 +88,9 @@ public class MapCurrentState {
     public void updateUI(double latitude, double longitude) {
         LatLng lastLocation = new LatLng(latitude, longitude);
         googleMap.clear();
-        marker = googleMap.addMarker(new MarkerOptions().position(lastLocation));
-        if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(lastLocation));
+        ButtonCurrentState buttonCurrentState = new ButtonCurrentState(context);
+        if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                 == ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
             marker.setTitle(context.getResources().getString(R.string.map_you_are_here));
         } else {
@@ -101,7 +101,7 @@ public class MapCurrentState {
 
     // Checks if GPS is enabled
     public boolean isGpsEnabled() {
-        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             return true;
         }
@@ -112,7 +112,7 @@ public class MapCurrentState {
 
     // Check if network location is enabled
     public boolean isNetworkEnabled() {
-        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             return true;
         }

@@ -1,22 +1,24 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonResetTipAlertFragment.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 2:46 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.apps.mohb.voltaki.R;
 
@@ -30,10 +32,11 @@ public class ButtonResetTipAlertFragment extends DialogFragment {
     private ButtonResetTipDialogListener mListener;
 
 
+    @NonNull
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setTitle(R.string.dialog_title_tip).setMessage(R.string.dialog_message_tip_button_reset)
                 .setPositiveButton(R.string.dialog_button_tip_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -46,15 +49,15 @@ public class ButtonResetTipAlertFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        // Verify that the host context implements the callback interface
         try {
             // Instantiate the ButtonResetTipDialogListener so we can send events to the host
-            mListener = (ButtonResetTipDialogListener) activity;
+            mListener = (ButtonResetTipDialogListener) context;
         } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
+            // The context doesn't implement the interface, throw exception
+            throw new ClassCastException(context.toString()
                     + " must implement ButtonResetTipDialogListener");
         }
     }

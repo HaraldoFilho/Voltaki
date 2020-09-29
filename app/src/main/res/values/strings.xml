@@ -3,8 +3,8 @@
 
     <!--Application version-->
     <string name="version_name">version: </string>
-    <string name="version_number" translatable="false">1.1.3</string>
-    <string name="version_code" translatable="false">89</string>
+    <string name="version_number" translatable="false">1.1.4</string>
+    <string name="version_code" translatable="false">90</string>
 
     <!--Application information-->
     <string name="info_app_name" translatable="false">Voltaki</string>
@@ -47,7 +47,7 @@
 
     <!--Button-->
     <string name="button_offline">Offline</string>
-    <string name="button_get_location">Getting location...</string>
+    <string name="button_get_location">Getting location…</string>
     <string name="button_come_back_here">Come back here</string>
     <string name="button_go_back">Go back</string>
 
@@ -131,21 +131,22 @@
 
     <!--Toasts-->
     <string name="toast_backup_bookmarks">Bookmarks were backed up to:\n</string>
+    <string name="toast_restore_bookmarks">Bookmarks were restored from:\n</string>
     <string name="toast_store_unavailable">Storage is unavailable</string>
     <string name="toast_file_not_found">Backup file not found</string>
     <string name="toast_added_bookmark">Bookmark added</string>
     <string name="toast_cant_go_back">A location is already set on map</string>
-    <string name="toast_search_address">Searching for address...</string>
+    <string name="toast_search_address">Searching for address…</string>
     <string name="toast_no_address_found">No address found. Check your internet connection.</string>
-    <string name="toast_get_legal_notices">Loading text from internet...</string>
+    <string name="toast_get_legal_notices">Loading text from internet…</string>
     <string name="toast_no_legal_notices">Couldn\'t load legal notices text. Check your internet connection.</string>
-    <string name="toast_get_help_page">Loading help page from internet...</string>
+    <string name="toast_get_help_page">Loading help page from internet…</string>
 
     <!--Notification-->
     <string name="notification_channel_name">Go Back</string>
     <string name="notification_channel_description">Click this notification to go back to original location</string>
     <string name="notification_go_back">Click to go back</string>
-    <string name="notification_blank" translatable="false"></string>
+    <string name="notification_blank" translatable="false" />
 
     <!--Layout resources-->
     <string name="layout_location_name">Location Name</string>

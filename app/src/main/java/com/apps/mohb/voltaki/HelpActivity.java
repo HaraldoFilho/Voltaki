@@ -1,25 +1,27 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HelpActivity.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 3:20 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class HelpActivity extends AppCompatActivity {
@@ -27,6 +29,7 @@ public class HelpActivity extends AppCompatActivity {
     private WebView webView;
     private Bundle bundle;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +72,13 @@ public class HelpActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        switch (id) {
-
-            // Send question
-            case R.id.action_send_question:
-                String[] address = new String[Constants.QUESTION_ARRAY_SIZE];
-                address[Constants.LIST_HEAD] = getString(R.string.info_feedback_email);
-                composeEmail(address, getString(R.string.action_question) + " " + getString(R.string.action_about_application)
-                        + " " + getString(R.string.info_app_name));
-                break;
+        // Send question
+        if (id == R.id.action_send_question) {
+            String[] address = new String[Constants.QUESTION_ARRAY_SIZE];
+            address[Constants.LIST_HEAD] = getString(R.string.info_feedback_email);
+            composeEmail(address, getString(R.string.action_question)
+                    + Constants.SPACE + getString(R.string.action_about_application)
+                    + Constants.SPACE + getString(R.string.info_app_name));
         }
 
         return super.onOptionsItemSelected(item);

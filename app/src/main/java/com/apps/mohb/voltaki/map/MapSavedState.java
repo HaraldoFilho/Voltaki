@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapSavedState.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 6:06 PM
  *
  *  -----------------------------------------------------------
  */
@@ -26,19 +26,18 @@ import com.apps.mohb.voltaki.R;
 public class MapSavedState {
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
 
 
     public MapSavedState(Context context) {
         preferences = context.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        editor = preferences.edit();
     }
 
     public void setLocationStatus(double latitude, double longitude, String address) {
+        SharedPreferences.Editor editor = preferences.edit();
         editor.putFloat(Constants.MAP_LATITUDE, (float) latitude);
         editor.putFloat(Constants.MAP_LONGITUDE, (float) longitude);
         editor.putString(Constants.MAP_ADDRESS, address);
-        editor.commit();
+        editor.apply();
     }
 
     public float getLatitude() {

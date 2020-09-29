@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryActivity.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -15,8 +15,6 @@ package com.apps.mohb.voltaki;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,8 +23,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
+import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
-import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.HistoryClearAlertFragment;
@@ -39,6 +40,8 @@ import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.MapSavedState;
 import com.apps.mohb.voltaki.messaging.Toasts;
 
+import java.util.Objects;
+
 
 public class HistoryActivity extends AppCompatActivity implements
         HistoryClearAlertFragment.HistoryClearAlertDialogListener,
@@ -48,7 +51,7 @@ public class HistoryActivity extends AppCompatActivity implements
         ReplaceLocationAlertFragment.ReplaceLocationDialogListener {
 
     private MapSavedState mapSavedState;
-    private ButtonSavedState buttonSavedState;
+    private ButtonCurrentState buttonCurrentState;
 
     private SharedPreferences showTipPref;
 
@@ -67,7 +70,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
         // initialize state variables
         mapSavedState = new MapSavedState(getApplicationContext());
-        buttonSavedState = new ButtonSavedState(getApplicationContext());
+        buttonCurrentState = new ButtonCurrentState(getApplicationContext());
 
         // create history list
         historyList = new Lists(getApplicationContext());
@@ -83,7 +86,7 @@ public class HistoryActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // if a location is not already set on map, set the selected location
-                if (ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
+                if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     setHistoryItemOnMap(position);
                 } else { // show dialog asking if wish to replace the location
@@ -201,7 +204,7 @@ public class HistoryActivity extends AppCompatActivity implements
     private void setHistoryItemOnMap(int position) {
 
         // set button to GREEN
-        buttonSavedState.setButtonStatus(ButtonStatus.GO_BACK);
+        buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
 
         // save location from item on memory
         mapSavedState.setLocationStatus(
@@ -233,15 +236,17 @@ public class HistoryActivity extends AppCompatActivity implements
             // add item to bookmarks
             historyList.addItemToBookmarks(getApplicationContext(), locationBookmarkItem);
             // show message that bookmark was added
-            Toasts.showBookmarkAdded();
+            Toasts toasts = new Toasts(getApplicationContext());
+            toasts.createBookmarkAdded();
+            toasts.showBookmarkAdded();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override // Cancel
+@Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -261,9 +266,9 @@ public class HistoryActivity extends AppCompatActivity implements
 
     }
 
-    @Override // No
+@Override // No
     public void onItemDeleteDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -280,9 +285,9 @@ public class HistoryActivity extends AppCompatActivity implements
         menuItemClear.setEnabled(false);
     }
 
-    @Override
+@Override
     public void onClearHistoryDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -291,24 +296,25 @@ public class HistoryActivity extends AppCompatActivity implements
     @Override // Yes
     public void onReplaceLocationDialogPositiveClick(DialogFragment dialog) {
         Bundle bundle = dialog.getArguments();
+        assert bundle != null;
         int position = bundle.getInt("position");
         // replace location on map
         setHistoryItemOnMap(position);
     }
 
-    @Override // No
+@Override // No
     public void onReplaceLocationDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
     // LISTS TIP DIALOG
 
-    @Override // Do not show again
+@Override // Do not show again
     public void onListsTipDialogPositiveClick(DialogFragment dialog) {
         // tells application to do not show tip again
-        showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).commit();
-        dialog.getDialog().cancel();
+        showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).apply();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 }

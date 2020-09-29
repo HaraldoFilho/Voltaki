@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : FetchAddressIntentService.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 3:20 PM
  *
  *  -----------------------------------------------------------
  */
@@ -72,6 +72,7 @@ public class FetchAddressIntentService extends IntentService {
         mReceiver = new MainFragment.AddressResultReceiver(null);
 
         try {
+            assert location != null;
             addresses = geocoder.getFromLocation(
                     location.getLatitude(),
                     location.getLongitude(),
@@ -92,10 +93,8 @@ public class FetchAddressIntentService extends IntentService {
         // Handle case where no address was found.
         if (addresses == null || addresses.isEmpty()) {
 
-            if (errorMessage.isEmpty()) {
-                errorMessage = getString(R.string.toast_no_address_found);
-                Log.e(Constants.LOG_TAG, errorMessage);
-            }
+            errorMessage = getString(R.string.toast_no_address_found);
+            Log.e(Constants.LOG_TAG, errorMessage);
             deliverResultToReceiver(FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(Constants.LIST_HEAD);

@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 11:46 PM
  *
  *  -----------------------------------------------------------
  */
@@ -93,9 +93,8 @@ public class Constants {
     public static final int UNLIMITED = 0;
 
     // Text
-    public static final int TEXT_SMALL = 12;
-    public static final int TEXT_MEDIUM = 15;
     public static final int TEXT_LARGE = 20;
+    public static final String SPACE = " ";
 
     // Feedback and question
     public static final int QUESTION_ARRAY_SIZE = 1;
@@ -108,10 +107,5 @@ public class Constants {
     public static final int NOTIFICATION_ID = 0;
     public static final String CHANNEL_ID = "NOTIFY";
     public static final int INTENT_REQUEST_CODE = 0;
-
-    // Toasts
-    public static final int TOAST_X_OFFSET = 0;
-    public static final int TOAST_Y_OFFSET = 0;
-
 
 }

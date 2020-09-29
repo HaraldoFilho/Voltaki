@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -17,9 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,13 +25,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+
+import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
-import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BackupAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
-import com.apps.mohb.voltaki.fragments.dialogs.ExternalStoragePermissionsAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarksSortAlertFragment;
+import com.apps.mohb.voltaki.fragments.dialogs.ExternalStoragePermissionsAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ItemDeleteAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ListsTipAlertFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.ReplaceLocationAlertFragment;
@@ -43,9 +45,9 @@ import com.apps.mohb.voltaki.lists.BookmarksListAdapter;
 import com.apps.mohb.voltaki.lists.Lists;
 import com.apps.mohb.voltaki.lists.LocationItem;
 import com.apps.mohb.voltaki.map.MapSavedState;
-import com.apps.mohb.voltaki.messaging.Toasts;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class BookmarksActivity extends AppCompatActivity implements
@@ -59,7 +61,7 @@ public class BookmarksActivity extends AppCompatActivity implements
         ExternalStoragePermissionsAlertFragment.ExternalStoragePermissionsDialogListener {
 
     private MapSavedState mapSavedState;
-    private ButtonSavedState buttonSavedState;
+    private ButtonCurrentState buttonCurrentState;
 
     private SharedPreferences showTipPref;
 
@@ -80,7 +82,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
         // initialize state variables
         mapSavedState = new MapSavedState(getApplicationContext());
-        buttonSavedState = new ButtonSavedState(getApplicationContext());
+        buttonCurrentState = new ButtonCurrentState(getApplicationContext());
 
         // create bookmarks list
         bookmarksList = new Lists(getApplicationContext());
@@ -96,7 +98,7 @@ public class BookmarksActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // if a location is not already set on map, set the selected location
-                if (ButtonEnums.convertEnumToInt(buttonSavedState.getButtonStatus())
+                if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                         < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                     setBookmarkItemOnMap(position);
                 } else { // show dialog asking if wish to replace the location
@@ -108,8 +110,6 @@ public class BookmarksActivity extends AppCompatActivity implements
                 }
             }
         });
-
-        Toasts.createBackupBookmarks();
 
     }
 
@@ -175,8 +175,10 @@ public class BookmarksActivity extends AppCompatActivity implements
 
             // Sort
             case R.id.action_sort_bookmarks:
-                DialogFragment sortAlert = new BookmarksSortAlertFragment();
-                sortAlert.show(getSupportFragmentManager(), "BookmarksSortAlertFragment");
+                if (bookmarksList.getBookmarks().size() > 1) {
+                    DialogFragment sortAlert = new BookmarksSortAlertFragment();
+                    sortAlert.show(getSupportFragmentManager(), "BookmarksSortAlertFragment");
+                }
                 break;
 
             // Backup
@@ -275,7 +277,7 @@ public class BookmarksActivity extends AppCompatActivity implements
     private void setBookmarkItemOnMap(int position) {
 
         // set button to GREEN
-        buttonSavedState.setButtonStatus(ButtonStatus.GO_BACK);
+        buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
 
         // save location from item on memory
         mapSavedState.setLocationStatus(
@@ -291,17 +293,13 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     @Override // read result of permissions requests
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch (requestCode) {
-            case Constants.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST: {
-                // if permission is granted enable menu items
-                if (grantResults.length > 0
-                        && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
-                    menuItemBackup.setEnabled(true);
-                    menuItemRestore.setEnabled(true);
-                }
-                return;
+        if (requestCode == Constants.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST) {// if permission is granted enable menu items
+            if (grantResults.length > 0
+                    && ((grantResults[0] == PackageManager.PERMISSION_GRANTED))) {
+                menuItemBackup.setEnabled(true);
+                menuItemRestore.setEnabled(true);
             }
         }
     }
@@ -320,7 +318,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     @Override // No
     public void onBackupDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -339,9 +337,9 @@ public class BookmarksActivity extends AppCompatActivity implements
         }
     }
 
-    @Override // No
+@Override // No
     public void onRestoreDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -356,9 +354,9 @@ public class BookmarksActivity extends AppCompatActivity implements
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-    @Override
+@Override
     public void onSortBookmarksDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -378,9 +376,9 @@ public class BookmarksActivity extends AppCompatActivity implements
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-    @Override // Cancel
+@Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -395,9 +393,9 @@ public class BookmarksActivity extends AppCompatActivity implements
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-    @Override // No
+@Override // No
     public void onItemDeleteDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -406,24 +404,25 @@ public class BookmarksActivity extends AppCompatActivity implements
     @Override // Yes
     public void onReplaceLocationDialogPositiveClick(DialogFragment dialog) {
         Bundle bundle = dialog.getArguments();
+        assert bundle != null;
         int position = bundle.getInt("position");
         // replace location on map
         setBookmarkItemOnMap(position);
     }
 
-    @Override // No
+@Override // No
     public void onReplaceLocationDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
     // LISTS TIP DIALOG
 
-    @Override // Do not show again
+@Override // Do not show again
     public void onListsTipDialogPositiveClick(DialogFragment dialog) {
         // tells application to do not show tip again
-        showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).commit();
-        dialog.getDialog().cancel();
+        showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).apply();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 
@@ -438,9 +437,9 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     }
 
-    @Override // No
+@Override // No
     public void onAlertExtStoragePermDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
+        Objects.requireNonNull(dialog.getDialog()).cancel();
     }
 
 }

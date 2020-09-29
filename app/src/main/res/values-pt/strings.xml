@@ -11,7 +11,7 @@
     <string name="alert_message_clear_history">Todos os items do histórico serão excluídos permanentemente\n</string>
     <string name="alert_message_reset_map">O botão retornará ao estado inicial e o mapa mostrará a localização atual\n</string>
     <string name="button_come_back_here">Volta aqui</string>
-    <string name="button_get_location">Obtendo localização...</string>
+    <string name="button_get_location">Obtendo localização…</string>
     <string name="button_go_back">Voltar</string>
     <string name="button_offline">Desconectado</string>
     <string name="context_delete">Excluir</string>
@@ -72,7 +72,7 @@
     <string name="set_max_history_items_unlimited">Ilimitado</string>
     <string name="set_notification_summ_off">Notificação está desativada</string>
     <string name="set_notification_summ_on">Quando clicada abre o mapa para voltar</string>
-    <string name="toast_get_legal_notices">Carregando texto da internet...</string>
+    <string name="toast_get_legal_notices">Carregando texto da internet…</string>
     <string name="toast_no_legal_notices">Não foi possível carregar texto de avisos legais. Verifique a sua conexão de internet.</string>
     <string name="alert_title_reset_preferences">Restaurar valores padrão?</string>
     <string name="alert_message_reset_preferences">Todas as configurações serão restauradas para os valores padrão\n</string>
@@ -99,7 +99,7 @@
     <string name="action_back">Voltar à origem</string>
     <string name="alert_title_replace">Substituir local?</string>
     <string name="alert_message_replace_location">Um local já está configurado no mapa. Substituir por este?\n</string>
-    <string name="toast_get_help_page">Carregando página de ajuda da internet...</string>
+    <string name="toast_get_help_page">Carregando página de ajuda da internet…</string>
     <string name="set_def_zoom_high">Alto</string>
     <string name="set_def_zoom_level_default">Automático</string>
     <string name="set_def_zoom_low">Baixo</string>
@@ -123,7 +123,7 @@
     <string name="set_map_type_normal">Normal</string>
     <string name="set_map_type_satellite">Satélite</string>
     <string name="set_title_map_type">Tipo do mapa</string>
-    <string name="toast_search_address">Procurando endereço...</string>
+    <string name="toast_search_address">Procurando endereço…</string>
     <string name="context_edit_address">Editar endereço</string>
     <string name="dialog_title_location_address">Endereço do local</string>
     <string name="context_share">Compartilhar</string>
@@ -151,5 +151,6 @@
     <string name="notification_channel_description">Toque na notificação para voltar ao lugar original</string>
     <string name="notification_channel_name">Voltar</string>
     <string name="action_bug_report">Falha no aplicativo</string>
+    <string name="toast_restore_bookmarks">Os marcadores foram restaurados de:\n</string>
 
 </resources>

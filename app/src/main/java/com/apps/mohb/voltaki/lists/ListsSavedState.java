@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ListsSavedState.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -17,12 +17,12 @@ import android.content.SharedPreferences;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
+import com.apps.mohb.voltaki.Constants;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-
-import com.apps.mohb.voltaki.Constants;
 
 
 // This class manages the lists saved states
@@ -36,25 +36,26 @@ public class ListsSavedState {
 
     public ListsSavedState(Context context) {
         preferences = context.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        editor = preferences.edit();
         this.context = context;
     }
 
     // save bookmarks list on memory through a json string
     public void setBookmarksState(ArrayList<LocationItem> bookmarks) throws IOException {
         String jsonBookmarks = writeJsonString(bookmarks);
+        editor = preferences.edit();
         editor.putString(Constants.BOOKMARKS, jsonBookmarks);
-        editor.commit();
+        editor.apply();
     }
 
     public void setBookmarksState(String jsonBookmarks) {
+        editor = preferences.edit();
         editor.putString(Constants.BOOKMARKS, jsonBookmarks);
-        editor.commit();
+        editor.apply();
     }
 
     // get bookmarks list from memory through a json string
     // if list was not saved yet creates a new array list
-    public ArrayList<LocationItem> getBookmarksState() throws IOException {
+public ArrayList<LocationItem> getBookmarksState() throws IOException {
         String jsonBookmarks = preferences.getString(Constants.BOOKMARKS, null);
         if (jsonBookmarks == null) {
             return new ArrayList<>();
@@ -65,8 +66,7 @@ public class ListsSavedState {
 
     // get a json string of bookmarks list from memory
     public String getBookmarksJsonState() {
-        String jsonBookmarks = preferences.getString(Constants.BOOKMARKS, "");
-        return jsonBookmarks;
+        return preferences.getString(Constants.BOOKMARKS, "");
     }
 
     // save history list on memory through a json string
@@ -78,7 +78,7 @@ public class ListsSavedState {
 
     // get history list from memory through a json string
     // if list was not saved yet creates a new array list
-    public ArrayList<LocationItem> getHistoryState() throws IOException {
+public ArrayList<LocationItem> getHistoryState() throws IOException {
         String jsonHistory = preferences.getString(Constants.HISTORY, null);
         if (jsonHistory == null) {
             return new ArrayList<>();
@@ -117,12 +117,9 @@ public class ListsSavedState {
     }
 
     // read a json string containing a list of location items
-    public ArrayList<LocationItem> readJsonString(String jsonString) throws IOException {
-        JsonReader jsonReader = new JsonReader(new StringReader(jsonString));
-        try {
+public ArrayList<LocationItem> readJsonString(String jsonString) throws IOException {
+        try (JsonReader jsonReader = new JsonReader(new StringReader(jsonString))) {
             return readLocationsArrayList(jsonReader);
-        } finally {
-            jsonReader.close();
         }
     }
 
@@ -141,8 +138,8 @@ public class ListsSavedState {
     public LocationItem readLocationItem(JsonReader jsonReader) throws IOException {
         String locationName = "";
         String locationAddress = "";
-        Double locationLatitude = Constants.DEFAULT_LATITUDE;
-        Double locationLongitude = Constants.DEFAULT_LONGITUDE;
+        double locationLatitude = Constants.DEFAULT_LATITUDE;
+        double locationLongitude = Constants.DEFAULT_LONGITUDE;
 
         jsonReader.beginObject();
         while (jsonReader.hasNext()) {
@@ -166,9 +163,8 @@ public class ListsSavedState {
 
         }
         jsonReader.endObject();
-        LocationItem locationItem = new LocationItem(this.context, locationName,
+        return new LocationItem(this.context, locationName,
                 locationAddress, locationLatitude, locationLongitude);
-        return locationItem;
     }
 
 }

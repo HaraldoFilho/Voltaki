@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryListAdapter.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 3:20 PM
  *
  *  -----------------------------------------------------------
  */
@@ -19,32 +19,36 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.List;
+import androidx.annotation.NonNull;
 
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.R;
 
+import java.util.List;
+
 
 // Adapter to connect History Array List to ListView
 
-public class HistoryListAdapter extends ArrayAdapter {
+public class HistoryListAdapter extends ArrayAdapter<LocationItem> {
 
-    public HistoryListAdapter(Context context, List list) {
+    public HistoryListAdapter(Context context, List<LocationItem> list) {
         super(context, Constants.LIST_ADAPTER_RESOURCE_ID, list);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
-        LocationItem locationItem = (LocationItem) getItem(position);
+        LocationItem locationItem = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_history_item, parent, false);
         }
 
-        TextView txtLocationName = (TextView) convertView.findViewById(R.id.txtTime);
-        TextView txtLocationAddress = (TextView) convertView.findViewById(R.id.txtLocationAddress);
+        TextView txtLocationName = convertView.findViewById(R.id.txtTime);
+        TextView txtLocationAddress = convertView.findViewById(R.id.txtLocationAddress);
 
+        assert locationItem != null;
         txtLocationName.setText(locationItem.getName());
         txtLocationAddress.setText(locationItem.getAddressText());
 

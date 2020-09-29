@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : AboutActivity.java
- *  Last modified : 6/13/20 12:34 PM
+ *  Last modified : 9/28/20 3:20 PM
  *
  *  -----------------------------------------------------------
  */
@@ -15,11 +15,12 @@ package com.apps.mohb.voltaki;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.apps.mohb.voltaki.fragments.dialogs.MaterialIconsDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.PrivacyPolicyDialogFragment;
@@ -28,55 +29,14 @@ import com.apps.mohb.voltaki.fragments.dialogs.TermsOfUseDialogFragment;
 
 public class AboutActivity extends AppCompatActivity {
 
-    /* ##### DEPRECATED #####
-    // Class to load Legal Notices text from internet
-    private class GetLegalNotices extends AsyncTask {
-
-        private DialogFragment dialog;
-        private String legalNotices;
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // show toast before start loading legal notices text
-            Toasts.createLegalNotices();
-            Toasts.setLegalNoticesText(R.string.toast_get_legal_notices);
-            Toasts.showLegalNotices();
-        }
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-            // get legal notices text from internet
-            GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-            legalNotices = googleApiAvailability.getOpenSourceSoftwareLicenseInfo(getApplicationContext());
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if ((legalNotices != null) && (!legalNotices.isEmpty())) {
-                // if successfully got legal notices text, show it on a dialog fragment
-                dialog = new LegalNoticesDialogFragment().newInstance(legalNotices);
-                dialog.show(getSupportFragmentManager(), "LegalNoticesDialogFragment");
-            } else {
-                // else show a toast informing that couldn't get
-                Toasts.setLegalNoticesText(R.string.toast_no_legal_notices);
-                Toasts.showLegalNotices();
-            }
-        }
-
-    }
-    */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         // displays app version number
-        TextView version = (TextView) findViewById(R.id.textAppVersion);
-        version.setText(getString(R.string.version_name) + " " + getString(R.string.version_number));
+        TextView version = findViewById(R.id.textAppVersion);
+        String versionText = getString(R.string.version_name) + Constants.SPACE + getString(R.string.version_number);
+        version.setText(versionText);
     }
 
 

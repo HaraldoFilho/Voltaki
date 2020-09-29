@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2018 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonCurrentState.java
- *  Last modified : 11/8/18 11:55 PM
+ *  Last modified : 9/28/20 1:40 PM
  *
  *  -----------------------------------------------------------
  */
@@ -14,6 +14,7 @@ package com.apps.mohb.voltaki.button;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Button;
 
@@ -25,28 +26,23 @@ import com.apps.mohb.voltaki.R;
 
 public class ButtonCurrentState {
 
-    private static Button button;
-    private static ButtonStatus buttonStatus;
+    private Button button;
+    private SharedPreferences preferences;
 
+    public ButtonCurrentState(Context context) {
+        preferences = context.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+    }
 
-    public static void setButton(Button b) {
+    public void setButton(Button b) {
         button = b;
     }
 
-    public static Button getButton() {
+    public Button getButton() {
         return button;
     }
 
-    public static ButtonStatus getButtonStatus() {
-        return buttonStatus;
-    }
-
-    public static void setButtonStatus(ButtonStatus status) {
-        buttonStatus = status;
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
-    public static void setButtonProperties(Context context, int color, int textColor, int text, float textSize, boolean enabled) {
+    public void setButtonProperties(Context context, int color, int textColor, int text, float textSize, boolean enabled) {
         if (button != null) {
             // check sdk version to apply correct methods
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // Lollipop or older
@@ -63,35 +59,46 @@ public class ButtonCurrentState {
         }
     }
 
-    public static void setButtonOffline(Context context) {
+    public void setButtonOffline(Context context) {
         setButtonProperties(context, R.color.colorOfflineButton,
                 R.color.colorWhiteTextButton, R.string.button_offline,
                 Constants.TEXT_LARGE, true);
     }
 
-    public static void setButtonGetLocation(Context context) {
+    public void setButtonGetLocation(Context context) {
         setButtonProperties(context, R.color.colorGetLocationButton,
                 R.color.colorBlackTextButton, R.string.button_get_location, Constants.TEXT_LARGE, false);
     }
 
-    public static void setButtonComeBack(Context context) {
+    public void setButtonComeBack(Context context) {
         setButtonProperties(context, R.color.colorComeBackHereButton,
                 R.color.colorBlackTextButton, R.string.button_come_back_here, Constants.TEXT_LARGE, true);
     }
 
-    public static void setButtonGoBack(Context context) {
+    public void setButtonGoBack(Context context) {
         setButtonProperties(context, R.color.colorGoBackButton,
                 R.color.colorBlackTextButton, R.string.button_go_back, Constants.TEXT_LARGE, true);
     }
 
-    public static void setButtonGoBackClicked(Context context) {
+    public void setButtonGoBackClicked(Context context) {
         setButtonProperties(context, R.color.colorGoBackButton,
                 R.color.colorYellowTextButton, R.string.button_go_back, Constants.TEXT_LARGE, true);
     }
 
-    public static void setButtonGoBackOffline(Context context) {
+    public void setButtonGoBackOffline(Context context) {
         setButtonProperties(context, R.color.colorGoBackButton,
                 R.color.colorOfflineButton, R.string.button_go_back, Constants.TEXT_LARGE, true);
+    }
+
+    public void setButtonStatus(ButtonStatus status) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(Constants.BUTTON_STATUS, ButtonEnums.convertEnumToInt(status));
+        editor.apply();
+    }
+
+    public ButtonStatus getButtonStatus() {
+        int status = preferences.getInt(Constants.BUTTON_STATUS, Constants.DEFAULT_BUTTON_STATUS);
+        return ButtonEnums.convertIntToEnum(status);
     }
 
 

@@ -1,11 +1,11 @@
 /*
- *  Copyright (c) 2019 mohb apps - All Rights Reserved
+ *  Copyright (c) 2020 mohb apps - All Rights Reserved
  *
  *  Project       : Voltaki
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainFragment.java
- *  Last modified : 12/27/19 8:54 PM
+ *  Last modified : 9/29/20 12:13 AM
  *
  *  -----------------------------------------------------------
  */
@@ -27,11 +27,6 @@ import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -39,11 +34,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.R;
 import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
-import com.apps.mohb.voltaki.button.ButtonSavedState;
 import com.apps.mohb.voltaki.button.ButtonStatus;
 import com.apps.mohb.voltaki.fragments.dialogs.BookmarkEditDialogFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.NoLocPermissionAlertFragment;
@@ -70,6 +69,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Objects;
 
 
 public class MainFragment extends Fragment implements
@@ -89,7 +91,7 @@ public class MainFragment extends Fragment implements
 
     private MapCurrentState mapCurrentState;
     private MapSavedState mapSavedState;
-    private ButtonSavedState buttonSavedState;
+    private ButtonCurrentState buttonCurrentState;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -106,6 +108,7 @@ public class MainFragment extends Fragment implements
     private Lists lists;
     private Vibrator vibrator;
     private Notification notification;
+    private Toasts toasts;
     private static boolean addressFound;
     private static boolean addressNotFound;
 
@@ -126,6 +129,7 @@ public class MainFragment extends Fragment implements
             // Display the address string
             // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
+            assert mAddressOutput != null;
             if ((resultCode == FetchAddressIntentService.SUCCESS_RESULT)
                     && (!mAddressOutput.isEmpty())) {
                 MapCurrentState.setLocationAddress(mAddressOutput);
@@ -139,7 +143,7 @@ public class MainFragment extends Fragment implements
                 }
             }
             // register that the first address update was already taken
-            isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, false).commit();
+            isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, false).apply();
 
         }
 
@@ -180,7 +184,7 @@ public class MainFragment extends Fragment implements
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -190,7 +194,7 @@ public class MainFragment extends Fragment implements
         }
     }
 
-    @Override
+@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -201,8 +205,10 @@ public class MainFragment extends Fragment implements
 
         // create instances of map and button
         mapCurrentState = new MapCurrentState(getContext());
-        mapSavedState = new MapSavedState(getContext());
-        buttonSavedState = new ButtonSavedState(getContext());
+        mapSavedState = new MapSavedState(Objects.requireNonNull(getContext()));
+
+        // create instance of button state
+        buttonCurrentState = new ButtonCurrentState(getContext());
 
         // create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -225,24 +231,27 @@ public class MainFragment extends Fragment implements
         // create an instance of notification
         notification = new Notification();
 
+        // create an instance of toasts
+        toasts = new Toasts(getContext());
+
         // when updating location, this variables are used to check if it is the first location value taken
-        isFirstLocationGot = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
+        isFirstLocationGot = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         isFirstAddressGot = getActivity().getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
 
         // create toasts for address message
-        Toasts.createSearchAddress();
-        Toasts.createLocationAddress();
+        toasts.createSearchAddress();
+        toasts.createLocationAddress();
 
     }
 
-    @Override
+@Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         try { // load main fragment view into main activity
             rootView = inflater.inflate(R.layout.fragment_main, container, false);
             hideFloatingButton();
             // create map and initialize it
-            MapsInitializer.initialize(this.getActivity());
+            MapsInitializer.initialize(Objects.requireNonNull(this.getActivity()));
             mMapView = (MapView) rootView.findViewById(R.id.map);
             mMapView.onCreate(savedInstanceState);
             mMapView.getMapAsync(this);
@@ -252,10 +261,10 @@ public class MainFragment extends Fragment implements
         }
 
         // create button
-        ButtonCurrentState.setButton((Button) rootView.findViewById(R.id.button));
+        buttonCurrentState.setButton((Button) rootView.findViewById(R.id.button));
 
         // manages the clicks on button
-        ButtonCurrentState.getButton().setOnClickListener(new View.OnClickListener() {
+        buttonCurrentState.getButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -265,9 +274,9 @@ public class MainFragment extends Fragment implements
                 }
 
                 // create intent that will call Google Maps when GO BACK button is clicked
-                mapIntent = mapSavedState.getNavigationOptionIntent(getContext(), defNavOption, defDefNavMode);
+                mapIntent = mapSavedState.getNavigationOptionIntent(Objects.requireNonNull(getContext()), defNavOption, defDefNavMode);
 
-                switch (ButtonCurrentState.getButtonStatus()) {
+                switch (buttonCurrentState.getButtonStatus()) {
 
                     // button is YELLOW
                     case COME_BACK_HERE:
@@ -275,8 +284,8 @@ public class MainFragment extends Fragment implements
                         // on the last location value taken
                         stopLocationUpdates();
                         // turn button GREEN
-                        ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
-                        ButtonCurrentState.setButtonGoBack(getContext());
+                        buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
+                        buttonCurrentState.setButtonGoBack(getContext());
                         // update red marker text
                         mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
                         // change options menu item text in main screen from Refresh to Reset
@@ -306,8 +315,8 @@ public class MainFragment extends Fragment implements
                     // button is GREEN
                     case GO_BACK:
                         // turn button GREEN with yellow letters
-                        ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_CLICKED);
-                        ButtonCurrentState.setButtonGoBackClicked(getContext());
+                        buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_CLICKED);
+                        buttonCurrentState.setButtonGoBackClicked(getContext());
                         // open Google Maps
                         startActivity(mapIntent);
                         break;
@@ -331,7 +340,7 @@ public class MainFragment extends Fragment implements
         });
 
         // manages the long clicks on button
-        ButtonCurrentState.getButton().setOnLongClickListener(new View.OnLongClickListener() {
+        buttonCurrentState.getButton().setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
@@ -342,16 +351,18 @@ public class MainFragment extends Fragment implements
                         vibrator.vibrate(Constants.VIBRATE_LONG_TIME);
                     }
                     // if button is YELLOW open add bookmark dialog
-                    if (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
+                    if (buttonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
                         lists.setBookmarkEditText("");
                         DialogFragment dialog = new BookmarkEditDialogFragment();
+                        assert getFragmentManager() != null;
                         dialog.show(getFragmentManager(), "BookmarkEditDialogFragment");
                     } else
                         // if button is RED reset
-                        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
+                        if (buttonCurrentState.getButtonStatus() == ButtonStatus.OFFLINE) {
                             mListener.onReset();
                         } else { // open reset dialog
                             DialogFragment alertDialog = new ResetAlertFragment();
+                            assert getFragmentManager() != null;
                             alertDialog.show(getFragmentManager(), "ResetAlertFragment");
                         }
                     mListener.onButtonLongPressed();
@@ -379,52 +390,48 @@ public class MainFragment extends Fragment implements
         defNavOption = sharedPref.getString(Constants.NAVIGATION_OPTION, "");
         defDefNavMode = sharedPref.getString(Constants.DEFAULT_NAV_MODE, "");
 
-        // get map saved state
-        // from memory
-        getMapSavedState();
-
         // get button saved state from memory
-        ButtonCurrentState.setButtonStatus(buttonSavedState.getButtonStatus());
+        buttonCurrentState.setButtonStatus(buttonCurrentState.getButtonStatus());
 
         // set buttons according to their saved states
-        switch (ButtonCurrentState.getButtonStatus()) {
+        switch (buttonCurrentState.getButtonStatus()) {
 
             case OFFLINE:
-                ButtonCurrentState.setButtonOffline(getContext());
+                buttonCurrentState.setButtonOffline(getContext());
                 hideFloatingButton();
                 break;
 
             case GETTING_LOCATION:
                 if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
-                    ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
-                    ButtonCurrentState.setButtonOffline(getContext());
+                    buttonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
+                    buttonCurrentState.setButtonOffline(getContext());
                 } else {
-                    ButtonCurrentState.setButtonGetLocation(getContext());
+                    buttonCurrentState.setButtonGetLocation(getContext());
                 }
                 hideFloatingButton();
                 break;
 
             case COME_BACK_HERE:
-                ButtonCurrentState.setButtonComeBack(getContext());
+                buttonCurrentState.setButtonComeBack(getContext());
                 showFloatingButton();
                 break;
 
             case GO_BACK:
-                ButtonCurrentState.setButtonGoBack(getContext());
+                buttonCurrentState.setButtonGoBack(getContext());
                 showFloatingButton();
                 break;
 
             case GO_BACK_CLICKED:
-                ButtonCurrentState.setButtonGoBackClicked(getContext());
+                buttonCurrentState.setButtonGoBackClicked(getContext());
                 showFloatingButton();
                 break;
 
             case GO_BACK_OFFLINE:
                 if (mapCurrentState.isNetworkEnabled() || mapCurrentState.isGpsEnabled()) {
-                    ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
-                    ButtonCurrentState.setButtonGoBack(getContext());
+                    buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK);
+                    buttonCurrentState.setButtonGoBack(getContext());
                 } else {
-                    ButtonCurrentState.setButtonGoBackOffline(getContext());
+                    buttonCurrentState.setButtonGoBackOffline(getContext());
                 }
                 showFloatingButton();
                 break;
@@ -433,27 +440,27 @@ public class MainFragment extends Fragment implements
 
     }
 
-    @Override
+@Override
     public void onConnected(Bundle connectionHint) {
 
         // set that no location was get yet
-        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
+        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).apply();
 
         // set that no address information was get yet
-        isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, true).commit();
+        isFirstAddressGot.edit().putBoolean(Constants.MAP_FIRST_ADDRESS, true).apply();
         addressFound = false;
         addressNotFound = false;
 
         // if default zoom level is high
-        if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+        if (Objects.requireNonNull(sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default)))
                 .matches(getString(R.string.set_def_zoom_high))) {
             zoomLevel = Constants.MAP_HIGH_ZOOM_LEVEL;
         } else // if default zoom level is mid
-            if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+            if (Objects.requireNonNull(sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default)))
                     .matches(getString(R.string.set_def_zoom_mid))) {
                 zoomLevel = Constants.MAP_MID_ZOOM_LEVEL;
             } else // if default zoom level is low
-                if (sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default))
+                if (Objects.requireNonNull(sharedPref.getString(Constants.DEFAULT_ZOOM_LEVEL, getString(R.string.set_def_zoom_level_default)))
                         .matches(getString(R.string.set_def_zoom_low))) {
                     zoomLevel = Constants.MAP_LOW_ZOOM_LEVEL;
                 } else { // if default zoom level is auto
@@ -475,7 +482,7 @@ public class MainFragment extends Fragment implements
         // set reset/refresh action menu item to reset
         mListener.onUpdateMainMenuItemResetTitle(R.string.action_reset);
         // if button is green got to location set on map
-        if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+        if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                 > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)) {
             mapCurrentState.gotoLocation(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(), zoomLevel);
             mapCurrentState.updateUI(mapCurrentState.getLatitude(), mapCurrentState.getLongitude());
@@ -486,12 +493,12 @@ public class MainFragment extends Fragment implements
             if (sharedPref.getBoolean(Constants.NOTIFICATION, true)) {
                 notification.startGoBackNotification(getContext());
             } else {
-                notification.cancelNotification(getContext(), Constants.NOTIFICATION_ID);
+                notification.cancelNotification(Objects.requireNonNull(getContext()), Constants.NOTIFICATION_ID);
             }
             // if is offline
             if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
-                ButtonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_OFFLINE);
-                ButtonCurrentState.setButtonGoBackOffline(getContext());
+                buttonCurrentState.setButtonStatus(ButtonStatus.GO_BACK_OFFLINE);
+                buttonCurrentState.setButtonGoBackOffline(getContext());
             }
             // show floating button
             showFloatingButton();
@@ -499,13 +506,13 @@ public class MainFragment extends Fragment implements
         } else
             // if is offline set the button to red
             if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
-                ButtonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
-                ButtonCurrentState.setButtonOffline(getContext());
+                buttonCurrentState.setButtonStatus(ButtonStatus.OFFLINE);
+                buttonCurrentState.setButtonOffline(getContext());
                 hideFloatingButton();
 
             } else { // set the button to orange
-                ButtonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-                ButtonCurrentState.setButtonGetLocation(getContext());
+                buttonCurrentState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
+                buttonCurrentState.setButtonGetLocation(getContext());
                 hideFloatingButton();
             }
 
@@ -526,8 +533,8 @@ public class MainFragment extends Fragment implements
                 // if this is the first location update
                 if (isFirstLocationGot.getBoolean(Constants.MAP_FIRST_LOCATION, true)) {
                     // turn button YELLOW
-                    ButtonCurrentState.setButtonStatus(ButtonStatus.COME_BACK_HERE);
-                    ButtonCurrentState.setButtonComeBack(getContext());
+                    buttonCurrentState.setButtonStatus(ButtonStatus.COME_BACK_HERE);
+                    buttonCurrentState.setButtonComeBack(getContext());
                     // set reset/refresh action menu item to refresh
                     mListener.onUpdateMainMenuItemResetTitle(R.string.action_refresh);
                     // set current location on map
@@ -539,10 +546,10 @@ public class MainFragment extends Fragment implements
                     mListener.onUpdateMainMenuItemShareState(true);
                     // if geocoder is present show message of searching for address
                     if (Geocoder.isPresent()) {
-                        Toasts.showSearchAddress();
+                        toasts.showSearchAddress();
                     }
                     // register that the first update was already taken
-                    isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, false).commit();
+                    isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, false).apply();
                 }
 
                 // move red marker position to the current location
@@ -552,19 +559,19 @@ public class MainFragment extends Fragment implements
                 if (Geocoder.isPresent()) {
                     startIntentService(mapCurrentState.getLastLocation());
                 } else {
-                    mapCurrentState.setLocationAddress(Constants.MAP_NO_ADDRESS);
+                    MapCurrentState.setLocationAddress(Constants.MAP_NO_ADDRESS);
                 }
 
                 // show address found or not found message
                 if (addressFound) {
-                    Toasts.setLocationAddressText(mapCurrentState.getLocationAddress());
-                    Toasts.showLocationAddress();
+                    toasts.setLocationAddressText(mapCurrentState.getLocationAddress());
+                    toasts.showLocationAddress();
                     addressFound = false;
                 }
 
                 if (addressNotFound) {
-                    Toasts.setLocationAddressText(R.string.toast_no_address_found);
-                    Toasts.showLocationAddress();
+                    toasts.setLocationAddressText(R.string.toast_no_address_found);
+                    toasts.showLocationAddress();
                     addressNotFound = false;
                 }
 
@@ -599,7 +606,7 @@ public class MainFragment extends Fragment implements
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult()
                             // if button is not GREEN
-                            if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                            if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                                     < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                                 hideFloatingButton();
                                 stopLocationUpdates();
@@ -636,10 +643,6 @@ public class MainFragment extends Fragment implements
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        // save button state on memory if it is not offline
-        if (ButtonCurrentState.getButtonStatus() != ButtonStatus.OFFLINE) {
-            buttonSavedState.setButtonStatus(ButtonCurrentState.getButtonStatus());
-        }
         // hide floating button
         hideFloatingButton();
         // save map state on memory
@@ -651,10 +654,6 @@ public class MainFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        // if button is YELLOW set it to ORANGE because when connect again will search for new location
-        if (ButtonCurrentState.getButtonStatus() == ButtonStatus.COME_BACK_HERE) {
-            buttonSavedState.setButtonStatus(ButtonStatus.GETTING_LOCATION);
-        }
     }
 
     @Override
@@ -675,7 +674,7 @@ public class MainFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
     }
@@ -696,19 +695,19 @@ public class MainFragment extends Fragment implements
 
     }
 
-    @Override
+@Override
     public void onMapReady(GoogleMap googleMap) {
         MapCurrentState.googleMap = googleMap;
-        if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
+        if (Objects.requireNonNull(sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default)))
                 .matches(getString(R.string.set_map_type_satellite))) {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        } else if (sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default))
+        } else if (Objects.requireNonNull(sharedPref.getString(Constants.MAP_TYPE, getString(R.string.set_map_type_default)))
                 .matches(getString(R.string.set_map_type_hybrid))) {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         } else {
             MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
-        mapCurrentState.mapMoved = false;
+        MapCurrentState.mapMoved = false;
         MapCurrentState.googleMap.setOnCameraMoveStartedListener(this);
         MapCurrentState.googleMap.setOnCameraIdleListener(this);
     }
@@ -716,14 +715,14 @@ public class MainFragment extends Fragment implements
     @Override
     public void onCameraMoveStarted(int reason) {
         if (reason == REASON_GESTURE) {
-            mapCurrentState.mapMoved = true;
+            MapCurrentState.mapMoved = true;
         }
     }
 
     @Override
     public void onCameraIdle() {
-        if (mapCurrentState.mapMoved) {
-            mapCurrentState.mapMoved = false;
+        if (MapCurrentState.mapMoved) {
+            MapCurrentState.mapMoved = false;
             mListener.onMapMoved();
         }
     }
@@ -741,33 +740,34 @@ public class MainFragment extends Fragment implements
         return mLocationRequest;
     }
 
-    public void startLocationUpdates() {
+public void startLocationUpdates() {
 
         // if button is not GREEN, turn button ORANGE, disable "add to bookmarks"
         // options menu item on main screen and set default location (0,0) on map
-        if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+        if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
             hideFloatingButton();
             mListener.onUpdateMainMenuItemAddBookmarksState(false);
             mListener.onUpdateMainMenuItemShareState(false);
-            mapCurrentState.googleMap.clear();
+            MapCurrentState.googleMap.clear();
             mapCurrentState.gotoLocation(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE, 0);
         }
 
         // register that the first update was not taken yet
-        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).commit();
+        isFirstLocationGot.edit().putBoolean(Constants.MAP_FIRST_LOCATION, true).apply();
 
         // check if location permissions are granted
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             // request location updates
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, mLocationListener);
         } else {
             // check if user already denied permission request
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Objects.requireNonNull(getActivity()),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 DialogFragment dialog = new NoLocPermissionAlertFragment();
+                assert getFragmentManager() != null;
                 dialog.show(getFragmentManager(), "NoLocPermissionAlertFragment");
             } else {
                 // request permissions
@@ -787,16 +787,16 @@ public class MainFragment extends Fragment implements
     }
 
     // start service that will get location address
-    protected void startIntentService(Location lastLocation) {
-        Intent intentAddress = new Intent(getActivity().getApplicationContext(), FetchAddressIntentService.class);
+protected void startIntentService(Location lastLocation) {
+        Intent intentAddress = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), FetchAddressIntentService.class);
         intentAddress.putExtra(FetchAddressIntentService.RECEIVER, mResultReceiver);
         intentAddress.putExtra(FetchAddressIntentService.LOCATION_DATA_EXTRA, lastLocation);
         getActivity().startService(intentAddress);
     }
 
-    private void updateMap() {
+private void updateMap() {
         // if button is not GREEN, start location updates and hide floating button
-        if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+        if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                 < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
             hideFloatingButton();
             startLocationUpdates();
@@ -812,13 +812,6 @@ public class MainFragment extends Fragment implements
     public void saveMapState() {
         mapSavedState.setLocationStatus(mapCurrentState.getLatitude(), mapCurrentState.getLongitude(),
                 mapCurrentState.getLocationAddress());
-    }
-
-    // get map saved state from memory
-    public void getMapSavedState() {
-        mapCurrentState.setLatitude(mapSavedState.getLatitude());
-        mapCurrentState.setLongitude(mapSavedState.getLongitude());
-        mapCurrentState.setLocationAddress(mapSavedState.getAddress());
     }
 
     private void hideFloatingButton() {
@@ -850,7 +843,7 @@ public class MainFragment extends Fragment implements
                 // check if button click action are enabled on settings
                 if (sharedPref.getBoolean(Constants.BUTTON_CLICK_ACTIONS, true)) {
                     // if button is not GREEN reset the map
-                    if (ButtonEnums.convertEnumToInt(ButtonCurrentState.getButtonStatus())
+                    if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                             < ButtonEnums.convertEnumToInt(ButtonStatus.GO_BACK)) {
                         // if vibrate feedback is enabled on settings, vibrate when button is clicked
                         if ((vibrator.hasVibrator()) && (sharedPref.getBoolean(Constants.BUTTON_VIBRATE, true))) {
