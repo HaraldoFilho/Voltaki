@@ -1,3 +1,6 @@
+#### **1.1.4**
+-  Migrated targetSdk to 30.
+
 #### **1.1.3**
 -  Updated app with the new site url.
 
