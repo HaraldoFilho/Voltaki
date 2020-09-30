@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarkEditDialogFragment.java
- *  Last modified : 9/28/20 6:36 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -31,6 +31,7 @@ public class BookmarkEditDialogFragment extends DialogFragment {
 
     public interface BookmarkEditDialogListener {
         void onBookmarkEditDialogPositiveClick(DialogFragment dialog);
+
         void onBookmarkEditDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -51,18 +52,17 @@ public class BookmarkEditDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
-        if(lists.isEditingAddress()) {
+        if (lists.isEditingAddress()) {
             builder.setTitle(R.string.dialog_title_location_address);
-        }
-        else {
+        } else {
             builder.setTitle(R.string.dialog_title_location_name);
         }
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        lists.setBookmarkEditText(text.getText().toString());
-                        mListener.onBookmarkEditDialogPositiveClick(BookmarkEditDialogFragment.this);
-                    }
-                })
+            public void onClick(DialogInterface dialog, int id) {
+                lists.setBookmarkEditText(text.getText().toString());
+                mListener.onBookmarkEditDialogPositiveClick(BookmarkEditDialogFragment.this);
+            }
+        })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onBookmarkEditDialogNegativeClick(BookmarkEditDialogFragment.this);

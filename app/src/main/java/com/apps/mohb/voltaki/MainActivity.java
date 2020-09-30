@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MainActivity.java
- *  Last modified : 9/29/20 12:13 AM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -20,7 +20,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.apps.mohb.voltaki.button.ButtonCurrentState;
 import com.apps.mohb.voltaki.button.ButtonEnums;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements
         // create instance of button current state
         buttonCurrentState = new ButtonCurrentState(this);
 
-        // get shared preferences variables
+        // get shared preferences_old variables
         showRefreshTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showResetTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
         showFloatingButtonTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        // if language has changed set user preferences to default values
+        // if language has changed set user preferences_old to default values
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         // create instance of bookmarks and history lists
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // check if all location providers are disabled
         if (!mapCurrentState.isNetworkEnabled() && !mapCurrentState.isGpsEnabled()) {
-            // if location services dialog is enabled in preferences show it
+            // if location services dialog is enabled in preferences_old show it
             if (showNoLocServWarnPref.getBoolean(Constants.LOC_SERV_CHECK, true)) {
                 locServDisabledDialog.setCancelable(false);
                 locServDisabledDialog.show(getSupportFragmentManager(), "LocServDisabledAlertFragment");
@@ -651,7 +651,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-@Override // No
+    @Override // No
     public void onAlertNoLocPermDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -698,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-@Override // Cancel
+    @Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -711,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements
         reset();
     }
 
-@Override // No
+    @Override // No
     public void onResetDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }

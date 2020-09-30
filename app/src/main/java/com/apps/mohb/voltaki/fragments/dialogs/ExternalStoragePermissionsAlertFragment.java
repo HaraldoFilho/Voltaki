@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ExternalStoragePermissionsAlertFragment.java
- *  Last modified : 9/28/20 2:46 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class ExternalStoragePermissionsAlertFragment extends DialogFragment {
 
     public interface ExternalStoragePermissionsDialogListener {
         void onAlertExtStoragePermDialogPositiveClick(DialogFragment dialog);
+
         void onAlertExtStoragePermDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -44,11 +45,11 @@ public class ExternalStoragePermissionsAlertFragment extends DialogFragment {
                 mListener.onAlertExtStoragePermDialogPositiveClick(ExternalStoragePermissionsAlertFragment.this);
             }
         })
-        .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mListener.onAlertExtStoragePermDialogNegativeClick(ExternalStoragePermissionsAlertFragment.this);
-            }
-        });
+                .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mListener.onAlertExtStoragePermDialogNegativeClick(ExternalStoragePermissionsAlertFragment.this);
+                    }
+                });
 
         return alertDialogBuilder.create();
 

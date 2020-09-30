@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BookmarksActivity.java
- *  Last modified : 9/29/20 12:13 AM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -119,7 +119,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
         // show tip if it hasn't shown before and list is not empty
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true))&&(!bookmarksList.getBookmarks().isEmpty())) {
+        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true)) && (!bookmarksList.getBookmarks().isEmpty())) {
             DialogFragment dialog = new ListsTipAlertFragment();
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }
@@ -132,8 +132,7 @@ public class BookmarksActivity extends AppCompatActivity implements
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
                 DialogFragment dialog = new ExternalStoragePermissionsAlertFragment();
                 dialog.show(getSupportFragmentManager(), "ExternalStoragePermissionsAlertFragment");
-            }
-            else {
+            } else {
                 // request permissions
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -157,8 +156,7 @@ public class BookmarksActivity extends AppCompatActivity implements
                 == PackageManager.PERMISSION_GRANTED) {
             menuItemBackup.setEnabled(true);
             menuItemRestore.setEnabled(true);
-        }
-        else {
+        } else {
             menuItemBackup.setEnabled(false);
             menuItemRestore.setEnabled(false);
         }
@@ -230,7 +228,7 @@ public class BookmarksActivity extends AppCompatActivity implements
             case R.id.share:
                 LocationItem bookmarksItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
                 locationItem = new LocationItem(this, bookmarksItem.getName(), bookmarksItem.getAddress(),
-                bookmarksItem.getLatitude(), bookmarksItem.getLongitude());
+                        bookmarksItem.getLatitude(), bookmarksItem.getLongitude());
                 locationItem.share();
                 return true;
 
@@ -246,10 +244,9 @@ public class BookmarksActivity extends AppCompatActivity implements
             // Edit address
             case R.id.editAddress:
                 locationItem = bookmarksList.getItemFromBookmarks(menuInfo.position);
-                if(!locationItem.getAddress().matches(Constants.MAP_NO_ADDRESS)) {
+                if (!locationItem.getAddress().matches(Constants.MAP_NO_ADDRESS)) {
                     bookmarksList.setBookmarkEditText(locationItem.getAddress());
-                }
-                else {
+                } else {
                     bookmarksList.setBookmarkEditText("");
                 }
                 bookmarksList.setEditingAddress(true);
@@ -337,7 +334,7 @@ public class BookmarksActivity extends AppCompatActivity implements
         }
     }
 
-@Override // No
+    @Override // No
     public void onRestoreDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -354,7 +351,7 @@ public class BookmarksActivity extends AppCompatActivity implements
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-@Override
+    @Override
     public void onSortBookmarksDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -366,17 +363,16 @@ public class BookmarksActivity extends AppCompatActivity implements
     public void onBookmarkEditDialogPositiveClick(DialogFragment dialog) {
         // update item and refresh list on screen
         // Note: notifyDataSetChanged() doesn't work properly sometimes
-        if(bookmarksList.isEditingAddress()) {
+        if (bookmarksList.isEditingAddress()) {
             bookmarksList.updateLocationAddress(menuInfo.position);
-        }
-        else {
+        } else {
             bookmarksList.updateLocationName(menuInfo.position);
         }
         bookmarksAdapter = new BookmarksListAdapter(getApplicationContext(), bookmarksList.getBookmarks());
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-@Override // Cancel
+    @Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -393,7 +389,7 @@ public class BookmarksActivity extends AppCompatActivity implements
         bookmarksListView.setAdapter(bookmarksAdapter);
     }
 
-@Override // No
+    @Override // No
     public void onItemDeleteDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -410,7 +406,7 @@ public class BookmarksActivity extends AppCompatActivity implements
         setBookmarkItemOnMap(position);
     }
 
-@Override // No
+    @Override // No
     public void onReplaceLocationDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -418,7 +414,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     // LISTS TIP DIALOG
 
-@Override // Do not show again
+    @Override // Do not show again
     public void onListsTipDialogPositiveClick(DialogFragment dialog) {
         // tells application to do not show tip again
         showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).apply();
@@ -437,7 +433,7 @@ public class BookmarksActivity extends AppCompatActivity implements
 
     }
 
-@Override // No
+    @Override // No
     public void onAlertExtStoragePermDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }

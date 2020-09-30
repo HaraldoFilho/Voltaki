@@ -5,25 +5,24 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsFragment.java
- *  Last modified : 9/29/20 12:13 AM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki.fragments;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import androidx.annotation.RequiresApi;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.apps.mohb.voltaki.Constants;
 import com.apps.mohb.voltaki.MainActivity;
@@ -36,16 +35,12 @@ import com.apps.mohb.voltaki.map.MapCurrentState;
 import com.apps.mohb.voltaki.messaging.Notification;
 import com.google.android.gms.maps.GoogleMap;
 
+import java.util.Objects;
 
-// Setting fragment that shows the options in the settings screen
-
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class SettingsFragment extends PreferenceFragment {
-
+public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
         setHasOptionsMenu(true);
 
         // Bind the summaries of navigation option, default navigation mode,
@@ -53,12 +48,12 @@ public class SettingsFragment extends PreferenceFragment {
         // to their values. When their values change, their summaries are
         // updated to reflect the new value, per the Android Design
         // guidelines.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_map_type)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_nav_option)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_nav_mode)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_def_zoom_level)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.set_key_max_history_items)));
-        setPreferenceClickListener(findPreference(Constants.NOTIFICATION));
+        bindPreferenceSummaryToValue(Objects.requireNonNull(findPreference(getString(R.string.set_key_map_type))));
+        bindPreferenceSummaryToValue(Objects.requireNonNull(findPreference(getString(R.string.set_key_nav_option))));
+        bindPreferenceSummaryToValue(Objects.requireNonNull(findPreference(getString(R.string.set_key_def_nav_mode))));
+        bindPreferenceSummaryToValue(Objects.requireNonNull(findPreference(getString(R.string.set_key_def_zoom_level))));
+        bindPreferenceSummaryToValue(Objects.requireNonNull(findPreference(getString(R.string.set_key_max_history_items))));
+        setPreferenceClickListener(Objects.requireNonNull(findPreference(Constants.NOTIFICATION)));
     }
 
     // start main activity if back arrow is pressed in the app bar
@@ -112,16 +107,14 @@ public class SettingsFragment extends PreferenceFragment {
                     stringValue.matches(getString(R.string.set_max_history_items_unlimited))) {
                 updateHistoryMaxItems();
             } else
-            // if value changed is the map type then update map
-            if (stringValue.matches(getString(R.string.set_map_type_normal))) {
-                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            } else
-            if (stringValue.matches(getString(R.string.set_map_type_satellite))) {
-                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-            } else
-            if (stringValue.matches(getString(R.string.set_map_type_hybrid))) {
-                MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            }
+                // if value changed is the map type then update map
+                if (stringValue.matches(getString(R.string.set_map_type_normal))) {
+                    MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else if (stringValue.matches(getString(R.string.set_map_type_satellite))) {
+                    MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                } else if (stringValue.matches(getString(R.string.set_map_type_hybrid))) {
+                    MapCurrentState.googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                }
 
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
@@ -153,17 +146,16 @@ public class SettingsFragment extends PreferenceFragment {
         @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public boolean onPreferenceClick(Preference preference) {
-        Notification notification = new Notification();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            ButtonCurrentState buttonCurrentState = new ButtonCurrentState(getContext());
+            Notification notification = new Notification();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity().getApplicationContext());
+            ButtonCurrentState buttonCurrentState = new ButtonCurrentState(requireContext());
             // if button is GREEN and Notification setting is checked start notification
             if (ButtonEnums.convertEnumToInt(buttonCurrentState.getButtonStatus())
                     > ButtonEnums.convertEnumToInt(ButtonStatus.COME_BACK_HERE)
-                    &&(sharedPreferences.getBoolean(Constants.NOTIFICATION, true))) {
-                notification.startGoBackNotification(getActivity().getApplicationContext());
-            }
-            else { // cancel notification
-                notification.cancelNotification(getActivity().getApplicationContext(), Constants.NOTIFICATION_ID);
+                    && (sharedPreferences.getBoolean(Constants.NOTIFICATION, true))) {
+                notification.startGoBackNotification(requireActivity().getApplicationContext());
+            } else { // cancel notification
+                notification.cancelNotification(requireActivity().getApplicationContext(), Constants.NOTIFICATION_ID);
             }
             return true;
         }
@@ -174,7 +166,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void updateHistoryMaxItems() {
-        Lists lists = new Lists(getActivity().getApplicationContext());
+        Lists lists = new Lists(requireActivity().getApplicationContext());
         lists.pruneHistory();
     }
 

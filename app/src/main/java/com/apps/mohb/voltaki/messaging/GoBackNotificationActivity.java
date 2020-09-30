@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : GoBackNotificationActivity.java
- *  Last modified : 9/28/20 1:42 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -15,6 +15,7 @@ package com.apps.mohb.voltaki.messaging;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.apps.mohb.voltaki.Constants;

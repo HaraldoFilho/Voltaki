@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ResetAlertFragment.java
- *  Last modified : 9/28/20 2:29 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class ResetAlertFragment extends DialogFragment {
 
     public interface ResetDialogListener {
         void onResetDialogPositiveClick(DialogFragment dialog);
+
         void onResetDialogNegativeClick(DialogFragment dialog);
     }
 

@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : NoLocPermissionAlertFragment.java
- *  Last modified : 9/28/20 2:46 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class NoLocPermissionAlertFragment extends DialogFragment {
 
     public interface NoLocPermissionDialogListener {
         void onAlertNoLocPermDialogPositiveClick(DialogFragment dialog);
+
         void onAlertNoLocPermDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -44,11 +45,11 @@ public class NoLocPermissionAlertFragment extends DialogFragment {
                 mListener.onAlertNoLocPermDialogPositiveClick(NoLocPermissionAlertFragment.this);
             }
         })
-        .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mListener.onAlertNoLocPermDialogNegativeClick(NoLocPermissionAlertFragment.this);
-            }
-        });
+                .setNegativeButton(R.string.alert_button_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mListener.onAlertNoLocPermDialogNegativeClick(NoLocPermissionAlertFragment.this);
+                    }
+                });
 
         return alertDialogBuilder.create();
 

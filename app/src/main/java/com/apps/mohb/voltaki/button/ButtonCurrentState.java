@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ButtonCurrentState.java
- *  Last modified : 9/28/20 1:40 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -48,8 +48,7 @@ public class ButtonCurrentState {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // Lollipop or older
                 button.setBackgroundColor(context.getResources().getColor(color));
                 button.setTextColor(context.getResources().getColor(textColor));
-            }
-            else { // Marshmallow or newer
+            } else { // Marshmallow or newer
                 button.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));
                 button.setTextColor(context.getResources().getColor(textColor, context.getTheme()));
             }

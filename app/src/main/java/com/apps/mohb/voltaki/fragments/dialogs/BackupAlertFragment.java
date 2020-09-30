@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : BackupAlertFragment.java
- *  Last modified : 9/28/20 2:28 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class BackupAlertFragment extends DialogFragment {
 
     public interface BackupDialogListener {
         void onBackupDialogPositiveClick(DialogFragment dialog);
+
         void onBackupDialogNegativeClick(DialogFragment dialog);
     }
 

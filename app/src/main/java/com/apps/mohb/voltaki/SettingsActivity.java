@@ -5,47 +5,45 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : SettingsActivity.java
- *  Last modified : 9/28/20 5:58 PM
+ *  Last modified : 9/29/20 2:52 PM
  *
  *  -----------------------------------------------------------
  */
 
 package com.apps.mohb.voltaki;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import com.apps.mohb.voltaki.fragments.SettingsFragment;
 import com.apps.mohb.voltaki.fragments.dialogs.PreferencesResetAlertFragment;
 
 import java.util.Objects;
 
-
 public class SettingsActivity extends AppCompatActivity implements
         PreferencesResetAlertFragment.PreferencesResetDialogListener {
-
-    SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings_activity);
 
-        // Create settings fragment which actually contain the settings screen
-        settingsFragment = new SettingsFragment();
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, settingsFragment)
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, new SettingsFragment())
                 .commit();
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
-
 
     // OPTIONS MENU
 
@@ -90,11 +88,11 @@ public class SettingsActivity extends AppCompatActivity implements
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
         // Set defaults on memory
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         // Update settings screen with the default values
-        getFragmentManager().beginTransaction().detach(settingsFragment).commit();
-        settingsFragment = new SettingsFragment();
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, settingsFragment)
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, new SettingsFragment())
                 .commit();
     }
 

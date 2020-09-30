@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ListsSavedState.java
- *  Last modified : 9/29/20 12:13 AM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -55,7 +55,7 @@ public class ListsSavedState {
 
     // get bookmarks list from memory through a json string
     // if list was not saved yet creates a new array list
-public ArrayList<LocationItem> getBookmarksState() throws IOException {
+    public ArrayList<LocationItem> getBookmarksState() throws IOException {
         String jsonBookmarks = preferences.getString(Constants.BOOKMARKS, null);
         if (jsonBookmarks == null) {
             return new ArrayList<>();
@@ -78,7 +78,7 @@ public ArrayList<LocationItem> getBookmarksState() throws IOException {
 
     // get history list from memory through a json string
     // if list was not saved yet creates a new array list
-public ArrayList<LocationItem> getHistoryState() throws IOException {
+    public ArrayList<LocationItem> getHistoryState() throws IOException {
         String jsonHistory = preferences.getString(Constants.HISTORY, null);
         if (jsonHistory == null) {
             return new ArrayList<>();
@@ -117,7 +117,7 @@ public ArrayList<LocationItem> getHistoryState() throws IOException {
     }
 
     // read a json string containing a list of location items
-public ArrayList<LocationItem> readJsonString(String jsonString) throws IOException {
+    public ArrayList<LocationItem> readJsonString(String jsonString) throws IOException {
         try (JsonReader jsonReader = new JsonReader(new StringReader(jsonString))) {
             return readLocationsArrayList(jsonReader);
         }

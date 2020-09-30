@@ -1,76 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--Map Type preferences-->
+    <!--Map Type preferences_old-->
     <ListPreference
-        android:key="@string/set_key_map_type"
-        android:title="@string/set_title_map_type"
-        android:entries="@array/setting_map_type"
-        android:entryValues="@array/setting_map_type"
-        android:defaultValue="@string/set_map_type_default" />
+        app:defaultValue="@string/set_map_type_default"
+        app:entries="@array/setting_map_type"
+        app:entryValues="@array/setting_map_type"
+        app:key="@string/set_key_map_type"
+        app:title="@string/set_title_map_type" />
 
-    <!--Navigation Option preferences-->
+    <!--Navigation Option preferences_old-->
     <ListPreference
-        android:key="@string/set_key_nav_option"
-        android:title="@string/set_title_nav_option"
-        android:entries="@array/setting_nav_option"
-        android:entryValues="@array/setting_nav_option"
-        android:defaultValue="@string/set_nav_option_default" />
+        app:defaultValue="@string/set_nav_option_default"
+        app:entries="@array/setting_nav_option"
+        app:entryValues="@array/setting_nav_option"
+        app:key="@string/set_key_nav_option"
+        app:title="@string/set_title_nav_option" />
 
-    <!--Default Navigation Mode preferences-->
+    <!--Default Navigation Mode preferences_old-->
     <ListPreference
-        android:key="@string/set_key_def_nav_mode"
-        android:title="@string/set_title_def_nav_mode"
-        android:entries="@array/setting_def_nav_mode"
-        android:entryValues="@array/setting_def_nav_mode"
-        android:defaultValue="@string/set_def_nav_mode_default" />
+        app:defaultValue="@string/set_def_nav_mode_default"
+        app:entries="@array/setting_def_nav_mode"
+        app:entryValues="@array/setting_def_nav_mode"
+        app:key="@string/set_key_def_nav_mode"
+        app:title="@string/set_title_def_nav_mode" />
 
-    <!--Default Zoom Level preferences-->
+    <!--Default Zoom Level preferences_old-->
     <ListPreference
-        android:key="@string/set_key_def_zoom_level"
-        android:title="@string/set_title_def_zoom_level"
-        android:entries="@array/setting_def_zoom_level"
-        android:entryValues="@array/setting_def_zoom_level"
-        android:defaultValue="@string/set_def_zoom_level_default" />
+        app:defaultValue="@string/set_def_zoom_level_default"
+        app:entries="@array/setting_def_zoom_level"
+        app:entryValues="@array/setting_def_zoom_level"
+        app:key="@string/set_key_def_zoom_level"
+        app:title="@string/set_title_def_zoom_level" />
 
-    <!--Notification preferences-->
-    <CheckBoxPreference
-        android:key="@string/set_key_notification"
-        android:title="@string/set_title_notification"
-        android:summaryOn="@string/set_notification_summ_on"
-        android:summaryOff="@string/set_notification_summ_off"
-        android:defaultValue="true" />
+    <!--Notification preferences_old-->
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="@string/set_key_notification"
+        app:summaryOff="@string/set_notification_summ_off"
+        app:summaryOn="@string/set_notification_summ_on"
+        app:title="@string/set_title_notification" />
 
-    <!--Vibrate Feedback preferences-->
-    <CheckBoxPreference
-        android:key="@string/set_key_vib_feedback"
-        android:title="@string/set_title_vib_feedback"
-        android:summaryOn="@string/set_vib_summ_on"
-        android:summaryOff="@string/set_vib_summ_off"
-        android:defaultValue="true" />
+    <!--Vibrate Feedback preferences_old-->
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="@string/set_key_vib_feedback"
+        app:summaryOff="@string/set_vib_summ_off"
+        app:summaryOn="@string/set_vib_summ_on"
+        app:title="@string/set_title_vib_feedback" />
 
-    <!--Button Long Click preferences-->
-    <CheckBoxPreference
-        android:key="@string/set_key_long_click_actions"
-        android:title="@string/set_title_long_click_actions"
-        android:summaryOn="@string/set_long_click_summ_on"
-        android:summaryOff="@string/set_long_click_summ_off"
-        android:defaultValue="true" />
+    <!--Button Long Click preferences_old-->
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="@string/set_key_long_click_actions"
+        app:summaryOff="@string/set_long_click_summ_off"
+        app:summaryOn="@string/set_long_click_summ_on"
+        app:title="@string/set_title_long_click_actions" />
 
-    <!--Bookmarks Auto Backup preferences-->
-    <CheckBoxPreference
-        android:key="@string/set_key_auto_backup"
-        android:title="@string/set_title_auto_backup"
-        android:summaryOn="@string/set_backup_summ_on"
-        android:summaryOff="@string/set_backup_summ_off"
-        android:defaultValue="false" />
+    <!--Bookmarks Auto Backup preferences_old-->
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="@string/set_key_auto_backup"
+        app:summaryOff="@string/set_backup_summ_off"
+        app:summaryOn="@string/set_backup_summ_on"
+        app:title="@string/set_title_auto_backup" />
 
-    <!--Maximum History Items preferences-->
+    <!--Maximum History Items preferences_old-->
     <ListPreference
-        android:key="@string/set_key_max_history_items"
-        android:title="@string/set_title_max_history_items"
-        android:entries="@array/setting_max_history_items"
-        android:entryValues="@array/setting_max_history_items"
-        android:defaultValue="@string/set_max_history_items_default" />
+        app:defaultValue="@string/set_max_history_items_default"
+        app:entries="@array/setting_max_history_items"
+        app:entryValues="@array/setting_max_history_items"
+        app:key="@string/set_key_max_history_items"
+        app:title="@string/set_title_max_history_items" />
 
 </PreferenceScreen>

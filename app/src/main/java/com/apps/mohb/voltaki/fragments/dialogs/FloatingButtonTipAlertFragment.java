@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : FloatingButtonTipAlertFragment.java
- *  Last modified : 9/28/20 2:46 PM
+ *  Last modified : 9/29/20 12:29 AM
  *
  *  -----------------------------------------------------------
  */

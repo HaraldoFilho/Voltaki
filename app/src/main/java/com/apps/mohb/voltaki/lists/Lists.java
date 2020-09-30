@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Lists.java
- *  Last modified : 9/28/20 8:08 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -72,7 +72,7 @@ public class Lists {
         // that exceed the maximum number
         assert maxItems != null;
         if ((maxItems.matches(Constants.HISTORY_MAX_ITEMS_10))
-                ||(maxItems.matches(Constants.HISTORY_MAX_ITEMS_100))) {
+                || (maxItems.matches(Constants.HISTORY_MAX_ITEMS_100))) {
             setHistoryMaxItems(Integer.parseInt(maxItems));
             pruneHistory();
         } else {
@@ -126,7 +126,7 @@ public class Lists {
         bookmarks.add(Constants.LIST_HEAD, item);
         saveState();
         // check if bookmarks auto back is enabled
-        if(sharedPref.getBoolean(Constants.AUTO_BACKUP, false)) {
+        if (sharedPref.getBoolean(Constants.AUTO_BACKUP, false)) {
             try {
                 backupBookmarks(context, true);
             } catch (IOException e) {
@@ -141,7 +141,7 @@ public class Lists {
     }
 
     public void updateLocationAddress(int position) {
-        if(!bookmarkEditText.isEmpty()) {
+        if (!bookmarkEditText.isEmpty()) {
             bookmarks.get(position).setAddress(bookmarkEditText);
         }
         saveState();
@@ -234,15 +234,14 @@ public class Lists {
                 // write json string to backup file
                 writeStringToFile(jsonString, backupFile);
                 // if auto backup is not enabled show toast with confirmation and the backup file full path
-                if(!auto) {
+                if (!auto) {
                     toasts.setBackupBookmarksText(context.getString(R.string.toast_backup_bookmarks) + backupFile.toString());
                     toasts.showBackupBookmarks();
                 }
             }
 
-        }
-        else { // if auto backup is not enabled show toast informing that external storage is unavailable
-            if(!auto) {
+        } else { // if auto backup is not enabled show toast informing that external storage is unavailable
+            if (!auto) {
                 toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
                 toasts.showBackupBookmarks();
             }
@@ -265,18 +264,15 @@ public class Lists {
                     listsSavedState.setBookmarksState(jsonString);
                     // get bookmarks list from memory
                     bookmarks = listsSavedState.getBookmarksState();
-                }
-                else { // show toast informing that backup file has not been found
+                } else { // show toast informing that backup file has not been found
                     toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
                     toasts.showBackupBookmarks();
                 }
-            }
-            else { // show toast informing that backup file has not been found
+            } else { // show toast informing that backup file has not been found
                 toasts.setBackupBookmarksText(context.getString(R.string.toast_file_not_found));
                 toasts.showBackupBookmarks();
             }
-        }
-        else { // show toast informing that external storage is unavailable
+        } else { // show toast informing that external storage is unavailable
             toasts.setBackupBookmarksText(context.getString(R.string.toast_store_unavailable));
             toasts.showBackupBookmarks();
 
@@ -302,7 +298,7 @@ public class Lists {
     }
 
     private File getBackupDirectory(Context context) {
-       return new File(String.valueOf(context.getExternalFilesDir(
+        return new File(String.valueOf(context.getExternalFilesDir(
                 Environment.DIRECTORY_DOCUMENTS)));
     }
 

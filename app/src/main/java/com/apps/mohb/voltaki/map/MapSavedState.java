@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapSavedState.java
- *  Last modified : 9/28/20 6:06 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -52,8 +52,8 @@ public class MapSavedState {
         return preferences.getString(Constants.MAP_ADDRESS, Constants.MAP_NO_ADDRESS);
     }
 
-    // This method returns the intent that will call Google Maps set according to preferences defined in Settings
-     public Intent getNavigationOptionIntent(Context context, String navigationOption, String navigationMode) {
+    // This method returns the intent that will call Google Maps set according to preferences_old defined in Settings
+    public Intent getNavigationOptionIntent(Context context, String navigationOption, String navigationMode) {
 
         Uri gmmIntentUri;
         String navMode;
@@ -73,8 +73,7 @@ public class MapSavedState {
         if (navigationOption.matches(context.getString(R.string.set_nav_option_map))) { // Map
             gmmIntentUri = Uri.parse("geo:?q=" + String.valueOf(getLatitude()) + ","
                     + String.valueOf(getLongitude()) + "&mode=" + navMode);
-        } else
-        if (navigationOption.matches(context.getString(R.string.set_nav_option_navigator))) { // Navigator
+        } else if (navigationOption.matches(context.getString(R.string.set_nav_option_navigator))) { // Navigator
             gmmIntentUri = Uri.parse("google.navigation:q=" + String.valueOf(getLatitude()) + ","
                     + String.valueOf(getLongitude()) + "&mode=" + navMode);
         } else {

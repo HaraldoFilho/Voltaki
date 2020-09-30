@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : MapCurrentState.java
- *  Last modified : 9/28/20 3:20 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -104,8 +104,7 @@ public class MapCurrentState {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -115,8 +114,7 @@ public class MapCurrentState {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

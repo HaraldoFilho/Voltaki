@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : HistoryActivity.java
- *  Last modified : 9/29/20 12:13 AM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -106,7 +106,7 @@ public class HistoryActivity extends AppCompatActivity implements
         super.onStart();
         // show tip if it hasn't shown before and list is not empty
         showTipPref = this.getSharedPreferences(Constants.PREF_NAME, Constants.PRIVATE_MODE);
-        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true))&&(!historyList.getHistory().isEmpty())) {
+        if ((showTipPref.getBoolean(Constants.LISTS_TIP_SHOW, true)) && (!historyList.getHistory().isEmpty())) {
             DialogFragment dialog = new ListsTipAlertFragment();
             dialog.show(getSupportFragmentManager(), "ListsTipAlertFragment");
         }
@@ -122,8 +122,7 @@ public class HistoryActivity extends AppCompatActivity implements
         menuItemClear = menu.findItem(R.id.action_clear_history);
         if (historyList.isHistoryEmpty()) {
             menuItemClear.setEnabled(false);
-        }
-        else {
+        } else {
             menuItemClear.setEnabled(true);
         }
         return true;
@@ -244,7 +243,7 @@ public class HistoryActivity extends AppCompatActivity implements
         }
     }
 
-@Override // Cancel
+    @Override // Cancel
     public void onBookmarkEditDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -266,7 +265,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
     }
 
-@Override // No
+    @Override // No
     public void onItemDeleteDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -285,7 +284,7 @@ public class HistoryActivity extends AppCompatActivity implements
         menuItemClear.setEnabled(false);
     }
 
-@Override
+    @Override
     public void onClearHistoryDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -302,7 +301,7 @@ public class HistoryActivity extends AppCompatActivity implements
         setHistoryItemOnMap(position);
     }
 
-@Override // No
+    @Override // No
     public void onReplaceLocationDialogNegativeClick(DialogFragment dialog) {
         Objects.requireNonNull(dialog.getDialog()).cancel();
     }
@@ -310,7 +309,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
     // LISTS TIP DIALOG
 
-@Override // Do not show again
+    @Override // Do not show again
     public void onListsTipDialogPositiveClick(DialogFragment dialog) {
         // tells application to do not show tip again
         showTipPref.edit().putBoolean(Constants.LISTS_TIP_SHOW, false).apply();

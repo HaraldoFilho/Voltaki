@@ -1,8 +1,12 @@
+#### **1.1.5**
+- Replaced some deprecated code.
+- Changed switches type on Settings.
+
 #### **1.1.4**
--  Migrated targetSdk to 30.
+- Migrated targetSdk to 30.
 
 #### **1.1.3**
--  Updated app with the new site url.
+- Updated app with the new site url.
 
 #### **1.1.2**
 - Improvements on user interface.

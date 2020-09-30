@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : LocationItem.java
- *  Last modified : 9/23/20 11:12 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -15,12 +15,12 @@ package com.apps.mohb.voltaki.lists;
 import android.content.Context;
 import android.content.Intent;
 
+import com.apps.mohb.voltaki.Constants;
+import com.apps.mohb.voltaki.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import com.apps.mohb.voltaki.Constants;
-import com.apps.mohb.voltaki.R;
 
 
 public class LocationItem {
@@ -89,8 +89,7 @@ public class LocationItem {
         // if location item has an address set, return this address
         if (!getAddress().matches(Constants.MAP_NO_ADDRESS)) {
             return getAddress();
-        }
-        else { // returns the location latitude/longitude as address
+        } else { // returns the location latitude/longitude as address
             latitude = String.valueOf(getLatitude());
             longitude = String.valueOf(getLongitude());
 
@@ -144,8 +143,11 @@ public class LocationItem {
     // share location as a google maps url
     public void share() {
         String address;
-        if(!getAddress().matches(Constants.MAP_NO_ADDRESS)) { address = getAddress() + "\n";
-        } else { address = ""; }
+        if (!getAddress().matches(Constants.MAP_NO_ADDRESS)) {
+            address = getAddress() + "\n";
+        } else {
+            address = "";
+        }
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.action_share_title));

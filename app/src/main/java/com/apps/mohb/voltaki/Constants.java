@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : Constants.java
- *  Last modified : 9/28/20 11:46 PM
+ *  Last modified : 9/29/20 1:16 PM
  *
  *  -----------------------------------------------------------
  */
@@ -19,7 +19,7 @@ public class Constants {
     public static final int PRIVATE_MODE = 0;
     public static final String PREF_NAME = "Voltaki";
 
-    // Settings preferences
+    // Settings preferences_old
     public static final String MAP_TYPE = "MAP_TYPE";
     public static final String NAVIGATION_OPTION = "NAVIGATION_OPTION";
     public static final String DEFAULT_NAV_MODE = "DEFAULT_NAV_MODE";
@@ -45,7 +45,7 @@ public class Constants {
     // Log
     public static final String LOG_TAG = "DEBUG_VOLTAKI";
 
-    // Button saved preferences
+    // Button saved preferences_old
     public static final String BUTTON_STATUS = "ButtonStatus";
     public static final int DEFAULT_BUTTON_STATUS = 0;
     public static final String BUTTON_RESET_TIP_SHOW = "ButtonResetTipShow";

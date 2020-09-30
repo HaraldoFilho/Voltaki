@@ -5,7 +5,7 @@
  *  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
  *
  *  File          : ItemDeleteAlertFragment.java
- *  Last modified : 9/28/20 2:46 PM
+ *  Last modified : 9/29/20 3:04 PM
  *
  *  -----------------------------------------------------------
  */
@@ -27,6 +27,7 @@ public class ItemDeleteAlertFragment extends DialogFragment {
 
     public interface ItemDeleteDialogListener {
         void onItemDeleteDialogPositiveClick(DialogFragment dialog);
+
         void onItemDeleteDialogNegativeClick(DialogFragment dialog);
     }
 
